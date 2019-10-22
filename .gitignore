@@ -1,2 +1,18 @@
 .DS_Store
 *.swp
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Comment this line if you want to version Wavefront .obj files.
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
