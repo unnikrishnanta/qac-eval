@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.5.1)
 project(qac_eval)
 
 # creates the variable EXEC and sets it to hello
-set(EXEC hello)
+set(EXEC qac_eval)
 
 # set the C++17 standard
 set(CMAKE_CXX_STANDARD 17)
