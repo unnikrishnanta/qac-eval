@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 
 # project name
-project(qac_eval)
+project(QAC_Eval)
 
 # creates the variable EXEC and sets it to hello
 set(EXEC qac_eval)
@@ -17,14 +17,15 @@ include_directories(include)
 find_package( Boost REQUIRED COMPONENTS program_options iostreams)
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-# puts all .cpp files inside src to the SOURCES variable
-file(GLOB SOURCES "src/*.cpp")
 add_subdirectory(src/core)
 add_subdirectory(src/qac_impl)
 
+# puts all .cpp files inside src to the SOURCES variable
+file(GLOB SOURCES "src/*.cpp")
 # compiles the files defined by SOURCES to generante the executable defined by EXEC
 add_executable(${EXEC} ${SOURCES})
+
 target_link_libraries( ${EXEC} ${Boost_LIBRARIES})
-target_link_libraries( ${EXEC} ${core})
-target_link_libraries( ${EXEC} ${qac_impl})
+target_link_libraries( ${EXEC} core)
+target_link_libraries( ${EXEC} qac_impl)
 
