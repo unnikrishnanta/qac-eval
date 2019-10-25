@@ -1,4 +1,5 @@
-#include <core/collection.hpp>
+#include "collection.hpp"
+#include <sstream>
 #include <boost/iostreams/device/mapped_file.hpp> // for mmap
 #include <iostream>
 

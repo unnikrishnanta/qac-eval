@@ -12,16 +12,19 @@ set(CMAKE_CXX_STANDARD 17)
 
 # I../includes
 include_directories(include)
-include_directories(include/core)
 
 # Boost libraries
-find_package( Boost REQUIRED COMPONENTS program_options boost_iostreams)
+find_package( Boost REQUIRED COMPONENTS program_options iostreams)
 include_directories( ${Boost_INCLUDE_DIRS} )
+
 # puts all .cpp files inside src to the SOURCES variable
-# file(GLOB src/*.cpp)
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
+file(GLOB SOURCES "src/*.cpp")
+add_subdirectory(src/core)
+add_subdirectory(src/qac_impl)
 
 # compiles the files defined by SOURCES to generante the executable defined by EXEC
 add_executable(${EXEC} ${SOURCES})
 target_link_libraries( ${EXEC} ${Boost_LIBRARIES})
+target_link_libraries( ${EXEC} ${core})
+target_link_libraries( ${EXEC} ${qac_impl})
 
