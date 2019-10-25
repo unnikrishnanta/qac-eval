@@ -20,4 +20,5 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
+.ycm_extra_conf.py
 
