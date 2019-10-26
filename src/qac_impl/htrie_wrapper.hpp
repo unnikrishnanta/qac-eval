@@ -16,7 +16,8 @@ namespace qac_ht {
     class HTrieCompleter {
         public:
             void build_index(const sdict_t& str_dict);
-            sdict_t complete(const string& prefix);
+            void update_index(const scored_str_t& sc); 
+            sdict_t complete(const string& prefix, const size_t& n_comp);
         private:
             tsl::htrie_map<char, int> ht_map;
     };

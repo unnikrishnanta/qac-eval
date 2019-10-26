@@ -8,17 +8,24 @@ void HTrieCompleter::build_index(const sdict_t& str_dict){
     }
 }
 
-sdict_t HTrieCompleter::complete(const string& prefix){
+sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
     string key_buffer;
-    sdict_t ret_vec;
-
-    for(auto it = ht_map.begin(); it != ht_map.end(); ++it) {
-        it.key(key_buffer);
-        ret_vec.push_back(make_pair(key_buffer, it.value()));
+    sdict_t matches;
+    
+    auto prefix_range = ht_map.equal_prefix_range(prefix);
+    for(auto it = prefix_range.first; it != prefix_range.second; ++it){
+        /* it.key(key_buffer); */
+        matches.push_back(make_pair(it.key(), it.value()));
     }
     
-    sort(ret_vec.begin(), ret_vec.end(), [](auto &left, auto &right) {
-        return left.second < right.second;
+    sort(matches.begin(), matches.end(), [](auto &left, auto &right) {
+        return left.second > right.second;
     });
-    return ret_vec;
+
+    sdict_t completions (matches.begin(), matches.begin() + n_comp);
+    return completions;
+}
+
+void HTrieCompleter::update_index(const scored_str_t& sc){
+    ht_map[sc.first] = sc.second;
 }

@@ -1,10 +1,14 @@
 #include<iostream>
 #include <boost/program_options.hpp>
 #include "core/collection.hpp"
+#include "qac_impl/htrie_wrapper.hpp"
 #include "config.hpp"
 
 using namespace std;
 using namespace boost::program_options;
+using namespace qac_ht;
+
+
 
 int main(int argc, char *argv[])
 {
@@ -47,7 +51,17 @@ int main(int argc, char *argv[])
     cout << "Reading wiki clickstream collection\n";
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, n_rows, true);
-    for(const auto sd: coll_wiki)
-        cout << sd.first << "\t" << sd.second << "\n"; 
+
+    cout << "Building index\n";
+    HTrieCompleter ht_comp;
+    for(const auto& kv: coll_wiki)
+        ht_comp.update_index(kv);
+
+    cout << "Testing completor\n\n";
+    auto completions = ht_comp.complete("pre", 5);
+    for (const auto& c : completions) {
+       cout << c.first << "\t" << c.second << "\n"; 
+    }
+    
     return 0;
 }
