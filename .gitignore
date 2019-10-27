@@ -2,6 +2,7 @@
 /build/
 /bin/
 /out/
+/external/
 
 .DS_Store
 *.swp
