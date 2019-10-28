@@ -1,4 +1,5 @@
 #include <utility>
+#include <iostream>
 #include "htrie_wrapper.hpp"
 
 using namespace qac_ht;
@@ -14,7 +15,6 @@ sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
     
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
-        /* it.key(key_buffer); */
         matches.push_back(make_pair(it.key(), it.value()));
     }
     
@@ -22,8 +22,11 @@ sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
         return left.second > right.second;
     });
 
-    sdict_t completions (matches.begin(), matches.begin() + n_comp);
-    return completions;
+    if(matches.size() > n_comp){
+        sdict_t completions (matches.begin(), matches.begin() + n_comp);
+        return completions;
+    }
+    return matches;
 }
 
 void HTrieCompleter::update_index(const scored_str_t& sc){

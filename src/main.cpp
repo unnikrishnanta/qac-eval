@@ -11,20 +11,36 @@ using namespace std;
 using namespace boost::program_options;
 using namespace qac_ht;
 
-static void BM_StringCreation(benchmark::State& state) {
-  for (auto _ : state)
-    std::string empty_string;
+static void BM_synth_query(benchmark::State& state) {
+    const size_t NCOMP = 10;
+    Collection coll_wiki;
+    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
+    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    PQLog plog;
+    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
+    HTrieCompleter ht_comp;
+    for (auto _ : state){
+        for (const auto& kv: plog) {
+            for(const auto& p: kv.second)
+                auto completions = ht_comp.complete(p, NCOMP);
+        }
+    }
 }
-// Register the function as a benchmark
-BENCHMARK(BM_StringCreation);
 
-// Define another benchmark
-static void BM_StringCopy(benchmark::State& state) {
-  std::string x = "hello";
-  for (auto _ : state)
-    std::string copy(x);
+static void  BM_build_index(benchmark::State& state) {
+    Collection coll_wiki;
+    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
+    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    HTrieCompleter ht_comp;
+    for (auto _ : state){
+        for(const auto& kv: coll_wiki)
+            ht_comp.update_index(kv);
+    }
 }
-BENCHMARK(BM_StringCopy);
+
+// Register the function as a benchmark
+BENCHMARK(BM_build_index);
+BENCHMARK(BM_synth_query);
 
 BENCHMARK_MAIN();
 
@@ -65,27 +81,33 @@ BENCHMARK_MAIN();
 /*         cerr << e.what() << "\n"; */
 /*     } */
     
-/*     /1* Collection coll_wiki; *1/ */
-/*     /1* cout << "Reading wiki clickstream collection\n"; *1/ */
-/*     /1* const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv"; *1/ */
-/*     /1* coll_wiki.read_collection(wiki_file, n_rows, true); *1/ */
+/*     Collection coll_wiki; */
+/*     cout << "Reading wiki clickstream collection\n"; */
+/*     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv"; */
+/*     coll_wiki.read_collection(wiki_file, n_rows, true); */
 
-/*     /1* cout << "Building index\n"; *1/ */
-/*     /1* HTrieCompleter ht_comp; *1/ */
-/*     /1* for(const auto& kv: coll_wiki) *1/ */
-/*     /1*     ht_comp.update_index(kv); *1/ */
+/*     cout << "Building index\n"; */
+/*     HTrieCompleter ht_comp; */
+/*     for(const auto& kv: coll_wiki) */
+/*         ht_comp.update_index(kv); */
 
-/*     /1* cout << "Testing completor\n\n"; *1/ */
-/*     /1* auto completions = ht_comp.complete("pre", 5); *1/ */
-/*     /1* for (const auto& c : completions) { *1/ */
-/*     /1*    cout << c.first << "\t" << c.second << "\n"; *1/ */ 
-/*     /1* } *1/ */
+/*     cout << "Testing completor\n\n"; */
+/*     auto completions = ht_comp.complete("pre", 5); */
+/*     for (const auto& c : completions) { */
+/*        cout << c.first << "\t" << c.second << "\n"; */ 
+/*     } */
 
-/*     /1* PQLog plog; *1/ */
-/*     /1* plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows); *1/ */
-/*     /1* for (const auto& kv: plog) { *1/ */
-/*     /1*    cout << kv.first << "\t" << boost::join(kv.second, ",") << "\n"; *1/ */ 
-/*     /1* } *1/ */
+/*     PQLog plog; */
+/*     cout << "Loading partial query log\n"; */
+/*     plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows); */
+/*     for (const auto& kv: plog) { */
+/*         for(const auto& p: kv.second){ */
+/*             cout << "PQ: " << p << "\n____________________________\n"; */
+/*             auto completions = ht_comp.complete(p, 10); */
+/*             for(const auto& c: completions) */
+/*                 cout << c.first << "\n"; */
+/*         } */
+/*     } */
      
 /*     return 0; */
 /* } */

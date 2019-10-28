@@ -19,7 +19,7 @@ namespace qac_ht {
             void update_index(const scored_str_t& sc); 
             sdict_t complete(const string& prefix, const size_t& n_comp);
         private:
-            tsl::htrie_map<char, int> ht_map;
+            tsl::htrie_map<char, size_t> ht_map;
     };
     
 }
