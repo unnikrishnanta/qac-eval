@@ -16,7 +16,23 @@ class PQLog {
         /* log_t::iterator begin() { return pq_log.begin(); } */
         /* log_t::iterator end() { return pq_log.end(); } */
 
+
     private:
         log_t pq_log;
+        log_t lr_log; /* Log obtained by typing left to right */
+        void generate_lr_log(); 
+    
+};
+
+class LRLog {
+
+    using log_t = map<string, vector<string>>;
+    public: 
+        void generate_lr_log(const PQLog& pqlog); 
+        log_t::const_iterator begin() const { return lr_log.cbegin(); }
+        log_t::const_iterator end() const { return lr_log.cend(); }
+
+    private:
+        log_t lr_log; /* Log obtained by typing left to right */
     
 };

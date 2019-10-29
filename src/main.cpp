@@ -11,8 +11,21 @@ using namespace std;
 using namespace boost::program_options;
 using namespace qac_ht;
 
+static void  BM_build_index(benchmark::State& state) {
+    Collection coll_wiki;
+    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
+    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    for (auto _ : state){
+        state.PauseTiming(); // Stop timers.  
+        HTrieCompleter ht_comp;
+        state.ResumeTiming(); // And resume timers.
+        for(const auto& kv: coll_wiki)
+            ht_comp.update_index(kv);
+    }
+}
+
 static void BM_synth_query(benchmark::State& state) {
-    const size_t NCOMP = 10;
+    size_t n_comp = state.range(0);
     Collection coll_wiki;
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
@@ -22,25 +35,35 @@ static void BM_synth_query(benchmark::State& state) {
     for (auto _ : state){
         for (const auto& kv: plog) {
             for(const auto& p: kv.second)
-                auto completions = ht_comp.complete(p, NCOMP);
+                auto completions = ht_comp.complete(p, n_comp);
         }
     }
+    state.SetComplexityN(state.range(0));
 }
 
-static void  BM_build_index(benchmark::State& state) {
+static void BM_lr_query(benchmark::State& state) {
+    size_t n_comp = state.range(0);
     Collection coll_wiki;
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    PQLog plog;
+    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
+    LRLog lrlog;
+    lrlog.generate_lr_log(plog);
     HTrieCompleter ht_comp;
     for (auto _ : state){
-        for(const auto& kv: coll_wiki)
-            ht_comp.update_index(kv);
+        for (const auto& kv: lrlog) {
+            for(const auto& p: kv.second)
+                auto completions = ht_comp.complete(p, n_comp);
+        }
     }
+    state.SetComplexityN(state.range(0));
 }
 
 // Register the function as a benchmark
-BENCHMARK(BM_build_index);
-BENCHMARK(BM_synth_query);
+BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond)->Complexity(benchmark::oN);
+BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8)->Complexity(benchmark::oN);
+BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8)->Complexity(benchmark::oN);
 
 BENCHMARK_MAIN();
 
@@ -108,6 +131,11 @@ BENCHMARK_MAIN();
 /*                 cout << c.first << "\n"; */
 /*         } */
 /*     } */
+
+/*     LRLog lrlog; */
+/*     lrlog.generate_lr_log(plog); */
+/*     for(const auto& [k, v]: lrlog) */
+/*         cout << k << "\t" << boost::join(v, ",") << "\n"; */
      
 /*     return 0; */
 /* } */

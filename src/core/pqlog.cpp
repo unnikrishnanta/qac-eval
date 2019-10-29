@@ -51,3 +51,15 @@ void PQLog::load_pqlog(const string& file_name, const size_t& n_rows){
         }
     }
 }
+
+
+void LRLog::generate_lr_log(const PQLog& pq_log){
+    for(const auto& [qid, pvec]: pq_log){
+        const auto lastp = pvec.back();
+        vector<string> lrp_vec;
+        for (int w = 1; w <= lastp.length(); ++w) {
+            lrp_vec.push_back(lastp.substr(0, w)); 
+        }
+        lr_log[qid] = lrp_vec;
+    }
+}
