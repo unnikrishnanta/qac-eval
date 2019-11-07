@@ -37,4 +37,21 @@ target_link_libraries(${EXEC} "-L ../external/benchmark/build/src" benchmark)
 target_link_libraries(${EXEC} pthread)
 target_link_libraries( ${EXEC} core)
 target_link_libraries( ${EXEC} qac_impl)
+# target_link_libraries( ${EXEC} benchmark_main)
 
+add_custom_target(run
+    COMMAND ${EXEC} --benchmark_repetitions=5 
+    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
+)
+
+# Set up rsync
+SET(path "*")
+SET(HOST "raksasa.eng.unimelb.edu.au")
+SET(USER "uthoombayil")
+SET(COPY_PATH "~/CodeBase/QAC-Eval/")
+SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store}") 
+
+add_custom_target(sync
+    COMMAND rsync -av -e ssh * --exclude=${RSYNC_EXCLUDE} ${USER}@${HOST}:${COPY_PATH}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)

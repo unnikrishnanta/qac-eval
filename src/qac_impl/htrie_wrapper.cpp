@@ -12,6 +12,7 @@ void HTrieCompleter::build_index(const sdict_t& str_dict){
 sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
     string key_buffer;
     sdict_t matches;
+    matches.reserve(n_comp);
     
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){

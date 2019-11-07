@@ -32,13 +32,22 @@ static void BM_synth_query(benchmark::State& state) {
     PQLog plog;
     plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
     HTrieCompleter ht_comp;
+    double num_completions=0, complen_sum=0;
     for (auto _ : state){
         for (const auto& kv: plog) {
-            for(const auto& p: kv.second)
+            for(const auto& p: kv.second){
                 auto completions = ht_comp.complete(p, n_comp);
+                num_completions += completions.size();
+                for(const auto& [comp, score]: completions)
+                    complen_sum += comp.length();
+            }
         }
     }
-    state.SetComplexityN(state.range(0));
+    state.counters["NumCompletions"] += num_completions;
+    state.counters["BytesProcessed"] += benchmark::Counter(complen_sum, 
+                                benchmark::Counter::kIsIterationInvariantRate, 
+                                benchmark::Counter::OneK::kIs1024);
+
 }
 
 static void BM_lr_query(benchmark::State& state) {
@@ -51,13 +60,22 @@ static void BM_lr_query(benchmark::State& state) {
     LRLog lrlog;
     lrlog.generate_lr_log(plog);
     HTrieCompleter ht_comp;
+    double num_completions=0, complen_sum=0;
     for (auto _ : state){
         for (const auto& kv: lrlog) {
-            for(const auto& p: kv.second)
+            for(const auto& p: kv.second){
                 auto completions = ht_comp.complete(p, n_comp);
+                num_completions += completions.size();
+                for(const auto& [comp, score]: completions)
+                    complen_sum += comp.length();
+            }
         }
     }
-    state.SetComplexityN(state.range(0));
+    /* state.SetComplexityN(state.range(0)); */
+    state.counters["NumCompletions"] += num_completions;
+    state.counters["BytesProcessed"] += benchmark::Counter(complen_sum, 
+                                benchmark::Counter::kIsIterationInvariantRate, 
+                                benchmark::Counter::OneK::kIs1024);
 }
 
 // Register the function as a benchmark
@@ -65,7 +83,12 @@ BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond)->Complexity(benchmark::
 BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8)->Complexity(benchmark::oN);
 BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8)->Complexity(benchmark::oN);
 
-BENCHMARK_MAIN();
+/* BENCHMARK_MAIN(); */
+int main (int argc, char ** argv) {
+    benchmark::Initialize (& argc, argv);
+    benchmark::RunSpecifiedBenchmarks ();
+    return 0;
+}
 
 /* int main(int argc, char *argv[]) */
 /* { */
