@@ -37,7 +37,7 @@ target_link_libraries( ${MEM_PROF} ${Boost_LIBRARIES})
 target_link_libraries( ${TIME_PROF} ${Boost_LIBRARIES})
 # google benchmark
 target_link_libraries(${TIME_PROF} "-L ../external/benchmark/build/src" benchmark)
-target_link_libraries(${MEM_PROF} pthread)
+target_link_libraries(${TIME_PROF} pthread)
 
 # QAC Evaluation Code libraries
 target_link_libraries( ${MEM_PROF} core)
