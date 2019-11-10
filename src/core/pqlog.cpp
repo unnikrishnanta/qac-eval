@@ -50,6 +50,8 @@ void PQLog::load_pqlog(const string& file_name, const size_t& n_rows){
         
         }
     }
+    /* cout << lines << " rows read from " << file_name << "\n"; */
+    /* cout << pq_log.size() << " conversations\n"; */
 }
 
 

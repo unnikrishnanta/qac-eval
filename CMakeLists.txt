@@ -2,17 +2,16 @@
 cmake_minimum_required(VERSION 3.5.1)
 SET(CMAKE_C_COMPILER gcc) 
 SET(CMAKE_CXX_COMPILER g++)
-# project name
-project(QAC_Eval)
-
-# creates the variable MEM_PROF and sets it to hello
-set(TIME_PROF time_prof)
-set(MEM_PROF mem_prof)
-
 # set the C++17 standard
 set(CMAKE_CXX_STANDARD 17)
 
+# project name
+project(QAC_Eval)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g ")
+# creates the variable MEM_PROF and sets it to hello
+set(TIME_PROF time_prof)
+set(MEM_PROF mem_prof)
 
 # Boost libraries
 find_package( Boost REQUIRED COMPONENTS program_options iostreams)
@@ -46,8 +45,8 @@ target_link_libraries( ${MEM_PROF} qac_impl)
 target_link_libraries( ${TIME_PROF} qac_impl)
 # target_link_libraries( ${MEM_PROF} benchmark_main)
 
-add_custom_target(tprof
-    COMMAND ${TIME_PROF} --benchmark_repetitions=5 
+add_custom_target(run
+    COMMAND ${TIME_PROF} --benchmark_repetitions=1 --benchmark_counters_tabular=true 
     WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 

@@ -29,24 +29,35 @@ static void BM_synth_query(benchmark::State& state) {
     Collection coll_wiki;
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
-    PQLog plog;
-    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
+    PQLog pqlog;
+    pqlog.load_pqlog("../../synth_log/data/wiki-synthlog-sample.tsv", SIZE_MAX);
     HTrieCompleter ht_comp;
-    double num_completions=0, complen_sum=0;
+    ht_comp.build_index(coll_wiki.get_collection());
+    /* ht_comp.print_index_meta(); */
+    double num_completions=0, plen_sum=0, num_pq=0;
     for (auto _ : state){
-        for (const auto& kv: plog) {
-            for(const auto& p: kv.second){
+        for (const auto& [qid, pvec]: pqlog) {
+            for(const auto& p: pvec){
+                ++num_pq;
                 auto completions = ht_comp.complete(p, n_comp);
                 num_completions += completions.size();
-                for(const auto& [comp, score]: completions)
-                    complen_sum += comp.length();
+                plen_sum += p.length();
             }
         }
     }
-    state.counters["NumCompletions"] += num_completions;
-    state.counters["BytesProcessed"] += benchmark::Counter(complen_sum, 
-                                benchmark::Counter::kIsIterationInvariantRate, 
-                                benchmark::Counter::OneK::kIs1024);
+    // Avg. no. of completions per partial query
+    state.counters["NCompAvg"] = (double)num_completions/num_pq; 
+    state.counters["NPQ"] = num_pq; // number of partial queries
+    // Total length of partial queries processed. 
+    state.counters["PQBytes"] = benchmark::Counter(plen_sum, 
+                                 benchmark::Counter::kIsIterationInvariantRate, 
+                                 benchmark::Counter::OneK::kIs1024);
+    // How many partial queries are processed per second
+    state.counters["PQRate"] = benchmark::Counter(num_pq, benchmark::Counter::kIsRate);
+    // How many seconds it takes to process one partial query
+    state.counters["PQInvRate"] = benchmark::Counter(num_pq, 
+                                    benchmark::Counter::kIsRate | 
+                                    benchmark::Counter::kInvert);
 
 }
 
@@ -56,32 +67,42 @@ static void BM_lr_query(benchmark::State& state) {
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
     PQLog plog;
-    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
+    plog.load_pqlog("../../synth_log/data/wiki-synthlog-sample.tsv", SIZE_MAX);
     LRLog lrlog;
     lrlog.generate_lr_log(plog);
     HTrieCompleter ht_comp;
-    double num_completions=0, complen_sum=0;
+    ht_comp.build_index(coll_wiki.get_collection());
+    /* ht_comp.print_index_meta(); */
+    double num_completions=0, plen_sum=0, num_pq=0;
     for (auto _ : state){
         for (const auto& kv: lrlog) {
             for(const auto& p: kv.second){
+                ++num_pq; 
                 auto completions = ht_comp.complete(p, n_comp);
                 num_completions += completions.size();
-                for(const auto& [comp, score]: completions)
-                    complen_sum += comp.length();
+                plen_sum += p.length();
             }
         }
     }
     /* state.SetComplexityN(state.range(0)); */
-    state.counters["NumCompletions"] += num_completions;
-    state.counters["BytesProcessed"] += benchmark::Counter(complen_sum, 
-                                benchmark::Counter::kIsIterationInvariantRate, 
-                                benchmark::Counter::OneK::kIs1024);
+    // Avg number of completions per partial query
+    state.counters["NCompAvg"] = (double)num_completions/num_pq; 
+    state.counters["NPQ"] = num_pq; // Number of partial queries
+    state.counters["PQBytes"] = benchmark::Counter(plen_sum, 
+                                 benchmark::Counter::kIsIterationInvariantRate, 
+                                 benchmark::Counter::OneK::kIs1024);
+    // How many partial queries are processed per second
+    state.counters["PQRate"] = benchmark::Counter(num_pq, benchmark::Counter::kIsRate);
+    // How many seconds it takes to process one partial query
+    state.counters["PQInvRate"] = benchmark::Counter(num_pq, 
+                                    benchmark::Counter::kIsRate | 
+                                    benchmark::Counter::kInvert);
 }
 
 // Register the function as a benchmark
 BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond)->Complexity(benchmark::oN);
-BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8)->Complexity(benchmark::oN);
-BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8)->Complexity(benchmark::oN);
+BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8);
+BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8);
 
 /* BENCHMARK_MAIN(); */
 int main (int argc, char ** argv) {

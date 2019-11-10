@@ -4,8 +4,9 @@
 
 using namespace std;
 
+using sdict_t = vector<pair<string, size_t>>;
+
 class Collection {
-    using sdict_t = vector<pair<string, size_t>>;
 
     public:
         using iterator = sdict_t::iterator;
@@ -16,6 +17,7 @@ class Collection {
                              const bool& skip_header=false);
         const_iterator begin() const { return str_dict.begin(); }
         const_iterator end() const { return str_dict.end(); }
+        const sdict_t get_collection() const;
 
     private:
         sdict_t str_dict;

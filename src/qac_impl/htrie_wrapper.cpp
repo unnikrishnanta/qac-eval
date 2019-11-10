@@ -12,7 +12,7 @@ void HTrieCompleter::build_index(const sdict_t& str_dict){
 sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
     string key_buffer;
     sdict_t matches;
-    matches.reserve(n_comp);
+    /* matches.reserve(n_comp); */
     
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
@@ -23,6 +23,7 @@ sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
         return left.second > right.second;
     });
 
+    /* cout << "# matches here " << matches.size() << "\n"; */
     if(matches.size() > n_comp){
         sdict_t completions (matches.begin(), matches.begin() + n_comp);
         return completions;
@@ -32,4 +33,8 @@ sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp){
 
 void HTrieCompleter::update_index(const scored_str_t& sc){
     ht_map[sc.first] = sc.second;
+}
+
+void HTrieCompleter::print_index_meta(){
+    cout << "# string indexed " << ht_map.size() << "\n";
 }

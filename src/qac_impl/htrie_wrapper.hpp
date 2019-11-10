@@ -18,6 +18,7 @@ namespace qac_ht {
             void build_index(const sdict_t& str_dict);
             void update_index(const scored_str_t& sc); 
             sdict_t complete(const string& prefix, const size_t& n_comp);
+            void print_index_meta();
         private:
             tsl::htrie_map<char, size_t> ht_map;
     };

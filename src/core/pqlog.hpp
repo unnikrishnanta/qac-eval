@@ -19,8 +19,8 @@ class PQLog {
 
     private:
         log_t pq_log;
-        log_t lr_log; /* Log obtained by typing left to right */
-        void generate_lr_log(); 
+        /* log_t lr_log; /1* Log obtained by typing left to right *1/ */
+        /* void generate_lr_log(); */ 
     
 };
 

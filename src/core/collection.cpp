@@ -32,3 +32,7 @@ void Collection::read_collection(const string& file_name,
         str_dict.erase(str_dict.begin());
 
 }
+
+const sdict_t Collection::get_collection() const {
+    return std::as_const(str_dict);
+}
