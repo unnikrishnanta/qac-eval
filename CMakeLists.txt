@@ -7,8 +7,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 # project name
 project(QAC_Eval)
-
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g ")
+
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+file(COPY ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
+    DESTINATION ${CMAKE_SOURCE_DIR})
 # creates the variable MEM_PROF and sets it to hello
 set(TIME_PROF time_prof)
 set(MEM_PROF mem_prof)

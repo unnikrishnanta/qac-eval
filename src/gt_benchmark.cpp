@@ -30,7 +30,7 @@ static void BM_synth_query(benchmark::State& state) {
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
     PQLog pqlog;
-    pqlog.load_pqlog("../../synth_log/data/wiki-synthlog-sample.tsv", SIZE_MAX);
+    pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
     HTrieCompleter ht_comp;
     ht_comp.build_index(coll_wiki.get_collection());
     /* ht_comp.print_index_meta(); */
@@ -67,7 +67,7 @@ static void BM_lr_query(benchmark::State& state) {
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
     PQLog plog;
-    plog.load_pqlog("../../synth_log/data/wiki-synthlog-sample.tsv", SIZE_MAX);
+    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
     LRLog lrlog;
     lrlog.generate_lr_log(plog);
     HTrieCompleter ht_comp;
@@ -101,8 +101,10 @@ static void BM_lr_query(benchmark::State& state) {
 
 // Register the function as a benchmark
 BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond)->Complexity(benchmark::oN);
-BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8);
-BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8);
+/* BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
+/* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
+BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->Arg(8);
+BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->Arg(8);
 
 /* BENCHMARK_MAIN(); */
 int main (int argc, char ** argv) {
