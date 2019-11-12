@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build",
+  "command": "/usr/bin/g++   -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/include -I/Users/uthoombayil/CodeBase/QAC-Eval/external/benchmark/include   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk   -std=gnu++1z -o CMakeFiles/time_prof.dir/src/gt_benchmark.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/gt_benchmark.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/gt_benchmark.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build",
+  "command": "/usr/bin/g++   -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/include -I/Users/uthoombayil/CodeBase/QAC-Eval/external/benchmark/include   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk   -std=gnu++1z -o CMakeFiles/mem_prof.dir/src/mem_benchmark.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/mem_benchmark.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/mem_benchmark.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/core",
+  "command": "/usr/bin/g++  -Dcore_EXPORTS -I/usr/local/include   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/core.dir/collection.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/core/collection.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/core/collection.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/core",
+  "command": "/usr/bin/g++  -Dcore_EXPORTS -I/usr/local/include   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/core.dir/pqlog.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/core/pqlog.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/core/pqlog.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/htrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp"
+}
+]
