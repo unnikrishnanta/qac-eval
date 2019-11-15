@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <utility>
-#include "trie-impl.hpp"
+#include "dawgtrie_wrapper.hpp"
 
 using namespace std;
 
@@ -74,13 +74,13 @@ sdict_t DAWGTrie::complete(const string& prefix, const size_t& ncomp) {
 }
 
 
-int main(int argc, char *argv[])
-{
-    vector<string> keys = {"abc", "abcd", "ccd"};
-    vector<size_t> values = {1,2,3};
-    DAWGTrie dtrie (keys, values);
-    auto comps = dtrie.complete("a",2);
-    for(const auto& kv: comps)
-        cout << kv.first << "\t" << kv.second << "\n";
-    return 0;
-}
+/* int main(int argc, char *argv[]) */
+/* { */
+/*     vector<string> keys = {"abc", "abcd", "ccd"}; */
+/*     vector<size_t> values = {1,2,3}; */
+/*     DAWGTrie dtrie (keys, values); */
+/*     auto comps = dtrie.complete("a",2); */
+/*     for(const auto& kv: comps) */
+/*         cout << kv.first << "\t" << kv.second << "\n"; */
+/*     return 0; */
+/* } */
