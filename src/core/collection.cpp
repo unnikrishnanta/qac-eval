@@ -36,3 +36,11 @@ void Collection::read_collection(const string& file_name,
 const sdict_t Collection::get_collection() const {
     return std::as_const(str_dict);
 }
+
+
+void Collection::sort_keys(){
+    std::sort(str_dict.begin(), str_dict.end(), [](auto &left, auto &right) {
+        return left.first < right.first;
+    });
+}
+

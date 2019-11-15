@@ -13,11 +13,11 @@ using namespace std;
 
 DAWGTrie::DAWGTrie(const vector<string>& keys, const vector<size_t>& vals):
                         values(vals){
-    build(keys, values);
+    build_status = build(keys, values);
 }
 
 /* Build Trie on keys and values.
- * IMPORTANT: To save time, pre-sort the vectors in INCREASING  value order. 
+ * IMPORTANT: The keys MUST be in dictioary sorted order. 
  */
 bool DAWGTrie::build(const vector<string>& keys,
                      const vector<size_t>& vals) {

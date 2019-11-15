@@ -18,6 +18,7 @@ class Collection {
         const_iterator begin() const { return str_dict.begin(); }
         const_iterator end() const { return str_dict.end(); }
         const sdict_t get_collection() const;
+        void sort_keys();
 
     private:
         sdict_t str_dict;
