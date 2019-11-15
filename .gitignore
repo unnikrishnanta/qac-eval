@@ -3,7 +3,7 @@
 */bin/*
 /out/
 /external/
-src/qac_impl/dawgdic/test
+src/qac_impl/dawgdic/
 
 .DS_Store
 *.swp
