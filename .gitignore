@@ -1,8 +1,9 @@
 ### Output and Cache Directories ###
 /build/
-/bin/
+*/bin/*
 /out/
 /external/
+src/qac_impl/dawgdic/test
 
 .DS_Store
 *.swp

@@ -100,7 +100,7 @@ static void BM_lr_query(benchmark::State& state) {
 }
 
 // Register the function as a benchmark
-BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond)->Complexity(benchmark::oN);
+BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond);
 /* BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 /* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->Arg(8);
