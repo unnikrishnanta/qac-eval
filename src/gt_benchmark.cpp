@@ -34,12 +34,14 @@ static void  BM_build_dawg(benchmark::State& state) {
     coll_wiki.sort_keys(); 
     /* Current DAWGTrie wrapper needs separate key and value vectors */
     vector<string> keys; 
-    vector<size_t> values;
+    /* vector<size_t> values; */
     transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(keys), 
                 [](const auto& p) { return p.first; });
-    transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(values), 
-                [](const auto& p) { return p.second; });
+    /* transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(values), */ 
+    /*             [](const auto& p) { return p.second; }); */
 
+    std::vector<size_t> values(keys.size()) ; // vector with 100 ints.
+    std::iota (std::begin(values), std::end(values), 0); // Fill with 0, 1, ..., 99.
     for (auto _ : state){
             DAWGTrie dtrie (keys, values);
     }
@@ -168,14 +170,14 @@ static void BM_lr_query(benchmark::State& state) {
 }
 
 // Register the function as a benchmark
-/* BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond); */
-/* BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond); */
+BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond);
 
 /* BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 /* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->Arg(8);
 BENCHMARK(BM_synth_query_dawg)->Unit(benchmark::kMillisecond)->Arg(8);
-/* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->Arg(8); */
+BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->Arg(8);
 
 int main (int argc, char ** argv) {
     benchmark::Initialize (& argc, argv);
