@@ -7,6 +7,7 @@
 #include "qac_impl/dawgtrie_wrapper.hpp"
 #include "config.hpp"
 #include <benchmark/benchmark.h>
+#include <numeric>
 
 using namespace std;
 using namespace boost::program_options;
@@ -60,7 +61,7 @@ static void BM_synth_query(benchmark::State& state) {
         for (const auto& [qid, pvec]: pqlog) {
             for(const auto& p: pvec){
                 ++num_pq;
-                auto completions = ht_comp.complete(p, n_comp);
+                auto completions = ht_comp.complete(p, n_comp, false);
                 num_completions += completions.size();
                 plen_sum += p.length();
             }
@@ -89,11 +90,13 @@ static void BM_synth_query_dawg(benchmark::State& state) {
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
     coll_wiki.sort_keys(); 
     vector<string> keys; 
-    vector<size_t> values;
+    /* vector<size_t> values; */
     transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(keys), 
                 [](const auto& p) { return p.first; });
-    transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(values), 
-                [](const auto& p) { return p.second; });
+    std::vector<size_t> values(keys.size()) ; // vector with 100 ints.
+    std::iota (std::begin(values), std::end(values), 0); // Fill with 0, 1, ..., 99.
+    /* transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(values), */ 
+    /*             [](const auto& p) { return p.second; }); */
     DAWGTrie dtrie (keys, values);
 
     PQLog pqlog;
@@ -132,7 +135,7 @@ static void BM_lr_query(benchmark::State& state) {
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
     PQLog plog;
-    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX);
+    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_comp);
     LRLog lrlog;
     lrlog.generate_lr_log(plog);
     HTrieCompleter ht_comp;
@@ -165,8 +168,8 @@ static void BM_lr_query(benchmark::State& state) {
 }
 
 // Register the function as a benchmark
-BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond);
-BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond);
+/* BENCHMARK(BM_build_index)->Unit(benchmark::kMillisecond); */
+/* BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond); */
 
 /* BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 /* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
@@ -229,11 +232,14 @@ int main (int argc, char ** argv) {
 
 /*     coll_wiki.sort_keys(); */ 
 /*     vector<string> keys; */ 
-/*     vector<size_t> values; */
+/*     /1* vector<size_t> values; *1/ */
 /*     transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(keys), */ 
 /*                                     [](const auto& p) { return p.first; }); */
-/*     transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(values), */ 
-/*                                     [](const auto& p) { return p.second; }); */
+/*     /1* transform(coll_wiki.begin(), coll_wiki.end(), std::back_inserter(values), *1/ */ 
+/*     /1*                                 [](const auto& p) { return p.second; }); *1/ */
+/*     std::vector<size_t> values(keys.size()) ; // vector with 100 ints. */
+/*     std::iota (std::begin(values), std::end(values), 0); // Fill with 0, 1, ..., 99. */
+
 /*     cout << "Building DAWG Trie\n"; */
 /*     DAWGTrie dtrie (keys, values); */
 /*     if(!dtrie.build_status) */

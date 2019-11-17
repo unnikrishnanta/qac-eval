@@ -10,9 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 project(QAC_Eval)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g")
 
-set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
-file(COPY ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
-    DESTINATION ${CMAKE_SOURCE_DIR})
+if(APPLE)
+    set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+    file(COPY ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
+        DESTINATION ${CMAKE_SOURCE_DIR})
+endif()
 # creates the variable MEM_PROF and sets it to hello
 set(TIME_PROF time_prof)
 set(MEM_PROF mem_prof)
@@ -59,7 +61,7 @@ SET(path "*")
 SET(HOST "raksasa.eng.unimelb.edu.au")
 SET(USER "uthoombayil")
 SET(COPY_PATH "~/CodeBase/QAC-Eval/")
-SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store}") 
+SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store,src/qac_impl/dawgdic/*}") 
 
 add_custom_target(sync
     COMMAND rsync -av -e ssh * --exclude=${RSYNC_EXCLUDE} ${USER}@${HOST}:${COPY_PATH}

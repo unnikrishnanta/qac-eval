@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 using namespace std;
 using namespace dawgdic;
@@ -22,8 +23,12 @@ namespace {
             explicit Comparer(const vector<size_t> &values) : values_(&values) {}
 
             bool operator()(const ValueType &lhs, const ValueType &rhs) const {
-                /* return (*values_)[lhs] < (*values_)[rhs]; */
-                return true; // For now because ordering is not important
+                /* if (lhs < values_->size() && rhs < values_->size()) */
+                    return values_->at(lhs) < values_->at(rhs);
+                /* else */ 
+                /*     cout << "Out of bounds. size() = " << values_->size() */ 
+                /*          << " LHS " << lhs << " RHS " << rhs << "\n"; */
+                /* return false; */
             }
 
         private:

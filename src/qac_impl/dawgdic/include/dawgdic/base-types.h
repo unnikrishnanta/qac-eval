@@ -10,10 +10,10 @@ typedef char CharType;
 typedef unsigned char UCharType;
 
 // 32-bit integer.
-typedef int ValueType;
+typedef long  ValueType;
 
 // 32-bit unsigned integer.
-typedef unsigned int BaseType;
+typedef unsigned long  BaseType;
 
 // 32 or 64-bit unsigned integer.
 typedef std::size_t SizeType;
