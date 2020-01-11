@@ -1,6 +1,6 @@
 # only for cmake --version >= 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
-SET(CMAKE_C_COMPILER gcc) 
+SET(CMAKE_C_COMPILER gcc)
 SET(CMAKE_CXX_COMPILER g++)
 # set the C++17 standard
 set(CMAKE_CXX_STANDARD 17)
@@ -34,8 +34,8 @@ include_directories(external/benchmark/include)
 # puts all .cpp files inside src to the SOURCES variable
 # file(GLOB SOURCES "src/*.cpp")
 # compiles the files defined by SOURCES to generante the executable defined by MEM_PROF
-add_executable(${MEM_PROF} src/mem_benchmark.cpp) 
-add_executable(${TIME_PROF} src/gt_benchmark.cpp) 
+add_executable(${MEM_PROF} src/mem_benchmark.cpp)
+add_executable(${TIME_PROF} src/gt_benchmark.cpp)
 
 # Boost
 target_link_libraries( ${MEM_PROF} ${Boost_LIBRARIES})
@@ -49,10 +49,11 @@ target_link_libraries( ${MEM_PROF} core)
 target_link_libraries( ${TIME_PROF} core)
 target_link_libraries( ${MEM_PROF} qac_impl)
 target_link_libraries( ${TIME_PROF} qac_impl)
+target_link_libraries( ${TIME_PROF} marisa)
 # target_link_libraries( ${MEM_PROF} benchmark_main)
 
 add_custom_target(run
-    COMMAND ${TIME_PROF} --benchmark_repetitions=1 --benchmark_counters_tabular=true 
+    COMMAND ${TIME_PROF} --benchmark_repetitions=1 --benchmark_counters_tabular=true
     WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 
@@ -61,7 +62,7 @@ SET(path "*")
 SET(HOST "raksasa.eng.unimelb.edu.au")
 SET(USER "uthoombayil")
 SET(COPY_PATH "~/CodeBase/QAC-Eval/")
-SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store,src/qac_impl/dawgdic/*}") 
+SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store,src/qac_impl/dawgdic/*}")
 
 add_custom_target(sync
     COMMAND rsync -av -e ssh * --exclude=${RSYNC_EXCLUDE} ${USER}@${HOST}:${COPY_PATH}

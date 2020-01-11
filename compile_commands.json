@@ -21,12 +21,17 @@
 },
 {
   "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
-  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/dawgtrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgtrie_wrapper.cpp",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/dawgtrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgtrie_wrapper.cpp",
   "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgtrie_wrapper.cpp"
 },
 {
   "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
-  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/htrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/htrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp",
   "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/marisa_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa_wrapper.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa_wrapper.cpp"
 }
 ]
