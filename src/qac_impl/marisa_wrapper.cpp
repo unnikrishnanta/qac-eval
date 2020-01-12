@@ -60,3 +60,32 @@ void MarisaCompleter::predictive_search(const string& str,
     }
     /* keyset.reset(); */
 }
+
+
+sdict_t MarisaCompleter::complete(const string& prefix,
+                                  const size_t& n_comp, const bool& topk){
+    keyset.reset();
+    agent.set_query(prefix.c_str(), prefix.length());
+    while (trie.predictive_search(agent)) {
+        keyset.push_back(agent.key());
+    }
+    if (!keyset.empty()) {
+        sdict_t matches;
+        /* const std::size_t end = std::min(n_comp, keyset.size()); */
+        for (std::size_t i = 0; i < keyset.size(); ++i) {
+            auto key_str = string(keyset[i].ptr(), keyset[i].length());
+            auto val = weights[keyset[i].id()];
+            matches.push_back(make_pair(key_str, val));
+        }
+        if(topk)
+            sort(matches.begin(), matches.end(), [](auto &left, auto &right) {
+                return left.second > right.second;
+            });
+        if(matches.size() > n_comp) {
+            sdict_t completions (matches.begin(), matches.begin() + n_comp);
+            return completions;
+        }
+        return matches;
+    }
+    return {};
+}

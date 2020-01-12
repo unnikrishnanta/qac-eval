@@ -9,17 +9,18 @@ void HTrieCompleter::build_index(const sdict_t& str_dict){
     }
 }
 
-sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp, 
+sdict_t HTrieCompleter::complete(const string& prefix, const size_t& n_comp,
                                     const bool& topk){
     string key_buffer;
     sdict_t matches;
     /* matches.reserve(n_comp); */
-    
+
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
         matches.push_back(make_pair(it.key(), it.value()));
     }
-    if(topk) 
+    cout << matches.size() << " matches found\n";
+    if(topk)
         sort(matches.begin(), matches.end(), [](auto &left, auto &right) {
             return left.second > right.second;
         });

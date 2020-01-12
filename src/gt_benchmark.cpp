@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
 
     cout << "Testing completor\n\n";
     cout << "HAT Trie Completions\n";
-    string prefix = "indian";
+    string prefix = "cricke";
     auto completions = ht_comp.complete(prefix, 10);
     for (const auto& c : completions) {
        cout << c.first << "\t" << c.second << "\n";
@@ -261,7 +261,11 @@ int main(int argc, char *argv[])
     cout << "\nMarisa Trie Completions\n";
     MarisaCompleter mtc;
     mtc.build_index(coll_wiki.get_collection());
-    mtc.predictive_search(prefix);
+    auto mt_completions = mtc.complete(prefix, 10);
+    for (const auto& c : mt_completions) {
+       cout << c.first << "\t" << c.second << "\n";
+    }
+    /* mtc.predictive_search(prefix); */
     /* cout << "\nDAWG Trie Completions\n"; */
     /* completions = dtrie.complete("miller", 20); */
     /* for (const auto& c : completions) { */
