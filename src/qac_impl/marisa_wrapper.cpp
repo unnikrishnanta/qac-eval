@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "marisa_wrapper.hpp"
 #include "marisa/include/marisa.h"
 /* #include "marisa/include/marisa/keyset.h" */
@@ -27,6 +28,14 @@ void MarisaCompleter::build_index(const sdict_t& str_dict){
     keyset.reset();
     read_keys(str_dict, keyset);
     trie.build(keyset);
+    // Store weights in the weights array. See how weights are managed
+    // https://code.google.com/archive/p/marisa-trie/issues/4
+    weights.resize(keyset.size());
+    for(size_t i=0; i< keyset.size(); ++i){
+        auto k = keyset[i];
+        weights[k.id()] = str_dict[i].second;
+    }
+    /* std::printf(" %10lu\n", (unsigned long)trie.io_size()); */
 }
 
 
@@ -46,7 +55,7 @@ void MarisaCompleter::predictive_search(const string& str,
             std::cout << keyset[i].id() << '\t';
             std::cout.write(keyset[i].ptr(),
             static_cast<std::streamsize>(keyset[i].length())) << '\t';
-                std::cout << str << '\n';
+                std::cout << weights[keyset[i].id()] << '\n';
         }
     }
     /* keyset.reset(); */

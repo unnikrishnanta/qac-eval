@@ -229,14 +229,11 @@ int main(int argc, char *argv[])
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
     coll_wiki.read_collection(wiki_file, n_rows, true);
 
-    MarisaCompleter mtc;
-    mtc.build_index(coll_wiki.get_collection());
-    mtc.predictive_search("melb");
 
-    /* cout << "Building HAT Trie\n"; */
-    /* HTrieCompleter ht_comp; */
-    /* for(const auto& kv: coll_wiki) */
-    /*     ht_comp.update_index(kv); */
+    cout << "Building HAT Trie\n";
+    HTrieCompleter ht_comp;
+    for(const auto& kv: coll_wiki)
+        ht_comp.update_index(kv);
 
     /* coll_wiki.sort_keys(); */
     /* vector<string> keys; */
@@ -253,13 +250,18 @@ int main(int argc, char *argv[])
     /* if(!dtrie.build_status) */
     /*     return 1; */
 
-    /* cout << "Testing completor\n\n"; */
-    /* cout << "HAT Trie Completions\n"; */
-    /* auto completions = ht_comp.complete("miller", 20); */
-    /* for (const auto& c : completions) { */
-    /*    cout << c.first << "\t" << c.second << "\n"; */
-    /* } */
+    cout << "Testing completor\n\n";
+    cout << "HAT Trie Completions\n";
+    string prefix = "melb";
+    auto completions = ht_comp.complete(prefix, 10);
+    for (const auto& c : completions) {
+       cout << c.first << "\t" << c.second << "\n";
+    }
 
+    cout << "\nMarisa Trie Completions\n";
+    MarisaCompleter mtc;
+    mtc.build_index(coll_wiki.get_collection());
+    mtc.predictive_search(prefix);
     /* cout << "\nDAWG Trie Completions\n"; */
     /* completions = dtrie.complete("miller", 20); */
     /* for (const auto& c : completions) { */

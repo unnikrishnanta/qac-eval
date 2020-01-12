@@ -27,8 +27,8 @@ namespace qac_mt {
             marisa::Trie trie;
             marisa::Keyset keyset;
             marisa::Agent agent;
+            vector<size_t> weights; // node ID to weights mapping.
     };
-
 }
 
 #endif
