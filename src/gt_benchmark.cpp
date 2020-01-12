@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
 
     cout << "Testing completor\n\n";
     cout << "HAT Trie Completions\n";
-    string prefix = "melb";
+    string prefix = "indian";
     auto completions = ht_comp.complete(prefix, 10);
     for (const auto& c : completions) {
        cout << c.first << "\t" << c.second << "\n";
