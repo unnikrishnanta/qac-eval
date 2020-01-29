@@ -47,6 +47,19 @@ void IncNgTrieCompleter::build_index(const sdict_t& str_dict){
   searcher = fsssearcher;
 }
 
-sdict_t IncNgTrieCompleter::complete(const string& prefix, const size_t& n_comp,
+sdict_t IncNgTrieCompleter::complete(string& prefix, const size_t& n_comp,
         const bool& topk){
+    std::vector<char> cstr(prefix.c_str(), prefix.c_str() + prefix.size() + 1);
+    searcher->ResetSearcher();
+    searcher->ExtendQuery(prefix.data(), prefix.length());
+    searcher->ProcessAll();
+    int i = 0;
+    for (unordered_set<int>::iterator it = searcher->result_set_.result_ids_.begin();
+         it != searcher->result_set_.result_ids_.end(); it ++)
+    {
+      int did = *it;
+      const string data = searcher->index_->dataset_.GetDocumentByID(did);
+      cout << "  << Result: " << i << "\t" << searcher->current_query_ << "\t DID: " << did <<  "\t\"" << data << "\"" << endl;
+    }
+    return {};
 }
