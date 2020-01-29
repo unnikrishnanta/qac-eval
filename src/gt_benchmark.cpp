@@ -12,8 +12,6 @@
 
 using namespace std;
 using namespace boost::program_options;
-using namespace qac_ht;
-using namespace qac_mt;
 
 static void  BM_build_index(benchmark::State& state) {
     Collection coll_wiki;

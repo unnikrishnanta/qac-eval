@@ -21,17 +21,92 @@
 },
 {
   "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
-  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/dawgtrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgtrie_wrapper.cpp",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/IncNgTrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie_wrapper.cpp",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie_wrapper.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/dawgtrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgtrie_wrapper.cpp",
   "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgtrie_wrapper.cpp"
 },
 {
   "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
-  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/htrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/htrie_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp",
   "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/htrie_wrapper.cpp"
 },
 {
   "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl",
-  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/dawgdic/include   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/marisa_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa_wrapper.cpp",
+  "command": "/usr/bin/g++  -Dqac_impl_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++1z -o CMakeFiles/qac_impl.dir/marisa_wrapper.cpp.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa_wrapper.cpp",
   "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa_wrapper.cpp"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/active_node.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/active_node.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/active_node.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/brother_trie.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/brother_trie.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/brother_trie.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/charset.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/charset.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/charset.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/dataset.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/dataset.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/dataset.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/easy_timer.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/easy_timer.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/easy_timer.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/fastss_searcher.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/fastss_searcher.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/fastss_searcher.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/fastssindex.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/fastssindex.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/fastssindex.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/map_trie.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/map_trie.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/map_trie.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/searcher_base.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/searcher_base.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/searcher_base.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/trie_base.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/trie_base.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/trie_base.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/util.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/util.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/util.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/util_test.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/util_test.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/util_test.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/variants.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/variants.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/variants.cc"
+},
+{
+  "directory": "/Users/uthoombayil/CodeBase/QAC-Eval/build/src/qac_impl/IncNgTrie",
+  "command": "/usr/bin/g++  -DIncNgTrie_EXPORTS -I/usr/local/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/hat-trie -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/marisa/include -I/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie   -Wall -g -Wall -g -lmarisa -Wall -g -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -fPIC   -std=gnu++11 -o CMakeFiles/IncNgTrie.dir/vector_trie.cc.o -c /Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/vector_trie.cc",
+  "file": "/Users/uthoombayil/CodeBase/QAC-Eval/src/qac_impl/IncNgTrie/vector_trie.cc"
 }
 ]

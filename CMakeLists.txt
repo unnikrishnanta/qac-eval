@@ -62,7 +62,8 @@ SET(path "*")
 SET(HOST "raksasa.eng.unimelb.edu.au")
 SET(USER "uthoombayil")
 SET(COPY_PATH "~/CodeBase/QAC-Eval/")
-SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store,src/qac_impl/dawgdic/*}")
+SET(RSYNC_EXCLUDE "{Makefile,build/*,*.swp,*.DS_Store,src/qac_impl/dawgdic/*,\
+                    src/qac_impl/marisa/lib/*,external/*}")
 
 add_custom_target(sync
     COMMAND rsync -av -e ssh * --exclude=${RSYNC_EXCLUDE} ${USER}@${HOST}:${COPY_PATH}

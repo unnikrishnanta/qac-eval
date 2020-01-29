@@ -4,7 +4,6 @@
 #include "marisa/include/marisa.h"
 /* #include "marisa/include/marisa/keyset.h" */
 using namespace std;
-using namespace qac_mt;
 
 void build_marisa(marisa::Keyset &keyset, const vector<float>& weights,
                   marisa::Trie *trie) {

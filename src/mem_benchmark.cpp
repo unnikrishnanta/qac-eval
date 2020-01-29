@@ -10,7 +10,6 @@
 
 using namespace std;
 using namespace boost::program_options;
-using namespace qac_ht;
 
 tsl::htrie_map<char, size_t> build_index(const sdict_t& str_dict){
     tsl::htrie_map<char, size_t> ht_map;
@@ -24,7 +23,7 @@ tsl::htrie_map<char, size_t> build_index(const sdict_t& str_dict){
 
 int main(int argc, char *argv[])
 {
-    string ofile; 
+    string ofile;
     bool verbose = false;
     size_t n_rows = SIZE_MAX;
     try {
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
         desc.add_options()
             ("help,h", "print usage message")
             ("output,o", value(&ofile), "pathname for output")
-            ("testsize,t", value<size_t>(&n_rows), 
+            ("testsize,t", value<size_t>(&n_rows),
                             "Run on test mode using t lines")
             ("verbose,v", "Run on verbose")
         ;
@@ -42,7 +41,7 @@ int main(int argc, char *argv[])
         store(parse_command_line(argc, argv, desc), vm);
         vm.notify();
 
-        if (vm.count("help")) {  
+        if (vm.count("help")) {
             cout << desc << "\n";
             return 0;
         }
@@ -58,7 +57,7 @@ int main(int argc, char *argv[])
     catch(exception& e) {
         cerr << e.what() << "\n";
     }
-    
+
     Collection *coll_wiki = new Collection();;
     cout << "Reading wiki clickstream collection\n";
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
     /* cout << "Testing completor\n\n"; */
     /* auto completions = ht_comp.complete("pre", 5); */
     /* for (const auto& c : completions) { */
-    /*    cout << c.first << "\t" << c.second << "\n"; */ 
+    /*    cout << c.first << "\t" << c.second << "\n"; */
     /* } */
 
     /* PQLog plog; */
@@ -95,6 +94,6 @@ int main(int argc, char *argv[])
     /* lrlog.generate_lr_log(plog); */
     /* for(const auto& [k, v]: lrlog) */
     /*     cout << k << "\t" << boost::join(v, ",") << "\n"; */
-     
+
     return 0;
 }

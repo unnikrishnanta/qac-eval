@@ -23,4 +23,5 @@
 *.so
 *.dylib
 .ycm_extra_conf.py
-
+#VSC workspace files
+*.code-workspace

@@ -2,6 +2,7 @@
 #define MARISA_WRAPPER_H
 
 #include "marisa/include/marisa.h"
+#include "dtypes.hpp"
 /* #include "marisa/include/marisa/keyset.h" */
 #include <vector>
 #include <string>
@@ -9,27 +10,25 @@
 
 using namespace std;
 
-namespace qac_mt {
 
-    using scored_str_t = pair<string, size_t>;
-    using sdict_t  = vector<scored_str_t>;
+using scored_str_t = pair<string, size_t>;
+using sdict_t  = vector<scored_str_t>;
 
-    class MarisaCompleter {
-        public:
-            void build_index(const sdict_t& str_dict);
-            /* void update_index(const scored_str_t& sc); */
-            sdict_t complete(const string& prefix, const size_t& n_comp,
-                            const bool& topk=true);
-            /* void print_index_meta(); */
-            void predictive_search(const string& str,
-                            const size_t& max_num_results=10);
-        private:
-            marisa::Trie trie;
-            marisa::Keyset keyset;
-            marisa::Agent agent;
-            vector<size_t> weights; // node ID to weights mapping.
-    };
-}
+class MarisaCompleter {
+    public:
+        void build_index(const sdict_t& str_dict);
+        /* void update_index(const scored_str_t& sc); */
+        sdict_t complete(const string& prefix, const size_t& n_comp,
+                        const bool& topk=true);
+        /* void print_index_meta(); */
+        void predictive_search(const string& str,
+                        const size_t& max_num_results=10);
+    private:
+        marisa::Trie trie;
+        marisa::Keyset keyset;
+        marisa::Agent agent;
+        vector<size_t> weights; // node ID to weights mapping.
+};
 
 #endif
 

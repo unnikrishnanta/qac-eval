@@ -2,7 +2,6 @@
 #include <iostream>
 #include "htrie_wrapper.hpp"
 
-using namespace qac_ht;
 void HTrieCompleter::build_index(const sdict_t& str_dict){
     for(const auto& sv:str_dict){
         ht_map[sv.first] = sv.second;
