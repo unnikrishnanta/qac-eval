@@ -67,7 +67,8 @@ int main(int argc, char *argv[])
     std::this_thread::sleep_for(std::chrono::seconds(40));
     cout << "Building index\n";
 
-    auto ht_map = build_index(coll_wiki->get_collection());
+    HTrieCompleter ht_comp;
+    ht_comp.build_index(*coll_wiki);
 
     delete(coll_wiki);
     std::this_thread::sleep_for(std::chrono::seconds(40));

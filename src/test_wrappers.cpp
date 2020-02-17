@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     string ofile;
     bool verbose = false;
     size_t n_rows = SIZE_MAX;
+    string prefix = "eagle";
     try {
         cout << "Program options\n";
         cout << "==========================================================\n";
@@ -32,6 +33,9 @@ int main(int argc, char *argv[])
             ("output,o", value(&ofile), "pathname for output")
             ("testsize,t", value<size_t>(&n_rows),
                             "Run on test mode using t lines")
+            ("prefix,p", value<string>(&prefix),
+                            "Prefix to query")
+            ("verbose,v", "Run on verbose")
             ("verbose,v", "Run on verbose")
         ;
         variables_map vm;
@@ -57,9 +61,8 @@ int main(int argc, char *argv[])
 
     Collection coll_wiki;
     cout << "Reading wiki clickstream collection\n";
-    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
+    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
     coll_wiki.read_collection(wiki_file, n_rows, true);
-    string prefix = "cale";
 
 #ifdef TEST_HTRIE
     cout << "\nBuilding HAT Trie\n";
@@ -99,12 +102,12 @@ int main(int argc, char *argv[])
 
 #ifdef TEST_INCGT
     cout << "\nBuilding IncNgTrie\n";
-    IncNgTrieCompleter inc;
+    IncNgTrieCompleter inc(1); // Allow edit distance of 1
     inc.build_index(coll_wiki);
     cout << "IncNgTrieCompletions\n" << string(30, '-') << endl;
     auto inc_completions = inc.complete(prefix, 10);
     for (const auto& c : inc_completions) {
-        cout << c.first << "\t" << c.second << "\n";
+        cout << c.comp_str << "\t" << c.score << "\n";
         
     }
 #endif
