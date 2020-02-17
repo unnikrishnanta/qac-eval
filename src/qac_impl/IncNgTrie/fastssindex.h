@@ -45,8 +45,9 @@ class FastssIndex {
   }
 
   /* Added by Unni */
-  void Initilization(const vector<string>& input_strings, int tau,
-                                  bool normalized, int norm_gap, TrieBase *trie);
+  void Initilization(const vector<string>& input_strings, 
+                     const vector<size_t>& scores, int tau,
+                     bool normalized, int norm_gap, TrieBase *trie);
 
   void Initilization(const string &filename, int tau = 3,
                      bool normalized = false, int norm_gap = 5,

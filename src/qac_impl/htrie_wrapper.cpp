@@ -1,10 +1,19 @@
 #include <utility>
 #include <iostream>
 #include "htrie_wrapper.hpp"
+#include "../core/dtypes.hpp"
 
 void HTrieCompleter::build_index(const sdict_t& str_dict){
     for(const auto& sv:str_dict){
         ht_map[sv.first] = sv.second;
+    }
+}
+
+void HTrieCompleter::build_index(const Collection& coll){
+    const auto& string_set = coll.get_strings();
+    const auto& scores = coll.get_scores();
+    for (int i = 0; i < string_set.size(); ++i) {
+       ht_map.insert(string_set[i], scores[i]); 
     }
 }
 

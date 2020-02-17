@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "marisa_wrapper.hpp"
 #include "marisa/include/marisa.h"
+#include "../core/dtypes.hpp"
 /* #include "marisa/include/marisa/keyset.h" */
 using namespace std;
 
@@ -22,6 +23,14 @@ void read_keys(sdict_t string_dict, marisa::Keyset& keyset) {
   }
 }
 
+/* The above function overloaded */
+void read_keys(const strvec_t& str_set, const scores_t& scores ,
+               marisa::Keyset& keyset) {
+  for (int i=0; i < str_set.size(); ++i) {
+    keyset.push_back(str_set[i].c_str(), str_set[i].length(), scores[i]);
+  }
+}
+
 
 void MarisaCompleter::build_index(const sdict_t& str_dict){
     keyset.reset();
@@ -35,6 +44,20 @@ void MarisaCompleter::build_index(const sdict_t& str_dict){
         weights[k.id()] = str_dict[i].second;
     }
     /* std::printf(" %10lu\n", (unsigned long)trie.io_size()); */
+}
+
+void MarisaCompleter::build_index(const Collection& coll){
+    keyset.reset();
+    auto scores = coll.get_scores();
+    read_keys(coll.get_strings(), scores, keyset);
+    trie.build(keyset);
+    // Store weights in the weights array. See how weights are managed
+    // https://code.google.com/archive/p/marisa-trie/issues/4
+    weights.resize(keyset.size());
+    for(size_t i=0; i< keyset.size(); ++i){
+        auto k = keyset[i];
+        weights[k.id()] = scores[i];
+    }
 }
 
 

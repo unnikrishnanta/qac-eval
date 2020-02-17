@@ -3,6 +3,7 @@
  * Written By: Unni Krishnan 
  * Date: 14/11/19. 
  */
+#include <numeric>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
@@ -14,6 +15,10 @@ using namespace std;
 DAWGTrie::DAWGTrie(const vector<string>& keys, const vector<size_t>& vals):
                         values(vals){
     build_status = build(keys, values);
+}
+
+DAWGTrie::DAWGTrie(const vector<string>& keys){
+    build_status = build(keys);
 }
 
 /* Build Trie on keys and values.
@@ -50,6 +55,38 @@ bool DAWGTrie::build(const vector<string>& keys,
     return true;
 }
 
+bool DAWGTrie::build(const vector<string>& keys) {
+    dawgdic::DawgBuilder builder;
+    std::vector<size_t> vals(keys.size()); // vector with 100 ints.
+    std::iota (std::begin(vals), std::end(vals), 0); // Fill with 0, 1, ..., 99.
+
+    for (std::size_t i = 0; i < keys.size(); ++i) {
+        if (!builder.Insert(keys[i].c_str(), 
+                    static_cast<dawgdic::ValueType>(vals[i]))) {
+            std::cerr << "error: failed to insert key: "
+                << keys[i] << std::endl;
+            return false;
+        }
+    }
+    dawgdic::Dawg dawg;
+    if (!builder.Finish(&dawg)) {
+        std::cerr << "error: failed to finish building Dawg" << std::endl;
+        return false;
+    }
+    if (!dawgdic::DictionaryBuilder::Build(dawg, &dic)) {
+        std::cerr << "error: failed to build Dictionary" << std::endl;
+        return false;
+    }
+    if (!dawgdic::RankedGuideBuilder::Build(dawg, dic, &guide,
+                Comparer(vals))) {
+        std::cerr << "error: failed to build RankedGuide" << std::endl;
+        return false;
+    }
+    /* Initialise a completer object for the complete() function */
+    completer.reset(new dawgdic::RankedCompleterBase<Comparer>
+                        (dic, guide, Comparer(values)));
+    return true;
+}
 
 sdict_t DAWGTrie::complete(const string& prefix, const size_t& ncomp) {
     char p;

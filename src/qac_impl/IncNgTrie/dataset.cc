@@ -5,12 +5,14 @@
 // construct a trie.
 
 #include "dataset.h"
+#include "../../core/utils.hpp"
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <numeric>
 
 using namespace std;
 
@@ -37,24 +39,49 @@ void RawDataSet::InitFromFile(const string& filename,
   }
   average_length_ = num_documents_ > 0 ? total_length/num_documents_ : 0;
   sort(documents_.begin(), documents_.end());
-  delete line;
+  delete[] line;
 }
 
 void RawDataSet::InitFromStrings(const vector<string>& input_strings,
-                                 int max_length)
+                                 const vector<size_t>& scores, int max_length)
 {
   int total_length = 0;
   max_length_ = max_length;
   num_documents_ = 0;
-  vector<string>::iterator it;
+  /* vector<string>::iterator it; */
+  documents_.reserve(input_strings.size());
   for (const auto& s: input_strings)
   {
     documents_.push_back(s);
     num_documents_ ++;
-    total_length = s.length();
+    total_length += s.length();
   }
   average_length_ = num_documents_ > 0 ? total_length/num_documents_ : 0;
-  sort(documents_.begin(), documents_.end());
+
+  weights_.reserve(num_documents_);
+  for (const auto sc: scores) {
+     weights_.push_back(sc); 
+  }
+
+  vector<pair<string, size_t>> zipped; 
+  zipped.reserve(num_documents_);
+  zip(documents_, weights_, zipped);
+  /* sort(documents_.begin(), documents_.end());
+   * Replace this sort with zipped sort to permute weights along with the 
+   * sorted string order. Added by Unni. 
+   * */
+  sort(zipped.begin(), zipped.end(), 
+          [&] (const auto& left, const auto& right) {
+            return left.first < right.first;
+          }
+      );
+  unzip(zipped, documents_, weights_);
+
+  /* cout << "Post sorting values\n"; */
+  /* for (int i = 0; i < num_documents_; ++i) { */
+  /*     cout << "ID " << i << " Doc " << documents_[i] */
+  /*          << " weight " << weights_[i] << "\n"; */
+  /* } */
 }
 
 RawDataSet::RawDataSet(const string& filename, int max_length)
@@ -62,9 +89,10 @@ RawDataSet::RawDataSet(const string& filename, int max_length)
   InitFromFile(filename, max_length);
 }
 
-RawDataSet::RawDataSet(vector<string>& input_strings, int max_length)
+RawDataSet::RawDataSet(vector<string>& input_strings,
+                       const vector<size_t>& scores, int max_length)
 {
-  InitFromStrings(input_strings, max_length);
+  InitFromStrings(input_strings, scores,  max_length);
 }
 
 void RawDataSet::DumpDataset(ostream& out)
@@ -82,4 +110,9 @@ const string& RawDataSet::GetDocumentByID(int id){
   return documents_[id];
 }
 
+
+const size_t& RawDataSet::GetWeightByID(int id){
+    return weights_[id];
 }
+
+} // End of namespace

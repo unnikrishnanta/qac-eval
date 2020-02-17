@@ -2,7 +2,7 @@
  * Written by Unni on 27/01/2020/
  *
  * Notes:
-    - MAX_QUERY_LENGTH is defined as 64
+    - MAX_QUERY_LENGTH is defined as 256
  */
 
 #include "IncNgTrie/fastssindex.h"
@@ -33,33 +33,39 @@ IncNgTrieCompleter::IncNgTrieCompleter() {
     max_tau = 2; // Number of mismatches allowed = 2
 }
 
-void IncNgTrieCompleter::build_index(const sdict_t& str_dict){
+IncNgTrieCompleter::IncNgTrieCompleter(int mt){
+    max_tau = mt;
+}
+
+void IncNgTrieCompleter:: build_index(const strvec_t& str_set,
+                                      const scores_t& scores){
   vector<string> input_strings;
-  std::transform(str_dict.begin(), str_dict.end(),
-                 back_inserter(input_strings),
-                 [](const auto& p) { return p.first;});
   indextrie = new MapTrie();
   fastss_index = new FastssIndex();
-  fastss_index -> Initilization(input_strings, max_tau, false, 0, indextrie);
+  fastss_index -> Initilization(str_set, scores, max_tau, false, 0, indextrie);
   active_pool = new ActiveNodePool();
   FastSSSearcher *fsssearcher = new FastSSSearcher();
   fsssearcher -> Initialize(fastss_index, active_pool, max_tau, false);
   searcher = fsssearcher;
 }
 
-sdict_t IncNgTrieCompleter::complete(string& prefix, const size_t& n_comp,
+void IncNgTrieCompleter::build_index(const Collection& coll){
+    build_index(coll.get_strings(), coll.get_scores());
+}
+
+
+vector<comp_t> IncNgTrieCompleter::complete(string& prefix, const size_t& n_comp,
         const bool& topk){
-    std::vector<char> cstr(prefix.c_str(), prefix.c_str() + prefix.size() + 1);
+    Completions cset;
     searcher->ResetSearcher();
     searcher->ExtendQuery(prefix.data(), prefix.length());
     searcher->ProcessAll();
-    int i = 0;
     for (unordered_set<int>::iterator it = searcher->result_set_.result_ids_.begin();
-         it != searcher->result_set_.result_ids_.end(); it ++)
-    {
+         it != searcher->result_set_.result_ids_.end(); it ++) {
       int did = *it;
-      const string data = searcher->index_->dataset_.GetDocumentByID(did);
-      cout << "  << Result: " << i << "\t" << searcher->current_query_ << "\t DID: " << did <<  "\t\"" << data << "\"" << endl;
+      const string& data = searcher->index_->dataset_.GetDocumentByID(did);
+      const auto& weight =  searcher->index_->dataset_.GetWeightByID(did);
+      cset.insert(data, weight); 
     }
-    return {};
+    return cset.tok_completions();
 }

@@ -22,10 +22,11 @@ bool _compare_variants_pair( const pair<string, int>& i, const pair<string, int>
 }
 
 /* Added by Unni */
-void FastssIndex::Initilization(const vector<string>& input_strings, int tau,
+void FastssIndex::Initilization(const vector<string>& input_strings,
+                                const vector<size_t>& weights, int tau,
                                 bool normalized, int norm_gap, TrieBase *trie)
 {
-  dataset_.InitFromStrings(input_strings);
+  dataset_.InitFromStrings(input_strings, weights);
   variant_generator_.set_tau(tau);
   vector< pair<string, int> > variants_did_list;
 

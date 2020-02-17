@@ -2,6 +2,7 @@
 #define HTRIE_WRAPPER_H
 
 #include "dtypes.hpp"
+#include "../core/collection.hpp"
 #include "hat-trie/tsl/htrie_map.h"
 
 #include <vector>
@@ -13,6 +14,7 @@ using namespace std;
 class HTrieCompleter {
     public:
         void build_index(const sdict_t& str_dict);
+        void build_index(const Collection& coll);
         void update_index(const scored_str_t& sc);
         sdict_t complete(const string& prefix, const size_t& n_comp,
                         const bool& topk=true);

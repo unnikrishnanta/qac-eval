@@ -43,6 +43,8 @@ class DAWGTrie{
         /* Return ncomp completions for prefix */
          sdict_t complete(const string& prefix, const size_t& ncomp);
          DAWGTrie(const vector<string>& keys, const vector<size_t>& vals);
+         // Constructor will fill in values with 0 to keys.size() - 1
+         DAWGTrie(const vector<string>& keys);
 
     private:
 
@@ -52,4 +54,5 @@ class DAWGTrie{
         const vector<size_t> values;
         /* Build trie from seperate key and value vectors */
         bool build(const vector<string>& keys, const vector<size_t>& vals);
+        bool build(const vector<string>& keys);
 };
