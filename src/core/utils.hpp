@@ -1,4 +1,8 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <vector>
+#include <string>
 // Fill the zipped vector with pairs consisting of the
 // corresponding elements of a and b. (This assumes 
 // that the vectors have equal length)
@@ -31,3 +35,5 @@ void unzip(
     }
 }
 
+
+#endif
