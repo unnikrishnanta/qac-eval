@@ -37,10 +37,8 @@ void Collection::read_collection(const string& file_name,
     ss << file_data;
     string line;
     size_t lines_read = 0;
-
+    size_t empty_lines = 0;
     while (std::getline(ss, line)) {
-        if(++lines_read >= n_rows)
-            break;
         if (!line.empty()){
             istringstream iss(line);
             string freq, targ_str;
@@ -48,6 +46,18 @@ void Collection::read_collection(const string& file_name,
             getline(iss, freq, '\t');
             str_set_.push_back(targ_str);
             scores_.push_back(atoi(freq.c_str()));
+        }
+        else 
+            empty_lines ++ ;
+
+        lines_read ++;
+        if(skip_header){ // Need to read one extra line including the header
+            if(lines_read > n_rows)
+                break;
+        }
+        else {
+            if(lines_read == n_rows)
+                break;
         }
 
     }
@@ -57,6 +67,9 @@ void Collection::read_collection(const string& file_name,
     }
 
     sort_scores(); // Sort scores_ and re-arrange str_set_ accordingly. 
+    n_docs_ = str_set_.size();
+    cout << "#Strings added to the collection " << n_docs_ 
+         << " Empty lines " << empty_lines << "\n";
     assert(str_set_.size() == scores_.size());
 }
 

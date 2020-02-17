@@ -25,6 +25,7 @@ class Collection {
     private:
         strvec_t str_set_;
         scores_t scores_;
+        size_t n_docs_; // Number of docs in the collection
 
         // Sorts scores in ascending order and permutes str_set_ in the
         // corresponding order
