@@ -1,7 +1,12 @@
 # only for cmake --version >= 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
-SET(CMAKE_C_COMPILER clang)
-SET(CMAKE_CXX_COMPILER clang++)
+if(APPLE)
+    SET(CMAKE_C_COMPILER clang)
+    SET(CMAKE_CXX_COMPILER clang++)
+else()
+    SET(CMAKE_C_COMPILER gcc)
+    SET(CMAKE_CXX_COMPILER g++)
+endif()
 # set the C++17 standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
@@ -53,12 +58,13 @@ target_link_libraries(${TEST_WRAPPERS} pthread)
 # QAC Evaluation Code libraries
 target_link_libraries( ${MEM_PROF} core)
 target_link_libraries( ${MEM_PROF} qac_impl)
+target_link_libraries( ${MEM_PROF} "-L ../src/qac_impl/marisa/lib" marisa)
 target_link_libraries( ${TIME_PROF} core)
 target_link_libraries( ${TIME_PROF} qac_impl)
-target_link_libraries( ${TIME_PROF} marisa)
+target_link_libraries( ${TIME_PROF} "-L ../src/qac_impl/marisa/lib" marisa)
 target_link_libraries( ${TEST_WRAPPERS} core)
 target_link_libraries( ${TEST_WRAPPERS} qac_impl)
-target_link_libraries( ${TEST_WRAPPERS} marisa)
+target_link_libraries( ${TEST_WRAPPERS} "-L ../src/qac_impl/marisa/lib" marisa)
 # target_link_libraries( ${MEM_PROF} benchmark_main)
 
 add_custom_target(run
