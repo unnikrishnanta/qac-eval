@@ -68,8 +68,8 @@ void Collection::read_collection(const string& file_name,
 
     sort_scores(); // Sort scores_ and re-arrange str_set_ accordingly. 
     n_docs_ = str_set_.size();
-    cout << "#Strings added to the collection " << n_docs_ 
-         << " Empty lines " << empty_lines << "\n";
+    /* cout << "#Strings added to the collection " << n_docs_ */ 
+    /*      << " Empty lines " << empty_lines << "\n"; */
     assert(str_set_.size() == scores_.size());
 }
 

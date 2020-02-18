@@ -54,18 +54,20 @@ void IncNgTrieCompleter::build_index(const Collection& coll){
 }
 
 
-vector<comp_t> IncNgTrieCompleter::complete(string& prefix, const size_t& n_comp,
-        const bool& topk){
-    Completions cset;
+CandidateSet IncNgTrieCompleter::complete(const string& prefix,
+                                        const size_t& n_comp, const bool& topk){
+    CompHandler ch;
     searcher->ResetSearcher();
-    searcher->ExtendQuery(prefix.data(), prefix.length());
+    // TODO: Avoid unnecessary allocations
+    string p = prefix;
+    searcher->ExtendQuery(p.data(), p.length());
     searcher->ProcessAll();
     for (unordered_set<int>::iterator it = searcher->result_set_.result_ids_.begin();
          it != searcher->result_set_.result_ids_.end(); it ++) {
       int did = *it;
       const string& data = searcher->index_->dataset_.GetDocumentByID(did);
       const auto& weight =  searcher->index_->dataset_.GetWeightByID(did);
-      cset.insert(data, weight); 
+      ch.insert(data, weight); 
     }
-    return cset.tok_completions();
+    return ch.tok_completions();
 }

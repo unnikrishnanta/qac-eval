@@ -28,12 +28,14 @@ struct CompareComps {
     }
 };
 
+using CandidateSet  = vector<comp_t>;
+
 /* Reference https://stackoverflow.com/a/33181173/937153 */
-class Completions {
+class CompHandler {
     public: 
         using comp_heap_t = priority_queue<comp_t, vector<comp_t>, CompareComps>;
-        Completions(int k): k_(k) {}
-        Completions(): k_(10) {}  // default #completions = 10
+        CompHandler(int k): k_(k) {}
+        CompHandler(): k_(10) {}  // default #completions = 10
 
         /* Mantain top k elements in a min-heap. If there are k elements and a
          * new element comes in, add it to the heap if it is greater than the
@@ -52,8 +54,8 @@ class Completions {
         /* Traverse the heap and fill in the elements in reverse order to
          * obtain completions in descendng order of the score 
          */
-        std::vector<comp_t> tok_completions() {
-            std::vector<comp_t> result(q_.size());
+        CandidateSet tok_completions() {
+            CandidateSet result(q_.size());
             while (q_.size()) {
                 result[q_.size() - 1] = q_.top();
                 q_.pop();

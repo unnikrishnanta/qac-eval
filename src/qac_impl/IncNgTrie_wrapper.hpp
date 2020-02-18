@@ -21,7 +21,7 @@ class IncNgTrieCompleter {
         void build_index(const strvec_t& str_set, const scores_t& scores);
         void build_index(const Collection& coll);
         void update_index(const scored_str_t& sc);
-        vector<comp_t> complete(string& prefix, const size_t& n_comp,
+        CandidateSet complete(const string& prefix, const size_t& n_comp,
                         const bool& topk=true);
         void print_index_meta();
     private:
