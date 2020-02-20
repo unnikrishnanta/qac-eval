@@ -37,8 +37,8 @@ IncNgTrieCompleter::IncNgTrieCompleter(int mt){
     max_tau = mt;
 }
 
-void IncNgTrieCompleter:: build_index(const strvec_t& str_set,
-                                      const scores_t& scores){
+void IncNgTrieCompleter:: build_index(const StrVec& str_set,
+                                      const ScoreVec& scores){
   vector<string> input_strings;
   indextrie = new MapTrie();
   fastss_index = new FastssIndex();

@@ -9,8 +9,6 @@
 
 using namespace std;
 
-using sdict_t = vector<pair<string, size_t>>;
-
 class Collection {
 
     public:
@@ -18,13 +16,13 @@ class Collection {
                              const size_t& n_rows=SIZE_MAX,
                              const bool& skip_header=false);
         /* void sort_keys(); */
-        strvec_t const &get_strings() const { return str_set_; }
-        scores_t const &get_scores() const { return scores_; }
+        StrVec const &get_strings() const { return str_set_; }
+        ScoreVec const &get_scores() const { return scores_; }
         size_t size();
 
     private:
-        strvec_t str_set_;
-        scores_t scores_;
+        StrVec str_set_;
+        ScoreVec scores_;
         size_t n_docs_; // Number of docs in the collection
 
         // Sorts scores in ascending order and permutes str_set_ in the

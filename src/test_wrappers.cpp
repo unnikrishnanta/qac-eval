@@ -10,8 +10,8 @@
 #include "config.hpp"
 #include <numeric>
 
-#define TEST_HTRIE 1
-#define TEST_MARISA 1
+/* #define TEST_HTRIE 1 */
+/* #define TEST_MARISA 1 */
 /* #define TEST_DAWG 1 */
 #define TEST_INCGT 1
 
@@ -111,17 +111,20 @@ int main(int argc, char *argv[])
         
     }
 #endif
-    /* PQLog plog; */
-    /* cout << "Loading partial query log\n"; */
-    /* plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows); */
-    /* for (const auto& kv: plog) { */
-    /*     for(const auto& p: kv.second){ */
-    /*         cout << "PQ: " << p << "\n____________________________\n"; */
-    /*         auto completions = ht_comp.complete(p, 10); */
-    /*         for(const auto& c: completions) */
-    /*             cout << c.first << "\n"; */
-    /*     } */
-    /* } */
+    PQLog plog;
+    cout << "Loading partial query log\n";
+    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows);
+    cout << "Done\n";
+    cout << "Testing on synth log\n";
+    for (const auto& kv: plog) {
+        for(const auto& p: kv.second){
+            cout << "PQ: " << p << "\n";
+            auto completions = inc.complete(p, 10);
+            /* for(const auto& c: completions) */
+            /*     cout << c.comp_str << "\n"; */
+        }
+        cout << endl;
+    }
 
     /* LRLog lrlog; */
     /* lrlog.generate_lr_log(plog); */

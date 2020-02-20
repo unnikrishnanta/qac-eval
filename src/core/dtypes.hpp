@@ -9,16 +9,19 @@
 
 using namespace std;
 
-using strvec_t = vector<string>;
-using scores_t = vector<size_t>;
-using sdict_t = vector<pair<string, size_t>>;
+using StrVec = vector<string>;
+using ScoreType = size_t;
+using ScoreVec = vector<ScoreType>;
+using ScoredStr = pair<string, ScoreType>;
+using StringDict = vector<ScoredStr>;
 
+/* Type declaration for a single completion */
 struct comp_t {
-    std::string_view comp_str;
-    size_t score;
+    std::string comp_str;
+    ScoreType score;
 
     comp_t () {}
-    comp_t (const string& cs, const size_t& val): comp_str(cs), score(val) {}
+    comp_t (const string& cs, const ScoreType& val): comp_str(cs), score(val) {}
 };
 
 struct CompareComps {
@@ -41,7 +44,7 @@ class CompHandler {
          * new element comes in, add it to the heap if it is greater than the
          * heap top (lowest value)
          */
-        void insert(const string& comp_str, const size_t& score){
+        void insert(const string& comp_str, const ScoreType& score){
             if (q_.size() < k_){ // Add to the heap straight away
                 q_.emplace(comp_str, score);
             }

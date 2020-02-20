@@ -2,37 +2,36 @@
 #include <algorithm>
 #include "marisa_wrapper.hpp"
 #include "marisa/include/marisa.h"
-#include "../core/dtypes.hpp"
 /* #include "marisa/include/marisa/keyset.h" */
 using namespace std;
 
-void build_marisa(marisa::Keyset &keyset, const vector<float>& weights,
-                  marisa::Trie *trie) {
-  for (std::size_t i = 0; i < keyset.size(); ++i) {
-    keyset[i].set_weight(weights[i]);
-  }
-  trie->build(keyset);
-  std::printf(" %10lu", (unsigned long)trie->io_size());
-}
+/* void build_marisa(marisa::Keyset &keyset, const vector<float>& weights, */
+/*                   marisa::Trie *trie) { */
+/*   for (std::size_t i = 0; i < keyset.size(); ++i) { */
+/*     keyset[i].set_weight(weights[i]); */
+/*   } */
+/*   trie->build(keyset); */
+/*   std::printf(" %10lu", (unsigned long)trie->io_size()); */
+/* } */
 
 
 /* Read the strings and scores in to keyset */
-void read_keys(sdict_t string_dict, marisa::Keyset& keyset) {
+void read_keys(StringDict string_dict, marisa::Keyset& keyset) {
   for (const auto ss : string_dict) {
     keyset.push_back(ss.first.c_str(), ss.first.length(), ss.second);
   }
 }
 
 /* The above function overloaded */
-void read_keys(const strvec_t& str_set, const scores_t& scores ,
+void read_keys(const StrVec& str_set, const ScoreVec& scores ,
                marisa::Keyset& keyset) {
-  for (int i=0; i < str_set.size(); ++i) {
+  for (unsigned int i=0; i < str_set.size(); ++i) {
     keyset.push_back(str_set[i].c_str(), str_set[i].length(), scores[i]);
   }
 }
 
 
-void MarisaCompleter::build_index(const sdict_t& str_dict){
+void MarisaCompleter::build_index(const StringDict& str_dict){
     keyset.reset();
     read_keys(str_dict, keyset);
     trie.build(keyset);
@@ -84,7 +83,7 @@ void MarisaCompleter::predictive_search(const string& str,
 }
 
 
-sdict_t MarisaCompleter::complete(const string& prefix,
+StringDict MarisaCompleter::complete(const string& prefix,
                                   const size_t& n_comp, const bool& topk){
     keyset.reset();
     agent.set_query(prefix.c_str(), prefix.length());
@@ -92,7 +91,7 @@ sdict_t MarisaCompleter::complete(const string& prefix,
         keyset.push_back(agent.key());
     }
     if (!keyset.empty()) {
-        sdict_t matches;
+        StringDict matches;
         /* const std::size_t end = std::min(n_comp, keyset.size()); */
         for (std::size_t i = 0; i < keyset.size(); ++i) {
             auto key_str = string(keyset[i].ptr(), keyset[i].length());
@@ -104,7 +103,7 @@ sdict_t MarisaCompleter::complete(const string& prefix,
                 return left.second > right.second;
             });
         if(matches.size() > n_comp) {
-            sdict_t completions (matches.begin(), matches.begin() + n_comp);
+            StringDict completions (matches.begin(), matches.begin() + n_comp);
             return completions;
         }
         return matches;

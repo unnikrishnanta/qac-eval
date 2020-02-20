@@ -11,7 +11,7 @@
 using namespace std;
 using namespace boost::program_options;
 
-tsl::htrie_map<char, size_t> build_index(const sdict_t& str_dict){
+tsl::htrie_map<char, size_t> build_index(const StringDict& str_dict){
     tsl::htrie_map<char, size_t> ht_map;
     for(const auto& sv:str_dict){
         ht_map[sv.first] = sv.second;

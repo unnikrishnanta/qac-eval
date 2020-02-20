@@ -54,7 +54,7 @@ bool DAWGTrie::build(const vector<string>& keys,
 }
 
 
-sdict_t DAWGTrie::complete(const string& prefix, const size_t& ncomp) {
+StringDict DAWGTrie::complete(const string& prefix, const size_t& ncomp) {
     char p;
     dawgdic::BaseType index; 
     index = dic.root();
@@ -64,7 +64,7 @@ sdict_t DAWGTrie::complete(const string& prefix, const size_t& ncomp) {
             continue;
     }    
     completer->Start(index, &p, 1);
-    sdict_t comps; 
+    StringDict comps; 
     if(ncomp != SIZE_MAX)
         comps.reserve(ncomp);
     size_t k=0;

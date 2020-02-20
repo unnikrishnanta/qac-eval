@@ -16,7 +16,7 @@
 using namespace std;
 using namespace dawgdic;
 
-using sdict_t = vector<pair<string, size_t>>;
+using StringDict = vector<pair<string, size_t>>;
 namespace {
     class Comparer {
         public:
@@ -41,7 +41,7 @@ class DAWGTrie{
     public: 
         bool build_status; // If the trie was successfully built
         /* Return ncomp completions for prefix */
-         sdict_t complete(const string& prefix, const size_t& ncomp);
+         StringDict complete(const string& prefix, const size_t& ncomp);
          DAWGTrie(const vector<string>& keys, const vector<size_t>& vals);
          // Constructor will fill in values with 0 to keys.size() - 1
          DAWGTrie(const vector<string>& keys);
