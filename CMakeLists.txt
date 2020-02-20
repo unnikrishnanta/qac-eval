@@ -13,7 +13,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 # project name
 project(QAC_Eval)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+add_compile_options(
+  "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"
+  "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>"
+)
 
 # if(APPLE)
 #     set(CMAKE_CXX_FLAGS "-I/Library/Developer/CommandLineTools/usr/include/c++/v1/")
