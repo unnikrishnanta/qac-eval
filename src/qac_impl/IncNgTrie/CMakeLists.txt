@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.5.1)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g\
-    -Wno-unused-command-line-argument")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g")
+add_compile_options(
+  "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"
+  "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>"
+)
 include_directories("/usr/local/opt/openssl/include")
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 file(GLOB QAC_SOURCES "*.cc" ".h")
