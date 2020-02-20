@@ -17,11 +17,11 @@ using StringDict = vector<ScoredStr>;
 
 /* Type declaration for a single completion */
 struct comp_t {
-    std::string comp_str;
+    std::string_view comp_str;
     ScoreType score;
 
     comp_t () {}
-    comp_t (const string& cs, const ScoreType& val): comp_str(cs), score(val) {}
+    comp_t (const string_view cs, const ScoreType& val): comp_str(cs), score(val) {}
 };
 
 struct CompareComps {
