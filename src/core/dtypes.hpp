@@ -44,7 +44,7 @@ class CompHandler {
          * new element comes in, add it to the heap if it is greater than the
          * heap top (lowest value)
          */
-        void insert(const string& comp_str, const ScoreType& score){
+        void insert(const string_view comp_str, const ScoreType& score){
             if (q_.size() < k_){ // Add to the heap straight away
                 q_.emplace(comp_str, score);
             }
@@ -65,7 +65,6 @@ class CompHandler {
             }
             return result;
         }
-
         const uint8_t n_comp() const { return q_.size();}
 
     private: 
