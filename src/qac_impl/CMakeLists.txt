@@ -15,8 +15,8 @@ include_directories(marisa/include)
 include_directories(IncNgTrie)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/IncNgTrie)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/dawgdic/bin)
-# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/marisa/lib)
+# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/dawgdic/bin)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/marisa/lib)
 # link_directories(${CMAKE_CURRENT_SOURCE_DIR}/IncNgTrie)
 
 add_library(qac_impl SHARED ${QAC_SOURCES})

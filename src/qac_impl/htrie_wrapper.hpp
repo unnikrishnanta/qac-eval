@@ -5,6 +5,7 @@
 #include "../core/collection.hpp"
 #include "hat-trie/tsl/htrie_map.h"
 
+#include <cstdint>
 #include <vector>
 #include <string>
 #include <utility>
@@ -16,12 +17,10 @@ class HTrieCompleter {
         void build_index(const StringDict& str_dict);
         void build_index(const Collection& coll);
         void update_index(const ScoredStr& sc);
-        StringDict complete(const string& prefix, const size_t& n_comp,
-                        const bool& topk=true);
+        CandidateSet complete(const string& prefix, const uint8_t& n_comp);
         void print_index_meta();
     private:
         tsl::htrie_map<char, ScoreType> ht_map;
 };
 
 #endif
-

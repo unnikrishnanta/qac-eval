@@ -16,28 +16,16 @@ void HTrieCompleter::build_index(const Collection& coll){
     }
 }
 
-StringDict HTrieCompleter::complete(const string& prefix, const size_t& n_comp,
-                                    const bool& topk){
+CandidateSet HTrieCompleter::complete(const string& prefix,
+                                      const uint8_t& n_comp){
     string key_buffer;
-    StringDict matches;
-    /* matches.reserve(n_comp); */
+    CompHandler ch;
 
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
-        matches.push_back(make_pair(it.key(), it.value()));
+        ch.insert(it.key(), it.value());
     }
-    /* cout << matches.size() << " matches found\n"; */
-    if(topk)
-        sort(matches.begin(), matches.end(), [](auto &left, auto &right) {
-            return left.second > right.second;
-        });
-
-    /* cout << "# matches here " << matches.size() << "\n"; */
-    if(matches.size() > n_comp){
-        StringDict completions (matches.begin(), matches.begin() + n_comp);
-        return completions;
-    }
-    return matches;
+    return ch.topk_completions();
 }
 
 void HTrieCompleter::update_index(const ScoredStr& sc){

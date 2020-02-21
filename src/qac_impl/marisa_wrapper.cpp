@@ -83,30 +83,21 @@ void MarisaCompleter::predictive_search(const string& str,
 }
 
 
-StringDict MarisaCompleter::complete(const string& prefix,
-                                  const size_t& n_comp, const bool& topk){
+CandidateSet MarisaCompleter::complete(const string& prefix,
+                                     const uint8_t& n_comp){
     keyset.reset();
     agent.set_query(prefix.c_str(), prefix.length());
     while (trie.predictive_search(agent)) {
         keyset.push_back(agent.key());
     }
     if (!keyset.empty()) {
-        StringDict matches;
-        /* const std::size_t end = std::min(n_comp, keyset.size()); */
+        CompHandler ch;
         for (std::size_t i = 0; i < keyset.size(); ++i) {
-            auto key_str = string(keyset[i].ptr(), keyset[i].length());
-            auto val = weights[keyset[i].id()];
-            matches.push_back(make_pair(key_str, val));
+            auto key_str = string_view(keyset[i].ptr(), keyset[i].length());
+            auto score = weights[keyset[i].id()];
+            ch.insert(key_str, score);
         }
-        if(topk)
-            sort(matches.begin(), matches.end(), [](auto &left, auto &right) {
-                return left.second > right.second;
-            });
-        if(matches.size() > n_comp) {
-            StringDict completions (matches.begin(), matches.begin() + n_comp);
-            return completions;
-        }
-        return matches;
+        return ch.topk_completions();
     }
     return {};
 }

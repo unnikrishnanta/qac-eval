@@ -63,25 +63,10 @@ void RawDataSet::InitFromStrings(const vector<string>& input_strings,
      weights_.push_back(sc); 
   }
 
-  vector<pair<string, size_t>> zipped; 
-  zipped.reserve(num_documents_);
-  zip(documents_, weights_, zipped);
   /* sort(documents_.begin(), documents_.end());
-   * Replace this sort with zipped sort to permute weights along with the 
-   * sorted string order. Added by Unni. 
-   * */
-  sort(zipped.begin(), zipped.end(), 
-          [&] (const auto& left, const auto& right) {
-            return left.first < right.first;
-          }
-      );
-  unzip(zipped, documents_, weights_);
-
-  /* cout << "Post sorting values\n"; */
-  /* for (int i = 0; i < num_documents_; ++i) { */
-  /*     cout << "ID " << i << " Doc " << documents_[i] */
-  /*          << " weight " << weights_[i] << "\n"; */
-  /* } */
+   * This line from the original source is not required anymore since the
+   * defualt sort order is set to string sorted order. 
+   */
 }
 
 RawDataSet::RawDataSet(const string& filename, int max_length)

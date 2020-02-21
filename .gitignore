@@ -1,5 +1,6 @@
 ### Output and Cache Directories ###
-/build/
+/build/*
+/debug/*
 */bin/*
 /out/
 /external/
@@ -27,4 +28,7 @@
 *.code-workspace
 # Clangd DB
 .clangd/*
-.vscode/*
+.vscode/* 
+src/qac_impl/dawgdic/test/*
+src/qac_impl/dawgdic/src/*
+src/qac_impl/dawgdic/bin/*

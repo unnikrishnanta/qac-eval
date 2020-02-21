@@ -57,7 +57,7 @@ class CompHandler {
         /* Traverse the heap and fill in the elements in reverse order to
          * obtain completions in descendng order of the score 
          */
-        CandidateSet tok_completions() {
+        CandidateSet topk_completions() {
             CandidateSet result(q_.size());
             while (q_.size()) {
                 result[q_.size() - 1] = q_.top();

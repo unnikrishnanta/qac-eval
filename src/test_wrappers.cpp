@@ -12,8 +12,8 @@
 
 /* #define TEST_HTRIE 1 */
 /* #define TEST_MARISA 1 */
-/* #define TEST_DAWG 1 */
-#define TEST_INCGT 1
+#define TEST_DAWG 1
+/* #define TEST_INCGT 1 */
 
 using namespace std;
 using namespace boost::program_options;
@@ -77,13 +77,13 @@ int main(int argc, char *argv[])
 
 #ifdef TEST_DAWG
     cout << "Building DAWG Trie\n";
-    DAWGTrie dtrie (coll_wiki.get_strings());
+    DAWGTrie dtrie (coll_wiki);
     if(!dtrie.build_status){
         cout << "\nDAWG Trie construction failed\n";
         return 1;
     }
     cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl;
-    completions = dtrie.complete("miller", 20);
+    auto completions = dtrie.complete("miller", 20);
     for (const auto& c : completions) {
         cout << c.first << "\t" << c.second << "\n";
     }
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     cout << "\nMarisa Trie Completions\n" << string(30, '-') << endl;
     auto mt_completions = mtc.complete(prefix, 10);
     for (const auto& c : mt_completions) {
-       cout << c.first << "\t" << c.second << "\n";
+       cout << c.comp_str << "\t" << c.score << "\n";
     }
 #endif
 
@@ -119,9 +119,9 @@ int main(int argc, char *argv[])
     for (const auto& kv: plog) {
         for(const auto& p: kv.second){
             cout << "PQ: " << p << "\n";
-            auto completions = inc.complete(p, 10);
-            /* for(const auto& c: completions) */
-            /*     cout << c.comp_str << "\n"; */
+            auto completions = dtrie.complete(p, 10);
+            for(const auto& c: completions)
+                cout << c.first << "\t" << c.second << "\n";
         }
         cout << endl;
     }

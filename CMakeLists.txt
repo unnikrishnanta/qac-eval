@@ -19,12 +19,13 @@ add_compile_options(
   "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>"
 )
 
-# if(APPLE)
-#     set(CMAKE_CXX_FLAGS "-I/Library/Developer/CommandLineTools/usr/include/c++/v1/")
-#     set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
-#     file(COPY ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
-#         DESTINATION ${CMAKE_SOURCE_DIR})
-# endif()
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+  message("Debug build.")
+ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
+  message("Release build.")
+ELSE()
+  message("Some other build type.")
+ENDIF()
 
 # creates the variable MEM_PROF and sets it to hello
 set(TIME_PROF time_prof)

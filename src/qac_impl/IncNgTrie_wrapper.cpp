@@ -69,5 +69,5 @@ CandidateSet IncNgTrieCompleter::complete(const string& prefix,
       const auto& weight =  searcher->index_->dataset_.GetWeightByID(did);
       ch.insert(data, weight); 
     }
-    return ch.tok_completions();
+    return ch.topk_completions();
 }

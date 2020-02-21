@@ -27,7 +27,7 @@ class Collection {
 
         // Sorts scores in ascending order and permutes str_set_ in the
         // corresponding order
-        void sort_scores();
+        void sort_strdict(int key=0);
 };
 
 #endif /* ifndef COLLECTION_H */

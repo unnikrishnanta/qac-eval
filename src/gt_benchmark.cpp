@@ -80,7 +80,7 @@ static void BM_synth_query_htrie(benchmark::State& state) {
         for (const auto& [qid, pvec]: pqlog) {
             for(const auto& p: pvec){
                 ++num_pq;
-                auto completions = ht_comp.complete(p, n_comp, false);
+                auto completions = ht_comp.complete(p, n_comp);
                 num_completions += completions.size();
                 plen_sum += p.length();
             }
@@ -116,7 +116,7 @@ static void BM_synth_query_marisa(benchmark::State& state) {
         for (const auto& [qid, pvec]: pqlog) {
             for(const auto& p: pvec){
                 ++num_pq;
-                auto completions = mtc.complete(p, n_comp, false);
+                auto completions = mtc.complete(p, n_comp);
                 num_completions += completions.size();
                 plen_sum += p.length();
             }
@@ -152,7 +152,7 @@ static void BM_synth_query_IncNgT(benchmark::State& state) {
         for (const auto& [qid, pvec]: pqlog) {
             for(const auto& p: pvec){
                 ++num_pq;
-                auto completions = inc.complete(p, n_comp, false);
+                auto completions = inc.complete(p, n_comp);
                 num_completions += completions.size();
                 plen_sum += p.length();
             }

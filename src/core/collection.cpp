@@ -15,19 +15,27 @@ size_t Collection::size(){
 }
 
 
-void Collection::sort_scores(){
+void Collection::sort_strdict(int key){
     vector<pair<string,size_t>> zipped;
     zip(str_set_, scores_, zipped);
-    std::sort(std::begin(zipped), std::end(zipped), 
-        [&](const auto& a, const auto& b)
-        {
-            return a.second < b.second;
-        });
-
-    // Write the sorted pairs back to the original vectors
+    if(key==0){ // Sort by strings 
+        std::sort(std::begin(zipped), std::end(zipped), 
+            [&](const auto& a, const auto& b) {
+                return a.first < b.first;
+            });
+    }
+    else{ // Sort by scores
+        std::sort(std::begin(zipped), std::end(zipped), 
+                [&](const auto& a, const auto& b) {
+                    return a.second < b.second;
+                });
+    }
     unzip(zipped, str_set_, scores_);
 }
 
+/* Reads the tab seperated string score pairs from filename and permutes them
+ * according to string if key=0 in sort_strdict and by score otherwise 
+ */
 void Collection::read_collection(const string& file_name, 
                                  const size_t& n_rows,
                                  const bool& skip_header){
@@ -66,7 +74,7 @@ void Collection::read_collection(const string& file_name,
         scores_.erase(scores_.begin());
     }
 
-    sort_scores(); // Sort scores_ and re-arrange str_set_ accordingly. 
+    sort_strdict(); // Sort scores_ and re-arrange str_set_ accordingly. 
     n_docs_ = str_set_.size();
     /* cout << "#Strings added to the collection " << n_docs_ */ 
     /*      << " Empty lines " << empty_lines << "\n"; */
