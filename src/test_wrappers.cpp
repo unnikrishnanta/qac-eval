@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         return 1;
     }
     cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl;
-    auto completions = dtrie.complete("miller", 20);
+    auto completions = dtrie.complete(prefix, 10);
     for (const auto& c : completions) {
         cout << c.first << "\t" << c.second << "\n";
     }
@@ -111,20 +111,20 @@ int main(int argc, char *argv[])
         
     }
 #endif
-    PQLog plog;
-    cout << "Loading partial query log\n";
-    plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows);
-    cout << "Done\n";
-    cout << "Testing on synth log\n";
-    for (const auto& kv: plog) {
-        for(const auto& p: kv.second){
-            cout << "PQ: " << p << "\n";
-            auto completions = dtrie.complete(p, 10);
-            for(const auto& c: completions)
-                cout << c.first << "\t" << c.second << "\n";
-        }
-        cout << endl;
-    }
+    /* PQLog plog; */
+    /* cout << "Loading partial query log\n"; */
+    /* plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows); */
+    /* cout << "Done\n"; */
+    /* cout << "Testing on synth log\n"; */
+    /* for (const auto& kv: plog) { */
+    /*     for(const auto& p: kv.second){ */
+    /*         cout << "PQ: " << p << "\n"; */
+    /*         auto completions = dtrie.complete(p, 10); */
+    /*         for(const auto& c: completions) */
+    /*             cout << c.first << "\t" << c.second << "\n"; */
+    /*     } */
+    /*     cout << endl; */
+    /* } */
 
     /* LRLog lrlog; */
     /* lrlog.generate_lr_log(plog); */
