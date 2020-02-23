@@ -19,8 +19,8 @@ class IncNgTrieCompleter {
         IncNgTrieCompleter(int mt);
         void build_index(const StrVec& str_set, const ScoreVec& scores);
         void build_index(const Collection& coll);
-        CandidateSet complete(const string& prefix, const size_t& n_comp,
-                        const bool& topk=true);
+        CandidateSet<std::string_view>
+            complete(const string& prefix, const size_t& n_comp);
         void print_index_meta();
     private:
         int max_tau; // Number of mismatches.

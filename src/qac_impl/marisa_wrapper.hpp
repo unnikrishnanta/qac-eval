@@ -21,7 +21,8 @@ class MarisaCompleter {
         void build_index(const StringDict& str_dict);
         void build_index(const Collection& coll);
         /* void update_index(const scored_str_t& sc); */
-        CandidateSet complete(const string& prefix, const uint8_t& n_comp);
+        CandidateSet<std::string_view>
+            complete(const string& prefix, const uint8_t& n_comp);
         /* void print_index_meta(); */
         void predictive_search(const string& str,
                         const size_t& max_num_results=10);

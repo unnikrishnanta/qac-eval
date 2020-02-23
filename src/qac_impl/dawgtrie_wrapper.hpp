@@ -24,12 +24,14 @@ class DAWGTrie{
          DAWGTrie(const Collection& coll);
          // Constructor will fill in values with 0 to keys.size() - 1
          DAWGTrie(const vector<string>& keys);
-         StringDict complete(const string& prefix, const uint8_t& ncomp);
+         CandidateSet<std::string>
+             complete(const string& prefix, const uint8_t& ncomp);
 
     private:
 
         Dictionary dic;
         RankedGuide guide;
+        std::unique_ptr< RankedCompleter > completer;
         /* Build trie from seperate key and value vectors */
         bool build(const StrVec& keys);
         bool build(const StrVec& keys, const ScoreVec& values);

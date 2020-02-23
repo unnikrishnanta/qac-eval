@@ -77,6 +77,8 @@ bool DAWGTrie::build(const StrVec& keys, const ScoreVec& values) {
         std::cerr << "error: failed to build RankedGuide" << std::endl;
         return false;
     }
+    /* Initialise a completer object for the complete() function */
+    completer.reset(new dawgdic::RankedCompleter (dic, guide));
     return true;
 }
 
@@ -111,17 +113,21 @@ bool DAWGTrie::build(const StrVec& keys) {
 }
 
 
-
-StringDict DAWGTrie::complete(const string& prefix, const uint8_t& ncomp) {
-    RankedCompleter completer(dic, guide);
+/* TODO: Check if completer->key() is a local variable that gets destroyed after query??
+ */
+CandidateSet <std::string> DAWGTrie::complete(const string& prefix, const uint8_t& ncomp) {
+    /* RankedCompleter completer(dic, guide); */
     dawgdic::BaseType index = dic.root();
-    StringDict comps; 
+    CompHandler<std::string> ch(ncomp);
     if (dic.Follow(prefix.c_str(), prefix.length(), &index)) {
-        completer.Start(index, prefix.c_str(), prefix.length());
-        while (completer.Next()) {
-            comps.push_back(make_pair(completer.key(), completer.value()));
+        completer->Start(index, prefix.c_str(), prefix.length());
+        while (completer->Next()) {
+            auto key_str = string_view(completer->key(), completer->length());
+            /* cout << "key_str " << key_str << "\t"; */
+            /* cout << completer->value() << "\n"; */
+            ch.insert(key_str, completer->value());
         }
     }
-    return comps;
+    return ch.topk_completions();
 }
 

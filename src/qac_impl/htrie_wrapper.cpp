@@ -1,3 +1,4 @@
+#include <string_view>
 #include <utility>
 #include <iostream>
 #include "htrie_wrapper.hpp"
@@ -16,11 +17,10 @@ void HTrieCompleter::build_index(const Collection& coll){
     }
 }
 
-CandidateSet HTrieCompleter::complete(const string& prefix,
+CandidateSet<std::string_view> HTrieCompleter::complete(const string& prefix,
                                       const uint8_t& n_comp){
     string key_buffer;
-    CompHandler ch;
-
+    CompHandler<std::string_view> ch(n_comp);
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
         ch.insert(it.key(), it.value());

@@ -11,9 +11,10 @@
 #include <numeric>
 
 /* #define TEST_HTRIE 1 */
-/* #define TEST_MARISA 1 */
+#define TEST_MARISA 1
 #define TEST_DAWG 1
 /* #define TEST_INCGT 1 */
+#define NCOMP 10
 
 using namespace std;
 using namespace boost::program_options;
@@ -85,8 +86,9 @@ int main(int argc, char *argv[])
     cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl;
     auto completions = dtrie.complete(prefix, 10);
     for (const auto& c : completions) {
-        cout << c.first << "\t" << c.second << "\n";
+        cout << c.comp_strview << "\t" << c.score << "\n";
     }
+
 #endif
 
 #ifdef TEST_MARISA
@@ -96,7 +98,7 @@ int main(int argc, char *argv[])
     cout << "\nMarisa Trie Completions\n" << string(30, '-') << endl;
     auto mt_completions = mtc.complete(prefix, 10);
     for (const auto& c : mt_completions) {
-       cout << c.comp_str << "\t" << c.score << "\n";
+       cout << c.comp_strview << "\t" << c.score << "\n";
     }
 #endif
 
@@ -107,9 +109,8 @@ int main(int argc, char *argv[])
     cout << "IncNgTrieCompletions\n" << string(30, '-') << endl;
     auto inc_completions = inc.complete(prefix, 10);
     for (const auto& c : inc_completions) {
-        cout << c.comp_str << "\t" << c.score << "\n";
-        
-    }
+        cout << c.comp_strview << "\t" << c.score << "\n";
+
 #endif
     /* PQLog plog; */
     /* cout << "Loading partial query log\n"; */
@@ -121,7 +122,8 @@ int main(int argc, char *argv[])
     /*         cout << "PQ: " << p << "\n"; */
     /*         auto completions = dtrie.complete(p, 10); */
     /*         for(const auto& c: completions) */
-    /*             cout << c.first << "\t" << c.second << "\n"; */
+    /*             cout << c.comp_strview << "\t" << c.score << "\n"; */
+    /*         cout << "\n\n"; */
     /*     } */
     /*     cout << endl; */
     /* } */
