@@ -47,10 +47,8 @@ static void  BM_build_dawg(benchmark::State& state) {
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
 
-    std::vector<size_t> values(coll_wiki.size()) ; // vector with 100 ints.
-    std::iota (std::begin(values), std::end(values), 0); // Fill with 0, 1, ..., 99.
     for (auto _ : state){
-        DAWGTrie dtrie (coll_wiki.get_strings(), values);
+        DAWGTrie dtrie (coll_wiki);
     }
 }
 
@@ -178,9 +176,7 @@ static void BM_synth_query_dawg(benchmark::State& state) {
     Collection coll_wiki;
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
     coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
-    std::vector<size_t> values(coll_wiki.size()) ; // vector with 100 ints.
-    std::iota (std::begin(values), std::end(values), 0); // Fill with 0, 1, ..., 99.
-    DAWGTrie dtrie (coll_wiki.get_strings(), values);
+    DAWGTrie dtrie (coll_wiki);
 
     PQLog pqlog;
     pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", 1000);
@@ -253,17 +249,15 @@ static void BM_lr_query(benchmark::State& state) {
 // Register the function as a benchmark
 BENCHMARK(BM_build_htrie)->Unit(benchmark::kMillisecond);
 BENCHMARK(BM_build_marisa)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond);
 BENCHMARK(BM_build_IncNgT)->Unit(benchmark::kMillisecond);
 
-/* BENCHMARK(BM_synth_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
-/* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 BENCHMARK(BM_synth_query_htrie)->Unit(benchmark::kMillisecond)->Arg(8);
 BENCHMARK(BM_synth_query_marisa)->Unit(benchmark::kMillisecond)->Arg(8);
+BENCHMARK(BM_synth_query_dawg)->Unit(benchmark::kMillisecond)->Arg(8);
 BENCHMARK(BM_synth_query_IncNgT)->Unit(benchmark::kMillisecond)->Arg(8);
-/* BENCHMARK(BM_lr_query)->Unit(benchmark::kMillisecond)->Arg(8); */
 
 /* BENCHMARK(BM_synth_query_htrie)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
-/* BENCHMARK(BM_synth_query_marisa)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 
 int main (int argc, char ** argv) {
     benchmark::Initialize (& argc, argv);
