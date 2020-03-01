@@ -91,7 +91,7 @@ CandidateSet<std::string_view> MarisaCompleter::complete(const string& prefix,
         keyset.push_back(agent.key());
     }
     if (!keyset.empty()) {
-        CompHandler<std::string_view> ch;
+        CompHandler<std::string_view> ch(n_comp);
         for (std::size_t i = 0; i < keyset.size(); ++i) {
             auto key_str = string_view(keyset[i].ptr(), keyset[i].length());
             auto score = weights[keyset[i].id()];

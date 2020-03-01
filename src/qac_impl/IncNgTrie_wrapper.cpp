@@ -57,7 +57,7 @@ void IncNgTrieCompleter::build_index(const Collection& coll){
 
 CandidateSet<std::string_view> IncNgTrieCompleter::complete(const string& prefix,
                                         const size_t& n_comp){
-    CompHandler<std::string_view> ch;
+    CompHandler<std::string_view> ch(n_comp);
     searcher->ResetSearcher();
     string p = prefix;
     searcher->ExtendQuery(p.data(), p.length());

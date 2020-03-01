@@ -36,7 +36,7 @@ bool DAWGTrie::build(const StrVec& keys, const ScoreVec& values) {
     dawgdic::DawgBuilder dawg_builder;
     // Reads keys from an input stream and inserts them into a dawg.
     std::string key;
-    std::size_t key_count = 0;
+    /* std::size_t key_count = 0; */
     for (size_t i = 0; i < keys.size(); ++i) {
         static const dawgdic::ValueType MAX_VALUE =
             std::numeric_limits<dawgdic::ValueType>::max();
@@ -59,9 +59,9 @@ bool DAWGTrie::build(const StrVec& keys, const ScoreVec& values) {
             return false;
         }
 
-        if (++key_count % 10000 == 0) {
-            std::cerr << "no. keys: " << key_count << '\r';
-        }
+        /* if (++key_count % 10000 == 0) { */
+        /*     std::cerr << "no. keys: " << key_count << '\r'; */
+        /* } */
     }
 
     dawgdic::Dawg dawg;
@@ -118,16 +118,17 @@ bool DAWGTrie::build(const StrVec& keys) {
 CandidateSet <std::string> DAWGTrie::complete(const string& prefix, const uint8_t& ncomp) {
     /* RankedCompleter completer(dic, guide); */
     dawgdic::BaseType index = dic.root();
-    CompHandler<std::string> ch(ncomp);
+    /* CompHandler<std::string> ch(ncomp); */
     if (dic.Follow(prefix.c_str(), prefix.length(), &index)) {
         completer->Start(index, prefix.c_str(), prefix.length());
         while (completer->Next()) {
             auto key_str = string_view(completer->key(), completer->length());
             /* cout << "key_str " << key_str << "\t"; */
             /* cout << completer->value() << "\n"; */
-            ch.insert(key_str, completer->value());
+            /* ch.insert(key_str, completer->value()); */
         }
     }
-    return ch.topk_completions();
+    /* return ch.topk_completions(); */
+    return {};
 }
 
