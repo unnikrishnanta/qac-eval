@@ -21,9 +21,8 @@ using namespace std;
 using namespace boost::program_options;
 
 static void  BM_build_htrie(benchmark::State& state) {
-    Collection coll_wiki;
-    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    Collection coll_wiki('w');
+    coll_wiki.read_collection(SIZE_MAX, true);
     for (auto _ : state){
         state.PauseTiming(); // Stop timers.
         HTrieCompleter ht_comp;
@@ -33,9 +32,9 @@ static void  BM_build_htrie(benchmark::State& state) {
 }
 
 static void  BM_build_marisa(benchmark::State& state) {
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
     MarisaCompleter mtc;
     for (auto _ : state){
         mtc.build_index(coll_wiki);
@@ -43,9 +42,9 @@ static void  BM_build_marisa(benchmark::State& state) {
 }
 
 static void  BM_build_dawg(benchmark::State& state) {
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
 
     for (auto _ : state){
         DAWGTrie dtrie (coll_wiki);
@@ -53,9 +52,9 @@ static void  BM_build_dawg(benchmark::State& state) {
 }
 
 static void  BM_build_IncNgT(benchmark::State& state) {
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
 
     for (auto _ : state){
         IncNgTrieCompleter inc(1);
@@ -65,9 +64,9 @@ static void  BM_build_IncNgT(benchmark::State& state) {
 
 static void BM_synth_query_htrie(benchmark::State& state) {
     size_t n_comp = state.range(0);
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
     PQLog pqlog;
     pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", 1000);
     HTrieCompleter ht_comp;
@@ -102,9 +101,9 @@ static void BM_synth_query_htrie(benchmark::State& state) {
 
 static void BM_synth_query_marisa(benchmark::State& state) {
     size_t n_comp = state.range(0);
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
     PQLog pqlog;
     pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", 1000);
     MarisaCompleter mtc;
@@ -138,9 +137,9 @@ static void BM_synth_query_marisa(benchmark::State& state) {
 
 static void BM_synth_query_IncNgT(benchmark::State& state) {
     size_t n_comp = state.range(0);
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
     PQLog pqlog;
     pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", 1000);
     IncNgTrieCompleter inc(1);
@@ -173,9 +172,9 @@ static void BM_synth_query_IncNgT(benchmark::State& state) {
 }
 static void BM_synth_query_dawg(benchmark::State& state) {
     size_t n_comp = state.range(0);
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
     DAWGTrie dtrie (coll_wiki);
 
     PQLog pqlog;
@@ -210,9 +209,9 @@ static void BM_synth_query_dawg(benchmark::State& state) {
 
 static void BM_lr_query(benchmark::State& state) {
     size_t n_comp = state.range(0);
-    Collection coll_wiki;
+    Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, SIZE_MAX, true);
+    coll_wiki.read_collection(SIZE_MAX, true);
     PQLog plog;
     plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_comp);
     LRLog lrlog;

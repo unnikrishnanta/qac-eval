@@ -58,10 +58,9 @@ int main(int argc, char *argv[])
         cerr << e.what() << "\n";
     }
 
-    Collection *coll_wiki = new Collection();;
+    Collection *coll_wiki = new Collection('w');;
     cout << "Reading wiki clickstream collection\n";
-    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki.tsv";
-    coll_wiki->read_collection(wiki_file, n_rows, true);
+    coll_wiki->read_collection(n_rows, true);
     cout << "Done\n";
 
     std::this_thread::sleep_for(std::chrono::seconds(40));

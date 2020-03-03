@@ -60,10 +60,9 @@ int main(int argc, char *argv[])
         cerr << e.what() << "\n";
     }
 
-    Collection coll_wiki;
+    Collection coll_wiki('c');
     cout << "Reading wiki clickstream collection\n";
-    const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
-    coll_wiki.read_collection(wiki_file, n_rows, true);
+    coll_wiki.read_collection(n_rows, true);
 
 #ifdef TEST_HTRIE
     cout << "\nBuilding HAT Trie\n";

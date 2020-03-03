@@ -17,6 +17,12 @@ void HTrieCompleter::build_index(const Collection& coll){
     }
 }
 
+void HTrieCompleter::build_index(const StrVec& str_set, const ScoreVec& scores){
+    for (unsigned int i = 0; i < str_set.size(); ++i) {
+       ht_map.insert(str_set[i], scores[i]); 
+    }
+}
+
 CandidateSet<std::string_view> HTrieCompleter::complete(const string& prefix,
                                       const uint8_t& n_comp){
     string key_buffer;
