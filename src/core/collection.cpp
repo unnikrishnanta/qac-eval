@@ -36,9 +36,13 @@ void Collection::sort_strdict(int key){
 /* Reads the tab seperated string score pairs from filename and permutes them
  * according to string if key=0 in sort_strdict and by score otherwise 
  */
-void Collection::read_collection(const string& file_name, 
-                                 const size_t& n_rows,
+void Collection::read_collection(const size_t& n_rows,
                                  const bool& skip_header){
+    string file_name;
+    if(coll_type == 'w')
+        file_name = WIKI_ROOT + WIKI_COLLECTION;
+    else if(coll_type == 'c')
+        file_name = CWEB_ROOT + CWEB_COLLECTION;
     mapped_file mmap(file_name, boost::iostreams::mapped_file::readonly);
     auto file_data = mmap.const_data();
     stringstream ss;
