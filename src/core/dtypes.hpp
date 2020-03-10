@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 #include <queue>
 
@@ -73,7 +74,7 @@ class CompHandler {
             }
             return result;
         }
-        const uint8_t n_comp() const { return q_.size();}
+        uint8_t n_comp() const { return std::as_const(q_.size());}
 
     private: 
         comp_heap_t q_;

@@ -10,28 +10,27 @@
 #include <cstdlib>
 #include <iostream>
 #include <utility>
+#include <assert.h>
 #include "dawgdic/include/dawgdic/ranked-completer.h"
 #include "dawgtrie_wrapper.hpp"
 
 using namespace std;
 
-DAWGTrie::DAWGTrie(const vector<string>& keys, const vector<size_t>& vals) {
-    build_status = build(keys, vals);
-}
-
-DAWGTrie::DAWGTrie(const vector<string>& keys){
+void DAWGTrie::build_index(const StrVec& keys){
     build_status = build(keys);
+    assert(build_status);
 }
 
-DAWGTrie::DAWGTrie(const Collection& coll){
-    build_status = build(coll.get_strings(), coll.get_scores());
+void DAWGTrie::build_index(const Collection& coll){
+    build_status = build_index(coll.get_strings(), coll.get_scores());
+    assert(build_status);
 }
 
 /* Build Trie on keys and values.
  * IMPORTANT: The keys MUST be in dictioary sorted order. 
  * Taken from dawgdic_build.cc
  */
-bool DAWGTrie::build(const StrVec& keys, const ScoreVec& values) {
+bool DAWGTrie::build_index(const StrVec& keys, const ScoreVec& values) {
 
     dawgdic::DawgBuilder dawg_builder;
     // Reads keys from an input stream and inserts them into a dawg.
@@ -56,7 +55,8 @@ bool DAWGTrie::build(const StrVec& keys, const ScoreVec& values) {
         if (!dawg_builder.Insert(keys[i].c_str(), keys[i].length(), value)) {
             std::cerr << "error: failed to insert key: "
                 << key << std::endl;
-            return false;
+            build_status = false;
+            assert(build_status);
         }
 
         /* if (++key_count % 10000 == 0) { */
@@ -67,19 +67,23 @@ bool DAWGTrie::build(const StrVec& keys, const ScoreVec& values) {
     dawgdic::Dawg dawg;
     if (!dawg_builder.Finish(&dawg)) {
         std::cerr << "error: failed to finish building Dawg" << std::endl;
-        return false;
+        build_status = false;
+        assert(build_status);
     }
     if (!dawgdic::DictionaryBuilder::Build(dawg, &dic)) {
         std::cerr << "error: failed to build Dictionary" << std::endl;
-        return false;
+        build_status = false;
     }
     if (!dawgdic::RankedGuideBuilder::Build(dawg, dic, &guide)) {
         std::cerr << "error: failed to build RankedGuide" << std::endl;
-        return false;
+        build_status = false;
+        assert(build_status);
     }
     /* Initialise a completer object for the complete() function */
     completer.reset(new dawgdic::RankedCompleter (dic, guide));
-    return true;
+    build_status = true;
+    assert(build_status);
+    return build_status;
 }
 
 

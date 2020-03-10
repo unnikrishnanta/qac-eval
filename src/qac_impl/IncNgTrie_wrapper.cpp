@@ -34,8 +34,8 @@ IncNgTrieCompleter::IncNgTrieCompleter() {
     max_tau = 2; // Number of mismatches allowed = 2
 }
 
-IncNgTrieCompleter::IncNgTrieCompleter(int mt){
-    max_tau = mt;
+IncNgTrieCompleter::IncNgTrieCompleter(int tau){
+    max_tau = tau;
 }
 
 void IncNgTrieCompleter:: build_index(const StrVec& str_set,

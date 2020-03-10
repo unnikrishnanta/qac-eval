@@ -16,7 +16,7 @@ using namespace dbwsim;
 class IncNgTrieCompleter {
     public:
         IncNgTrieCompleter();
-        IncNgTrieCompleter(int mt);
+        IncNgTrieCompleter(int tau);
         void build_index(const StrVec& str_set, const ScoreVec& scores);
         void build_index(const Collection& coll);
         CandidateSet<std::string_view>

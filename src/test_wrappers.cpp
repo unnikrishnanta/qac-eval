@@ -7,7 +7,6 @@
 #include "qac_impl/dawgtrie_wrapper.hpp"
 #include "qac_impl/marisa_wrapper.hpp"
 #include "qac_impl/IncNgTrie_wrapper.hpp"
-#include "config.hpp"
 #include <numeric>
 
 /* #define TEST_HTRIE 1 */
@@ -77,7 +76,8 @@ int main(int argc, char *argv[])
 
 #ifdef TEST_DAWG
     cout << "Building DAWG Trie\n";
-    DAWGTrie dtrie (coll_wiki);
+    DAWGTrie dtrie;
+    dtrie.build_index(coll_wiki);
     if(!dtrie.build_status){
         cout << "\nDAWG Trie construction failed\n";
         return 1;

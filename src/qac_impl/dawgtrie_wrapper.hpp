@@ -18,21 +18,17 @@ using namespace dawgdic;
 class DAWGTrie{
     
     public: 
-        bool build_status; // If the trie was successfully built
-        /* Return ncomp completions for prefix */
-         DAWGTrie(const vector<string>& keys, const vector<size_t>& vals);
-         DAWGTrie(const Collection& coll);
-         // Constructor will fill in values with 0 to keys.size() - 1
-         DAWGTrie(const vector<string>& keys);
+         bool build_status; // If the trie was successfully built
+         void build_index(const Collection& coll);
+         bool build_index(const StrVec& str_set, const ScoreVec& scores);
+         void build_index(const StrVec& keys);
          CandidateSet<std::string>
              complete(const string& prefix, const uint8_t& ncomp);
 
     private:
-
         Dictionary dic;
         RankedGuide guide;
         std::unique_ptr< RankedCompleter > completer;
         /* Build trie from seperate key and value vectors */
         bool build(const StrVec& keys);
-        bool build(const StrVec& keys, const ScoreVec& values);
 };

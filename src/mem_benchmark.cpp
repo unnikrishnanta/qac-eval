@@ -4,7 +4,6 @@
 #include "core/collection.hpp"
 #include "core/pqlog.hpp"
 #include "qac_impl/htrie_wrapper.hpp"
-#include "config.hpp"
 #include <thread>
 #include <chrono>
 

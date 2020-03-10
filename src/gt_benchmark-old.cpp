@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -13,7 +14,7 @@
 #define TEST_HTRIE 1
 #define TEST_MARISA 1
 /* #define TEST_DAWG 1 */
-/* #define TEST_INCGT 1 */
+#define TEST_INCGT 1
 
 
 using namespace std;
@@ -45,8 +46,7 @@ static void  BM_build_dawg(benchmark::State& state) {
     coll_wiki.read_collection(SIZE_MAX, true);
 
     for (auto _ : state){
-        DAWGTrie dtrie;
-        dtrie.build_index(coll_wiki);
+        DAWGTrie dtrie (coll_wiki);
     }
 }
 
@@ -174,8 +174,7 @@ static void BM_synth_query_dawg(benchmark::State& state) {
     Collection coll_wiki('w');
     const string wiki_file = WIKI_ROOT + "clickstream-agg-wiki-64B.tsv";
     coll_wiki.read_collection(SIZE_MAX, true);
-    DAWGTrie dtrie ;
-    dtrie.build_index(coll_wiki);
+    DAWGTrie dtrie (coll_wiki);
 
     PQLog pqlog;
     pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", 1000);
@@ -248,13 +247,13 @@ static void BM_lr_query(benchmark::State& state) {
 // Register the function as a benchmark
 BENCHMARK(BM_build_htrie)->Unit(benchmark::kMillisecond);
 BENCHMARK(BM_build_marisa)->Unit(benchmark::kMillisecond);
-/* BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond); */
-/* BENCHMARK(BM_build_IncNgT)->Unit(benchmark::kMillisecond); */
+BENCHMARK(BM_build_dawg)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_build_IncNgT)->Unit(benchmark::kMillisecond);
 
-/* BENCHMARK(BM_synth_query_htrie)->Unit(benchmark::kMillisecond)->Arg(8); */
-/* BENCHMARK(BM_synth_query_marisa)->Unit(benchmark::kMillisecond)->Arg(8); */
-/* BENCHMARK(BM_synth_query_dawg)->Unit(benchmark::kMillisecond)->Arg(8); */
-/* BENCHMARK(BM_synth_query_IncNgT)->Unit(benchmark::kMillisecond)->Arg(8); */
+BENCHMARK(BM_synth_query_htrie)->Unit(benchmark::kMillisecond)->Arg(8);
+BENCHMARK(BM_synth_query_marisa)->Unit(benchmark::kMillisecond)->Arg(8);
+BENCHMARK(BM_synth_query_dawg)->Unit(benchmark::kMillisecond)->Arg(8);
+BENCHMARK(BM_synth_query_IncNgT)->Unit(benchmark::kMillisecond)->Arg(8);
 
 /* BENCHMARK(BM_synth_query_htrie)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(2, 8); */
 
@@ -263,38 +262,4 @@ int main (int argc, char ** argv) {
     benchmark::RunSpecifiedBenchmarks ();
     return 0;
 }
-
-/* /1* #include <iostream> *1/ */
-/* #include <benchmark/benchmark.h> */
-/* #include <timeprof/benchmark-build.hpp> */
-
-
-/* #define WIKI 'w' */
-/* #define CWEB 'c' */
-/* #define WIKI_NROWS 5077651 */
-/* #define CWEB_NROWS 195285642 */
-
-/* #ifdef WIKI */ 
-/* #define NROWS WIKI_NROWS */
-/* #else */
-/* #define NROWS CWEB_NROWS */
-/* #endif */
-
-
-/* /1* BENCHMARK_REGISTER_F(BuildFixture, BuildHTrie) *1/ */
-/* /1*     ->RangeMultiplier(2)->Ranges({{1<<10, NROWS}}); *1/ */
-/* /1* BENCHMARK_REGISTER_F(BuildFixture, BuildMarisa) *1/ */
-/* /1*     ->RangeMultiplier(2)->Ranges({{1<<10, NROWS}}); *1/ */
-/* /1* BENCHMARK_REGISTER_F(BuildFixture, BuildDAWG) *1/ */
-/* /1*     ->RangeMultiplier(2)->Ranges({{1<<10, NROWS}}); *1/ */
-/* BENCHMARK_REGISTER_F(BuildFixture, BuildIncNgT) */
-/*     ->RangeMultiplier(2)->Ranges({{1<<10, NROWS}, {1,2}}); */
-/* /1* BENCHMARK_REGISTER_F(HTrieFixture, SynthQuery)->Args({WIKI, 10000, 1000}); *1/ */
-
-/* BENCHMARK_MAIN(); */
-/* /1* int main (int argc, char ** argv) { *1/ */
-/* /1*     benchmark::Initialize (& argc, argv); *1/ */
-/* /1*     benchmark::RunSpecifiedBenchmarks (); *1/ */
-/* /1*     return 0; *1/ */
-/* /1* } *1/ */
 

@@ -46,9 +46,12 @@ void MarisaCompleter::build_index(const StringDict& str_dict){
 }
 
 void MarisaCompleter::build_index(const Collection& coll){
+    build_index(coll.get_strings(), coll.get_scores());
+}
+
+void MarisaCompleter::build_index(const StrVec& str_set, const ScoreVec& scores){
     keyset.reset();
-    auto scores = coll.get_scores();
-    read_keys(coll.get_strings(), scores, keyset);
+    read_keys(str_set, scores, keyset);
     trie.build(keyset);
     // Store weights in the weights array. See how weights are managed
     // https://code.google.com/archive/p/marisa-trie/issues/4
@@ -58,7 +61,6 @@ void MarisaCompleter::build_index(const Collection& coll){
         weights[k.id()] = scores[i];
     }
 }
-
 
 void MarisaCompleter::predictive_search(const string& str,
                                         const size_t& max_num_results){
