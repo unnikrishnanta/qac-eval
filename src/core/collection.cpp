@@ -13,15 +13,15 @@ using namespace std;
 using namespace boost::iostreams;
 
 Collection::Collection(const char c) : coll_type(c){
-    cout << "Collection constructor\n";
+    cout << "Collection constructor" << endl;
 }
 
 Collection::~Collection(){
-    cout << "Collection destructor\n";
+    cout << "Collection destructor"<< endl;
 }
 
 size_t Collection::size(){
-    return str_dict_.size();
+    return str_set_.size(); 
 }
 
 void Collection::sort_strdict(StringDict& zipped, int key){
@@ -52,7 +52,6 @@ void Collection::uniform_sample(const size_t& nrows,
     if(sort)
         sort_strdict(sample, sort_key);
     unzip(sample);
-    /* cout << "str_set_.size() " << str_set_.size() << "\n"; */
 }
 
 /* Reads the tab seperated string score pairs from filename and permutes them

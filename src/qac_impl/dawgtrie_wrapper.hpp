@@ -1,3 +1,5 @@
+#ifndef DAWG_WRAPPER_H
+#define DAWG_WRAPPER_H
 /* TODO: 
  *  3. Get completions with prefix added. 
  *  */
@@ -32,3 +34,4 @@ class DAWGTrie{
         /* Build trie from seperate key and value vectors */
         bool build(const StrVec& keys);
 };
+#endif /* ifndef DAWG_WRAPPER_H */

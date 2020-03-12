@@ -27,7 +27,8 @@ class Collection {
         /* void sort_keys(); */
         StrVec const &get_strings() const { return str_set_; }
         ScoreVec const &get_scores() const { return scores_; }
-        size_t size();
+        size_t size();  /* Current size of the collection after sampling */
+
         void uniform_sample(const size_t& nrows,
                             const bool& sort=true, const int& sort_key=0);
 

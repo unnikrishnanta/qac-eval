@@ -1,3 +1,6 @@
+#ifndef PQLOG_H
+#define PQLOG_H
+
 #include <map>
 #include <vector>
 #include <string>
@@ -36,3 +39,5 @@ class LRLog {
         log_t lr_log; /* Log obtained by typing left to right */
     
 };
+
+#endif /* ifndef PQLOG_H */
