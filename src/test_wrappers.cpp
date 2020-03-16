@@ -10,10 +10,11 @@
 #include <numeric>
 
 /* #define TEST_HTRIE 1 */
-#define TEST_MARISA 1
+/* #define TEST_MARISA 1 */
 #define TEST_DAWG 1
 /* #define TEST_INCGT 1 */
 #define NCOMP 10
+#define COLLECTION 'c'
 
 using namespace std;
 using namespace boost::program_options;
@@ -59,9 +60,9 @@ int main(int argc, char *argv[])
         cerr << e.what() << "\n";
     }
 
-    Collection coll_wiki('c');
-    cout << "Reading wiki clickstream collection\n";
-    coll_wiki.read_collection(n_rows, true);
+    Collection coll_wiki;
+    cout << "Reading collection\n";
+    coll_wiki.read_collection(COLLECTION, n_rows, true);
 
 #ifdef TEST_HTRIE
     cout << "\nBuilding HAT Trie\n";

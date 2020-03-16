@@ -18,9 +18,9 @@ const string CWEB_COLLECTION = "clueweb-agg-32B.tsv";
 class Collection {
 
     public:
-        Collection(const char c);
+        Collection();
         ~Collection();
-        void read_collection(const size_t& n_rows,
+        void read_collection(const char& coll_type, const size_t& n_rows,
                              const bool& skip_header=false, 
                              const bool& sort=true, const int& sort_key=0);
         void read_collection(const bool& skip_header=false);
@@ -33,7 +33,6 @@ class Collection {
                             const bool& sort=true, const int& sort_key=0);
 
     private:
-        const char coll_type; // Wiki or Clueweb
         StrVec str_set_; // If sampled, only the sample will be stored
         ScoreVec scores_; // If sampled, only the sample will be stored
         StringDict str_dict_; // Always stores the collection in full

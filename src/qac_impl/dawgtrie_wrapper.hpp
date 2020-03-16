@@ -3,11 +3,11 @@
 /* TODO: 
  *  3. Get completions with prefix added. 
  *  */
-#include "dawgdic/include/dawgdic/dawg-builder.h"
-#include "dawgdic/include/dawgdic/dictionary-builder.h"
-#include "dawgdic/include/dawgdic/guide-builder.h"
-#include "dawgdic/include/dawgdic/ranked-completer.h"
-#include "dawgdic/include/dawgdic/ranked-guide-builder.h"
+#include "dawgdic/dawg-builder.h"
+#include "dawgdic/dictionary-builder.h"
+#include "dawgdic/guide-builder.h"
+#include "dawgdic/ranked-completer.h"
+#include "dawgdic/ranked-guide-builder.h"
 #include "../core/dtypes.hpp"
 #include "../core/collection.hpp"
 #include <vector>

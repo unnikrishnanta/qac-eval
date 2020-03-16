@@ -50,7 +50,7 @@ class RankedGuideBuilder {
   bool BuildRankedGuide(VALUE_COMPARER_TYPE value_comparer) {
     // Initializes units and flags.
     units_.resize(dic_.size());
-    is_fixed_table_.resize(dic_.size() / 8, '\0');
+    is_fixed_table_.resize(dic_.size() / sizeof(ValueType), '\0');
 
     if (dawg_.size() <= 1) {
       return true;
@@ -169,11 +169,12 @@ class RankedGuideBuilder {
   }
 
   void set_is_fixed(BaseType index) {
-    is_fixed_table_[index / 8] |= 1 << (index % 8);
+    is_fixed_table_[index / sizeof(ValueType)] |= 1 << (index % sizeof(ValueType));
   }
 
   bool is_fixed(BaseType index) const {
-    return (is_fixed_table_[index / 8] & (1 << (index % 8))) != 0;
+    return (is_fixed_table_[index / sizeof(ValueType)] &
+            (1 << (index % sizeof(ValueType)))) != 0;
   }
 };
 

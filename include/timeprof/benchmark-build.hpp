@@ -11,15 +11,15 @@
 #include <benchmark/benchmark.h>
 #include <memory>
 
-#define COLLECTION 'c'
+#define COLLECTION 'w'
 
 class BuildFixture : public ::benchmark::Fixture {
  public:
      Collection coll;
      
-     BuildFixture(): coll(COLLECTION) {
+     BuildFixture(): coll() {
         cout << "Fixture Constructor\n";
-        coll.read_collection(SIZE_MAX, true);
+        coll.read_collection(COLLECTION, SIZE_MAX, true);
      }
 
      void SetUp(const ::benchmark::State& st) {
@@ -72,6 +72,7 @@ BENCHMARK_DEFINE_F(BuildFixture, BuildIncNgT)(benchmark::State& state) {
         inc.build_index(coll.get_strings(), coll.get_scores());
     }
 }
+
 /* BENCHMARK_DEFINE_F(BuildFixture, SynthQuery)(benchmark::State& state) { */
 /*   nrows = static_cast<size_t>(state.range(1)); */
 /*   /1* cout << "PQ nrows = " << nrows; *1/ */
@@ -88,4 +89,3 @@ BENCHMARK_DEFINE_F(BuildFixture, BuildIncNgT)(benchmark::State& state) {
 /*       } */
 /*     } */
 /*   } */
-/* } */

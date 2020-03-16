@@ -11,7 +11,6 @@
 #include <iostream>
 #include <utility>
 #include <assert.h>
-#include "dawgdic/include/dawgdic/ranked-completer.h"
 #include "dawgtrie_wrapper.hpp"
 
 using namespace std;

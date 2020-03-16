@@ -12,8 +12,8 @@
 using namespace std;
 using namespace boost::iostreams;
 
-Collection::Collection(const char c) : coll_type(c){
-    cout << "Collection constructor" << endl;
+Collection::Collection(){
+    cout << "Collection constructor"<< endl;
 }
 
 Collection::~Collection(){
@@ -57,7 +57,7 @@ void Collection::uniform_sample(const size_t& nrows,
 /* Reads the tab seperated string score pairs from filename and permutes them
  * according to string if key=0 in sort_strdict and by score otherwise 
  */
-void Collection::read_collection(const size_t& n_rows,
+void Collection::read_collection(const char& coll_type, const size_t& n_rows,
                                  const bool& skip_header, 
                                  const bool& sort, const int& sort_key){
     string file_name;
