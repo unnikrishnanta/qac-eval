@@ -49,6 +49,7 @@ class RankedGuideBuilder {
   template <typename VALUE_COMPARER_TYPE>
   bool BuildRankedGuide(VALUE_COMPARER_TYPE value_comparer) {
     // Initializes units and flags.
+    /* std::cout << "dic_size() " << dic_.size() << "\n"; */
     units_.resize(dic_.size());
     is_fixed_table_.resize(dic_.size() / sizeof(ValueType), '\0');
 

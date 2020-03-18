@@ -7,7 +7,7 @@
 #include <iostream>
 #include <benchmark/benchmark.h>
 #include <memory>
-#include <timeprof/benchmark-build.hpp>
+#include <timeprof/benchmark_build.hpp>
 
 
 #define WIKI 'w'
@@ -38,7 +38,7 @@
 Collection BuildFixture::coll;
 
 int main(int argc, char** argv) {
-  BuildFixture::coll.read_collection(COLLECTION, SIZE_MAX, true);
+  BuildFixture::coll.read_collection(COLLECTION, 100, true);
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
 }

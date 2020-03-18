@@ -12,13 +12,6 @@
 using namespace std;
 using namespace boost::iostreams;
 
-Collection::Collection(){
-    cout << "Collection constructor"<< endl;
-}
-
-Collection::~Collection(){
-    cout << "Collection destructor"<< endl;
-}
 
 size_t Collection::size(){
     return str_set_.size(); 

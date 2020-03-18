@@ -13,39 +13,37 @@
 
 #define COLLECTION 'w'
 
+#define COUNTERS 
+
 class BuildFixture : public ::benchmark::Fixture {
  public:
      static Collection coll;
-     
-     /* BuildFixture(): coll() { */
-     /*    cout << "Fixture Constructor\n"; */
-     /*    coll.read_collection(COLLECTION, SIZE_MAX, true); */
-     /* } */
-
-     ~BuildFixture() {
-         cout << "Fixture destructor\n";
-     }
 };
+
+/* Add a set of counters derived from coll  to the State object.
+ * The counters will be included in the benchmark reporting */
+void add_build_counters(const Collection& coll, benchmark::State& state) {
+    double nbytes = 0;
+    for (const auto s : coll.get_strings()) {
+        nbytes += s.length();
+    }
+    state.counters["NBytes"] = benchmark::Counter(nbytes);
+    // We process with the rate of state.range(0) bytes every iteration:
+    state.counters["BytesProcessed"] = benchmark::Counter(nbytes,
+                                benchmark::Counter::kIsIterationInvariantRate,
+                                benchmark::Counter::OneK::kIs1024);
+}
+
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildHTrie)(benchmark::State& state) {
     auto nrows = static_cast<size_t>(state.range(0));
     assert(coll.size());  // Make sure that coll is not empty
     coll.uniform_sample(nrows);
-    double nbytes = 0, n_iter = 0;
     for (auto _ : state) {
         HTrieCompleter ht_comp;
         ht_comp.build_index(coll.get_strings(), coll.get_scores());
-        n_iter ++;
     }
-    for (const auto s : coll.get_strings()) {
-        nbytes += s.length();
-    }
-    state.counters["NBytes"] = nbytes;
-    state.counters["NIter"] = n_iter; // Nor required. Kept for cross checking
-    // We process with the rate of state.range(0) bytes every iteration:
-    state.counters["BytesProcessed"] = benchmark::Counter(n_iter * nbytes,
-                                benchmark::Counter::kIsIterationInvariantRate,
-                                benchmark::Counter::OneK::kIs1024);
+    add_build_counters(coll, state);
 }
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildMarisa)(benchmark::State& state) {
@@ -56,6 +54,7 @@ BENCHMARK_DEFINE_F(BuildFixture, BuildMarisa)(benchmark::State& state) {
         MarisaCompleter mtc;
         mtc.build_index(coll.get_strings(), coll.get_scores());
     }
+    add_build_counters(coll, state);
 }
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildDAWG)(benchmark::State& state) {
@@ -66,6 +65,7 @@ BENCHMARK_DEFINE_F(BuildFixture, BuildDAWG)(benchmark::State& state) {
         DAWGTrie dtrie;
         dtrie.build_index(coll.get_strings(), coll.get_scores());
     }
+    add_build_counters(coll, state);
 }
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildIncNgT)(benchmark::State& state) {
@@ -78,6 +78,7 @@ BENCHMARK_DEFINE_F(BuildFixture, BuildIncNgT)(benchmark::State& state) {
         IncNgTrieCompleter inc(tau);
         inc.build_index(coll.get_strings(), coll.get_scores());
     }
+    add_build_counters(coll, state);
 }
 
 /* /1* BENCHMARK_DEFINE_F(BuildFixture, SynthQuery)(benchmark::State& state) { *1/ */

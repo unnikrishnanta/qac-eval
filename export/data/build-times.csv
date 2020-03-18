@@ -1,0 +1,50 @@
+2020-03-18 19:19:46
+Running ./bm_build
+Run on (4 X 2000 MHz CPU s)
+CPU Caches:
+  L1 Data 32K (x2)
+  L1 Instruction 32K (x2)
+  L2 Unified 262K (x2)
+  L3 Unified 4194K (x1)
+Load Average: 3.97, 2.83, 2.38
+name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message,"BytesProcessed","NBytes"
+"BuildFixture/BuildHTrie/512",6967,96284,95248,ns,,,,,,1.74387e+07,1661
+"BuildFixture/BuildHTrie/1024",7172,94318.3,93524.1,ns,,,,,,1.77601e+07,1661
+"BuildFixture/BuildHTrie/2048",7113,96862.5,95616.1,ns,,,,,,1.73716e+07,1661
+"BuildFixture/BuildHTrie/4096",7223,98497.3,96992.7,ns,,,,,,1.7125e+07,1661
+"BuildFixture/BuildHTrie/8192",7371,97569.7,96391.4,ns,,,,,,1.72318e+07,1661
+"BuildFixture/BuildHTrie/16384",7256,110087,103695,ns,,,,,,1.60181e+07,1661
+"BuildFixture/BuildHTrie/32768",7273,95438.9,94385.4,ns,,,,,,1.75981e+07,1661
+"BuildFixture/BuildHTrie/65536",5513,109866,105833,ns,,,,,,1.56945e+07,1661
+"BuildFixture/BuildHTrie/131072",7312,98049,96760,ns,,,,,,1.71662e+07,1661
+"BuildFixture/BuildHTrie/262144",6992,98519,96454.7,ns,,,,,,1.72205e+07,1661
+"BuildFixture/BuildHTrie/524288",7410,100106,97945.1,ns,,,,,,1.69585e+07,1661
+"BuildFixture/BuildHTrie/1048576",7280,100743,99069.6,ns,,,,,,1.6766e+07,1661
+"BuildFixture/BuildHTrie/2097152",7274,110898,105288,ns,,,,,,1.57757e+07,1661
+"BuildFixture/BuildHTrie/4194304",6297,102693,99157.1,ns,,,,,,1.67512e+07,1661
+"BuildFixture/BuildHTrie/5077651",7152,99341.4,97424.4,ns,,,,,,1.70491e+07,1661
+"BuildFixture/BuildMarisa/512",4026,174513,171467,ns,,,,,,9.68697e+06,1661
+"BuildFixture/BuildMarisa/1024",4027,184151,177983,ns,,,,,,9.33235e+06,1661
+"BuildFixture/BuildMarisa/2048",4106,170728,168589,ns,,,,,,9.85238e+06,1661
+"BuildFixture/BuildMarisa/4096",4126,178397,172857,ns,,,,,,9.60913e+06,1661
+"BuildFixture/BuildMarisa/8192",4165,175419,172493,ns,,,,,,9.62935e+06,1661
+"BuildFixture/BuildMarisa/16384",4100,169698,167127,ns,,,,,,9.93856e+06,1661
+"BuildFixture/BuildMarisa/32768",4258,222217,188234,ns,,,,,,8.82414e+06,1661
+"BuildFixture/BuildMarisa/65536",4028,169667,167320,ns,,,,,,9.92707e+06,1661
+"BuildFixture/BuildMarisa/131072",4286,166212,164592,ns,,,,,,1.00916e+07,1661
+"BuildFixture/BuildMarisa/262144",4307,174074,170379,ns,,,,,,9.74885e+06,1661
+"BuildFixture/BuildMarisa/524288",3621,167677,164782,ns,,,,,,1.008e+07,1661
+"BuildFixture/BuildMarisa/1048576",3460,187129,182266,ns,,,,,,9.11303e+06,1661
+"BuildFixture/BuildMarisa/2097152",3552,187180,179395,ns,,,,,,9.25888e+06,1661
+"BuildFixture/BuildMarisa/4194304",3324,168591,165486,ns,,,,,,1.00371e+07,1661
+"BuildFixture/BuildMarisa/5077651",4354,169237,166449,ns,,,,,,9.97903e+06,1661
+"BuildFixture/BuildDAWG/512",241,2.97102e+06,2.94172e+06,ns,,,,,,564636,1661
+"BuildFixture/BuildDAWG/1024",243,2.9921e+06,2.95633e+06,ns,,,,,,561845,1661
+"BuildFixture/BuildDAWG/2048",229,3.30428e+06,3.10111e+06,ns,,,,,,535615,1661
+"BuildFixture/BuildDAWG/4096",224,2.91474e+06,2.88597e+06,ns,,,,,,575542,1661
+"BuildFixture/BuildDAWG/8192",223,3.38089e+06,3.2843e+06,ns,,,,,,505739,1661
+"BuildFixture/BuildDAWG/16384",203,3.43963e+06,3.17652e+06,ns,,,,,,522899,1661
+"BuildFixture/BuildDAWG/32768",216,3.34543e+06,3.12174e+06,ns,,,,,,532076,1661
+"BuildFixture/BuildDAWG/65536",205,3.43774e+06,3.32515e+06,ns,,,,,,499526,1661
+"BuildFixture/BuildDAWG/131072",229,3.48016e+06,3.33487e+06,ns,,,,,,498071,1661
+"BuildFixture/BuildDAWG/262144",236,3.32642e+06,3.1483e+06,ns,,,,,,527586,1661

@@ -18,8 +18,6 @@ const string CWEB_COLLECTION = "clueweb-agg-32B.tsv";
 class Collection {
 
     public:
-        Collection();
-        ~Collection();
         void read_collection(const char& coll_type, const size_t& n_rows,
                              const bool& skip_header=false, 
                              const bool& sort=true, const int& sort_key=0);

@@ -72,6 +72,7 @@ bool DAWGTrie::build_index(const StrVec& keys, const ScoreVec& values) {
     if (!dawgdic::DictionaryBuilder::Build(dawg, &dic)) {
         std::cerr << "error: failed to build Dictionary" << std::endl;
         build_status = false;
+        assert(build_status);
     }
     if (!dawgdic::RankedGuideBuilder::Build(dawg, dic, &guide)) {
         std::cerr << "error: failed to build RankedGuide" << std::endl;
