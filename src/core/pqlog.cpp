@@ -26,7 +26,7 @@
 using namespace std;
 using namespace boost::iostreams;
 
-void PQLog::load_pqlog(const string& file_name, const size_t& n_rows){
+void PQLog::load_synthlog(const string& file_name, const size_t& n_rows){
 
 
   cout << "Reading synthetic log from " << file_name << "\n";
@@ -59,15 +59,15 @@ void PQLog::load_pqlog(const string& file_name, const size_t& n_rows){
     cout << pq_log_.size() << " conversations\n";
 }
 
-QueryLog PQLog::lr_log(){
-    QueryLog lr_log;
+PQLog PQLog::lr_log(){
+    PQLog lr_log;
     for(const auto& [qid, pvec]: pq_log_){
         const auto lastp = pvec.back();
         vector<string> lrp_vec;
         for (unsigned int w = 1; w <= lastp.length(); ++w) {
             lrp_vec.push_back(lastp.substr(0, w)); 
         }
-        lr_log[qid] = lrp_vec;
+        lr_log.insert(qid, lrp_vec);
     }
     return lr_log;
 }
