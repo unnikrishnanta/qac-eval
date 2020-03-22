@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 #include <queue>
+#include <map>
 
 using namespace std;
 
@@ -15,6 +16,7 @@ using ScoreType = size_t;
 using ScoreVec = vector<ScoreType>;
 using ScoredStr = pair<string, ScoreType>;
 using StringDict = vector<ScoredStr>;
+using QueryLog = map<string, vector<string>>;
 
 /* Type declaration for a single completion */
 template <typename StrType>

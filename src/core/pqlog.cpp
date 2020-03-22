@@ -20,6 +20,7 @@
 #include <random>
 #include <utility>
 
+#include "dtypes.hpp"
 #include "pqlog.hpp"
 
 using namespace std;
@@ -58,8 +59,8 @@ void PQLog::load_pqlog(const string& file_name, const size_t& n_rows){
     cout << pq_log_.size() << " conversations\n";
 }
 
-
-void LRLog::generate_lr_log(const PQLog& pq_log_){
+QueryLog PQLog::lr_log(){
+    QueryLog lr_log;
     for(const auto& [qid, pvec]: pq_log_){
         const auto lastp = pvec.back();
         vector<string> lrp_vec;
@@ -68,6 +69,7 @@ void LRLog::generate_lr_log(const PQLog& pq_log_){
         }
         lr_log[qid] = lrp_vec;
     }
+    return lr_log;
 }
 
 /* Randomly shuffles the vectors str_set and scores and selects nrows samples
