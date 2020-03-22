@@ -1,6 +1,12 @@
-/*
+/* Benchmark the build-time of various QAC implementations using Google
+ * benchmark library. 
+ *
+ * Release notes: 
+ * =====================
  * Fixtures over simple benchmarks. With simple benchmarks, the file will be
  * reloaded for each iteration -> too slow
+ *
+ * Written by: Unni Krishnan. Last major modification: 18/03/2020.
  */
 #include "core/collection.hpp"
 #include <cstdint>
@@ -14,6 +20,8 @@
 #define CWEB 'c'
 #define WIKI_NROWS 5077651
 #define CWEB_NROWS 195285642
+
+#define COLLECTION WIKI
 
 #if COLLECTION==WIKI 
 #define NROWS WIKI_NROWS
@@ -38,7 +46,7 @@
 Collection BuildFixture::coll;
 
 int main(int argc, char** argv) {
-  BuildFixture::coll.read_collection(COLLECTION, 100, true);
+  BuildFixture::coll.read_collection(COLLECTION, NROWS, true);
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
 }
