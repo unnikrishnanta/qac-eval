@@ -10,26 +10,34 @@
 #include <benchmark/benchmark.h>
 #include <timeprof/benchmark_query.hpp>
 
-#define WIKISYNTH_SIZE 1206653
-
-
-BENCHMARK_REGISTER_F(QueryFixture, HTrieSynth)
+BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie)
     ->RangeMultiplier(8)
-    ->Ranges({{NROWS, NROWS},
+    ->Ranges({{1000, 1000},
+    /* ->Ranges({{NROWS, NROWS}, */
              {1<<4, WIKISYNTH_SIZE},
-             {COLLECTION, COLLECTION}})
+             {SYNTHLOG, SYNTHLOG}})
     ->Unit(benchmark::kMillisecond);
-    /* ->RangeMultiplier(2)->Ranges({{1<<9, 100}}); */
-    /* ->Args({1000, 100}); */
 
+BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa)
+    ->RangeMultiplier(8)
+    ->Ranges({{1000, 1000},
+    /* ->Ranges({{NROWS, NROWS}, */
+             {1<<4, WIKISYNTH_SIZE},
+             {SYNTHLOG, SYNTHLOG}})
+    ->Unit(benchmark::kMillisecond);
+
+
+/* Declaring static members */
 Collection QueryBase::coll;
-PQLog QueryBase::pqlog;
+PQLog QueryBase::synth_log;
 
 int main(int argc, char *argv[])
 {
     benchmark::Initialize(&argc, argv);
     QueryBase::coll.read_collection(COLLECTION, NROWS, true);
-    QueryBase::pqlog.load_pqlog(SYNTHLOG, SIZE_MAX);
+    QueryBase::synth_log.load_synthlog(WIKISYNTH, SIZE_MAX);
+    std::cout << "\n<Benchmark>/*/"<< (int) SYNTHLOG << ": SynthLog benchmrks\n";
+    std::cout << "<Benchmark>/*/"<< (int) LRLOG << ": LRLog benchmrks\n\n";
     benchmark::RunSpecifiedBenchmarks();
     return 0;
 }
