@@ -28,45 +28,37 @@
 #define SYNTHLOG "../../synth_log/data/cweb-synthlog.tsv"
 #endif
 
-/* class QueryBase { */
-/*  public: */
-/*      static Collection coll; */
-/*      PQLog pqlog; */
-/* }; */
+class QueryBase {
+ public:
+     static Collection coll;
+     static PQLog pqlog;
+};
 
 
-class QueryFixture: public benchmark::Fixture  {
+class QueryFixture: public QueryBase, public benchmark::Fixture {
     public:
-        static Collection coll;
-        static PQLog pqlog;
         std::unique_ptr<HTrieCompleter> ht_comp;
         PQLog pqlog_sampled;
 
-        /* QueryFixture() { */
-        /* } */
-
         void SetUp(const benchmark::State& state) {
-            auto coll_nrows = static_cast<size_t>(state.range(1));
+            auto coll_nrows = static_cast<size_t>(state.range(0));
             auto n_conv = static_cast<size_t>(state.range(1));
-            assert(ht_comp.get() == nullptr); // Make sure index was destroyed
             assert(coll.size());
             coll.uniform_sample(coll_nrows);
             ht_comp = std::make_unique<HTrieCompleter>();
             ht_comp->build_index(coll.get_strings(), coll.get_scores());
             pqlog_sampled = pqlog.uniform_sample(n_conv);
+            assert(pqlog_sampled.size());
         }
 
         void TearDown(const benchmark::State& state) {
             assert(ht_comp.get() != nullptr);
             ht_comp.reset();
         }
-
-        ~QueryFixture() {
-            /* std::cout << "HAT-trie query destructor\n"; */
-        }
 };
 
-BENCHMARK_DEFINE_F(QueryFixture, SynthQuery)(benchmark::State& state) {
+/* Benchmark HAT-Trie on SynthLog */
+BENCHMARK_DEFINE_F(QueryFixture, HTrieSynth)(benchmark::State& state) {
     double num_completions=0, plen_sum=0, num_pq=0;
     for (auto _ : state) {
         for (const auto& [qid, pvec]: pqlog_sampled) {
