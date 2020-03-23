@@ -2,12 +2,14 @@
 #define DTYPES_H
 
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
 #include <queue>
 #include <map>
+#include <algorithm>
 
 using namespace std;
 
@@ -19,49 +21,70 @@ using StringDict = vector<ScoredStr>;
 using QueryLog = map<string, vector<string>>;
 
 /* Type declaration for a single completion */
-template <typename StrType>
-struct comp_t {
-    StrType comp_strview;
-    ScoreType score;
 
-    comp_t () {}
-    comp_t (const string_view cs, const ScoreType& val): comp_strview(cs), score(val) {}
-    comp_t (const string& cs, const ScoreType& val): comp_strview(cs), score(val) {}
+template <typename StrType>
+class CandidateSet {
+
+    public:
+        typedef typename vector<pair<StrType, ScoreType>>::iterator iterator;
+        typedef typename vector<pair<StrType, ScoreType>>::const_iterator const_iterator;
+        
+        // using const_iterator = array_type::const_iterator;
+        CandidateSet(int k=8): k_(k) {
+            n_comp_ = 0;
+            c_.resize(k_);
+        }
+
+        void set_k(const int& k) {
+            if(k > k_) 
+                c_.resize(k);
+            k_ = k;
+        }
+
+        iterator begin() noexcept { return c_.begin(); }
+        const_iterator cbegin() const noexcept { return c_.cbegin(); }
+        iterator end() noexcept { return c_.begin() + n_comp_; }
+        const_iterator cend() const noexcept { return c_.cbegin() + n_comp_; }
+
+        int size() const { return std::as_const(n_comp_);}
+
+    protected:
+        vector<pair<StrType, ScoreType>> c_;
+        int k_;
+        int n_comp_; // #active completions. Needed here for iterators
 };
 
-template <typename StrType>
-struct CompareComps {
-    bool operator()(comp_t<StrType> const & lhs, comp_t<StrType> const & rhs) {
-        // Maintains a min-heap
-        return lhs.score > rhs.score;
-    }
-};
-
-template <typename StrType>
-using CandidateSet  = vector<comp_t<StrType>>;
 
 /* Reference https://stackoverflow.com/a/33181173/937153
  * StrType = std::string or std::string_view to avoid copying
 */
 template <typename StrType>
-class CompHandler {
+class CompHandler: public CandidateSet<StrType> {
     public: 
-        using comp_heap_t = priority_queue<comp_t<StrType>,
-                            vector<comp_t<StrType>>, CompareComps<StrType>>;
-        CompHandler(int k): k_(k) {}
-        CompHandler(): k_(10) {}  // default #completions = 10
+
+        void reset_completor () {
+            this->n_comp_ = 0;
+        }
 
         /* Mantain top k elements in a min-heap. If there are k elements and a
          * new element comes in, add it to the heap if it is greater than the
          * heap top (lowest value)
          */
-        void insert(const string_view comp_strview, const ScoreType& score){
-            if (q_.size() < k_){ // Add to the heap straight away
-                q_.emplace(comp_strview, score);
+        void insert(const string_view comp_str, const ScoreType& score){
+            assert(this->n_comp_ <= this->k_);  // Invariant to maintain top-k
+            if (this->n_comp_ < this->k_){ // Add to the heap straight away
+                this->c_[this->n_comp_++] = make_pair(comp_str, score);
+                //cout << "inserted " << c_[n_comp_ -1].first << "\n";
+                if (this->n_comp_ == this->k_) // c_begin() + k_ is c_end()
+                    make_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
             }
-            else if (score > q_.top().score) {
-                q_.pop();
-                q_.emplace(comp_strview, score);
+            else if (score > this->c_[0].second) {
+                // moves the smallest to the end
+                std::pop_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                this->c_.back() = make_pair(comp_str, score);
+                /* Insert the element at the position last-1
+                   into the max heap defined by the range [first, last-1) */
+                std::push_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
             }
         }
 
@@ -69,18 +92,22 @@ class CompHandler {
          * obtain completions in descendng order of the score 
          */
         CandidateSet<StrType> topk_completions() {
-            CandidateSet<StrType> result(q_.size());
-            while (q_.size()) {
-                result[q_.size() - 1] = q_.top();
-                q_.pop();
-            }
-            return result;
+            if (this->n_comp_ < this->k_)
+                std::sort(this->c_.begin(), this->c_.end(),
+                        [](auto &left, auto &right) {
+                            return left.second > right.second;
+                        });
+            else 
+                std::sort_heap(this->c_.begin(), this->c_.end(),
+                        [](auto &left, auto &right) {
+                            return left.second > right.second;
+                        });
+            return *this;
         }
-        uint8_t n_comp() const { return std::as_const(q_.size());}
 
-    private: 
-        comp_heap_t q_;
-        uint8_t k_;
+        /* Both these functions return the same value */
+        int n_comp() const { return std::as_const(this->n_comp_);}
+
 };
 
 #endif

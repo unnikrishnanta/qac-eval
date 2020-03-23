@@ -95,7 +95,7 @@ add_custom_target(query-time
     COMMAND ${QUERY_TPROF}
             --benchmark_counters_tabular=true 
             --benchmark_out_format=csv
-            --benchmark_out=../export/data/build-times.csv
+            --benchmark_out=../export/data/query-times.csv
     WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 # Set up rsync

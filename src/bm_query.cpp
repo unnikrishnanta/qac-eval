@@ -12,16 +12,40 @@
 
 BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie)
     ->RangeMultiplier(8)
-    ->Ranges({{1000, 1000},
-    /* ->Ranges({{NROWS, NROWS}, */
+    /* ->Ranges({{1000, 1000}, */
+    ->Ranges({{NROWS, NROWS},
              {1<<4, WIKISYNTH_SIZE},
              {SYNTHLOG, SYNTHLOG}})
     ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa)
     ->RangeMultiplier(8)
-    ->Ranges({{1000, 1000},
-    /* ->Ranges({{NROWS, NROWS}, */
+    /* ->Ranges({{1000, 1000}, */
+    ->Ranges({{NROWS, NROWS},
+             {1<<4, WIKISYNTH_SIZE},
+             {SYNTHLOG, SYNTHLOG}})
+    ->Unit(benchmark::kMillisecond);
+
+BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1000, 1000}, */
+    ->Ranges({{NROWS, NROWS},
+             {1<<4, WIKISYNTH_SIZE},
+             {SYNTHLOG, SYNTHLOG}})
+    ->Unit(benchmark::kMillisecond);
+
+BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1000, 1000}, */
+    ->Ranges({{NROWS, NROWS},
+             {1<<4, WIKISYNTH_SIZE},
+             {SYNTHLOG, SYNTHLOG}})
+    ->Unit(benchmark::kMillisecond);
+
+BENCHMARK_REGISTER_F(QueryFixture, QueryIncNgTrie)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1000, 1000}, */
+    ->Ranges({{NROWS, NROWS},
              {1<<4, WIKISYNTH_SIZE},
              {SYNTHLOG, SYNTHLOG}})
     ->Unit(benchmark::kMillisecond);

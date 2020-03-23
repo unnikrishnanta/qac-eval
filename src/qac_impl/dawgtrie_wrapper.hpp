@@ -25,7 +25,7 @@ class DAWGTrie{
          bool build_index(const StrVec& str_set, const ScoreVec& scores);
          void build_index(const StrVec& keys);
          CandidateSet<std::string>
-             complete(const string& prefix, const uint8_t& ncomp);
+             complete(const string& prefix, const int& ncomp);
 
     private:
         Dictionary dic;
@@ -33,5 +33,6 @@ class DAWGTrie{
         std::unique_ptr< RankedCompleter > completer;
         /* Build trie from seperate key and value vectors */
         bool build(const StrVec& keys);
+        CompHandler<string> ch_;
 };
 #endif /* ifndef DAWG_WRAPPER_H */

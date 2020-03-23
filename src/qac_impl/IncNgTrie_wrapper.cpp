@@ -30,10 +30,6 @@ using namespace std;
 using namespace dbwsim;
 
 
-IncNgTrieCompleter::IncNgTrieCompleter() {
-    max_tau = 2; // Number of mismatches allowed = 2
-}
-
 IncNgTrieCompleter::IncNgTrieCompleter(int tau){
     max_tau = tau;
 }
@@ -56,8 +52,10 @@ void IncNgTrieCompleter::build_index(const Collection& coll){
 
 
 CandidateSet<std::string_view> IncNgTrieCompleter::complete(const string& prefix,
-                                        const size_t& n_comp){
-    CompHandler<std::string_view> ch(n_comp);
+                                        const int& n_comp){
+    ch_.reset_completor();
+    assert(ch_.n_comp() == 0);
+    ch_.set_k(n_comp);
     searcher->ResetSearcher();
     string p = prefix;
     searcher->ExtendQuery(p.data(), p.length());
@@ -67,7 +65,7 @@ CandidateSet<std::string_view> IncNgTrieCompleter::complete(const string& prefix
       int did = *it;
       const string_view data = searcher->index_->dataset_.GetDocumentByID(did);
       const auto& weight =  searcher->index_->dataset_.GetWeightByID(did);
-      ch.insert(data, weight); 
+      ch_.insert(data, weight); 
     }
-    return ch.topk_completions();
+    return ch_.topk_completions();
 }

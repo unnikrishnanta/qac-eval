@@ -1,3 +1,4 @@
+#include <cassert>
 #include <string_view>
 #include <utility>
 #include <iostream>
@@ -23,15 +24,18 @@ void HTrieCompleter::build_index(const StrVec& str_set, const ScoreVec& scores){
     }
 }
 
-CandidateSet<std::string_view> HTrieCompleter::complete(const string& prefix,
-                                      const uint8_t& n_comp){
+
+CandidateSet<std::string>
+HTrieCompleter::complete(const string& prefix, const int& n_comp){
+    ch_.reset_completor();
+    assert(ch_.n_comp() == 0);
+    ch_.set_k(n_comp);
     string key_buffer;
-    CompHandler<std::string_view> ch(n_comp);
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
-        ch.insert(it.key(), it.value());
+        ch_.insert(it.key(), it.value());
     }
-    return ch.topk_completions();
+    return ch_.topk_completions();
 }
 
 void HTrieCompleter::update_index(const ScoredStr& sc){

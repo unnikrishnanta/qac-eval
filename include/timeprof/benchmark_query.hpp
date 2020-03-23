@@ -32,6 +32,8 @@
 #define WIKISYNTH "../../synth_log/data/cweb-synthlog.tsv"
 #endif
 
+#define NCOMP 8  // Number of completions 
+
 class QueryBase {
  public:
      static Collection coll;
@@ -71,12 +73,25 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
                 for (const auto& [qid, pvec]: pqlog) {
                     for(const auto& p: pvec){
                         ++num_pq;
-                        auto completions = qac_impl->complete(p, true);
+                        auto completions = qac_impl->complete(p, NCOMP);
                         num_completions += completions.size();
                         plen_sum += p.length();
                     }
                 }
             }
+            state.counters["NComp"] = num_completions;
+            state.counters["NPQ"] = num_pq; // number of partial queries
+            // Total length of partial queries processed.
+            state.counters["PQBytes"] = benchmark::Counter(plen_sum,
+                                benchmark::Counter::kIsIterationInvariantRate,
+                                benchmark::Counter::OneK::kIs1024);
+            // How many partial queries are processed per second
+            state.counters["PQRate"] = benchmark::Counter(num_pq,
+                                            benchmark::Counter::kIsRate);
+            // How many seconds it takes to process one partial query
+            state.counters["PQInvRate"] = benchmark::Counter(num_pq,
+                                            benchmark::Counter::kIsRate |
+                                            benchmark::Counter::kInvert);
         }
 
 };
@@ -90,5 +105,17 @@ BENCHMARK_TEMPLATE_DEFINE_F(QueryFixture, QueryHTrie,
 /* Benchmark Marisa-Trie */
 BENCHMARK_TEMPLATE_DEFINE_F(QueryFixture, QueryMarisa,
             MarisaCompleter)(benchmark::State& state) {
+    run_benchmarks(state);
+}
+
+/* Benchmark DAWG-Trie */
+BENCHMARK_TEMPLATE_DEFINE_F(QueryFixture, QueryDAWG,
+            DAWGTrie)(benchmark::State& state) {
+    run_benchmarks(state);
+}
+
+/* Benchmark IncNgTrie */
+BENCHMARK_TEMPLATE_DEFINE_F(QueryFixture, QueryIncNgTrie,
+            IncNgTrieCompleter)(benchmark::State& state) {
     run_benchmarks(state);
 }

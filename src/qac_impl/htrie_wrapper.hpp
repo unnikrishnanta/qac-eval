@@ -18,11 +18,12 @@ class HTrieCompleter {
         void build_index(const Collection& coll);
         void build_index(const StrVec& str_set, const ScoreVec& scores);
         void update_index(const ScoredStr& sc);
-        CandidateSet<std::string_view>
-            complete(const string& prefix, const uint8_t& n_comp);
+        CandidateSet<std::string> complete(const string& prefix,
+                                        const int& n_comp);
         void print_index_meta();
     private:
         tsl::htrie_map<char, ScoreType> ht_map;
+        CompHandler<string> ch_;
 };
 
 #endif

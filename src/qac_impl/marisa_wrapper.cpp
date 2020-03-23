@@ -85,21 +85,23 @@ void MarisaCompleter::predictive_search(const string& str,
 }
 
 
-CandidateSet<std::string_view> MarisaCompleter::complete(const string& prefix,
-                                     const uint8_t& n_comp){
+CandidateSet<std::string_view>
+MarisaCompleter::complete(const string& prefix, const int& n_comp){
     keyset.reset();
     agent.set_query(prefix.c_str(), prefix.length());
     while (trie.predictive_search(agent)) {
         keyset.push_back(agent.key());
     }
     if (!keyset.empty()) {
-        CompHandler<std::string_view> ch(n_comp);
+        ch_.reset_completor();
+        assert(ch_.n_comp() == 0);
+        ch_.set_k(n_comp);
         for (std::size_t i = 0; i < keyset.size(); ++i) {
             auto key_str = string_view(keyset[i].ptr(), keyset[i].length());
             auto score = weights[keyset[i].id()];
-            ch.insert(key_str, score);
+            ch_.insert(key_str, score);
         }
-        return ch.topk_completions();
+        return ch_.topk_completions();
     }
     return {};
 }

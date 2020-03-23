@@ -119,20 +119,20 @@ bool DAWGTrie::build(const StrVec& keys) {
 
 /* TODO: Check if completer->key() is a local variable that gets destroyed after query??
  */
-CandidateSet <std::string> DAWGTrie::complete(const string& prefix, const uint8_t& ncomp) {
+CandidateSet <std::string> DAWGTrie::complete(const string& prefix, const int& ncomp) {
     /* RankedCompleter completer(dic, guide); */
+    ch_.reset_completor();
+    assert(ch_.n_comp() == 0);
+    ch_.set_k(ncomp);
+
     dawgdic::BaseType index = dic.root();
-    /* CompHandler<std::string> ch(ncomp); */
     if (dic.Follow(prefix.c_str(), prefix.length(), &index)) {
         completer->Start(index, prefix.c_str(), prefix.length());
         while (completer->Next()) {
-            auto key_str = string_view(completer->key(), completer->length());
-            /* cout << "key_str " << key_str << "\t"; */
-            /* cout << completer->value() << "\n"; */
-            /* ch.insert(key_str, completer->value()); */
+            auto key_str = string(completer->key(), completer->length());
+            ch_.insert(key_str, completer->value());
         }
     }
-    /* return ch.topk_completions(); */
-    return {};
+    return ch_.topk_completions();
 }
 

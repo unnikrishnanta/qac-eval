@@ -23,7 +23,7 @@ class MarisaCompleter {
         void build_index(const StrVec& str_set, const ScoreVec& scores);
         /* void update_index(const scored_str_t& sc); */
         CandidateSet<std::string_view>
-            complete(const string& prefix, const uint8_t& n_comp);
+        complete(const string& prefix, const int& n_comp);
         /* void print_index_meta(); */
         void predictive_search(const string& str,
                         const size_t& max_num_results=10);
@@ -32,6 +32,7 @@ class MarisaCompleter {
         marisa::Keyset keyset;
         marisa::Agent agent;
         ScoreVec weights; // node ID to weights mapping.
+        CompHandler<string_view> ch_;
 };
 
 #endif

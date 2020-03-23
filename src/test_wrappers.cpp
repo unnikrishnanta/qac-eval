@@ -1,6 +1,7 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <string_view>
 #include "core/collection.hpp"
 #include "core/pqlog.hpp"
 #include "qac_impl/htrie_wrapper.hpp"
@@ -9,12 +10,12 @@
 #include "qac_impl/IncNgTrie_wrapper.hpp"
 #include <numeric>
 
-/* #define TEST_HTRIE 1 */
+#define TEST_HTRIE 1
 /* #define TEST_MARISA 1 */
-#define TEST_DAWG 1
+/* #define TEST_DAWG 1 */
 /* #define TEST_INCGT 1 */
 #define NCOMP 10
-#define COLLECTION 'c'
+#define COLLECTION 'w'
 
 using namespace std;
 using namespace boost::program_options;
@@ -69,10 +70,11 @@ int main(int argc, char *argv[])
     HTrieCompleter ht_comp;
     ht_comp.build_index(coll_wiki);
     cout << "HAT Trie Completions\n"<< string(30, '-') << endl;
-    auto completions = ht_comp.complete(prefix, 10);
-    for (const auto& c : completions) {
+    auto ht_completions = ht_comp.complete(prefix, 10);
+    for (const auto& c : ht_completions) {
         cout << c.first << "\t" << c.second << "\n";
     }
+    cout << "Total " << ht_completions.size() << " completions \n";
 #endif
 
 #ifdef TEST_DAWG
@@ -84,9 +86,9 @@ int main(int argc, char *argv[])
         return 1;
     }
     cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl;
-    auto completions = dtrie.complete(prefix, 10);
-    for (const auto& c : completions) {
-        cout << c.comp_strview << "\t" << c.score << "\n";
+    auto dt_completions = dtrie.complete(prefix, 10);
+    for (const auto& c : dt_completions) {
+        cout << c.first << "\t" << c.second << "\n";
     }
 
 #endif
@@ -98,7 +100,7 @@ int main(int argc, char *argv[])
     cout << "\nMarisa Trie Completions\n" << string(30, '-') << endl;
     auto mt_completions = mtc.complete(prefix, 10);
     for (const auto& c : mt_completions) {
-       cout << c.comp_strview << "\t" << c.score << "\n";
+       cout << c.first << "\t" << c.second << "\n";
     }
 #endif
 
@@ -109,29 +111,39 @@ int main(int argc, char *argv[])
     cout << "IncNgTrieCompletions\n" << string(30, '-') << endl;
     auto inc_completions = inc.complete(prefix, 10);
     for (const auto& c : inc_completions) {
-        cout << c.comp_strview << "\t" << c.score << "\n";
+        cout << c.first << "\t" << c.second << "\n";
+    }
 
 #endif
-    /* PQLog plog; */
-    /* cout << "Loading partial query log\n"; */
-    /* plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows); */
-    /* cout << "Done\n"; */
-    /* cout << "Testing on synth log\n"; */
-    /* for (const auto& kv: plog) { */
-    /*     for(const auto& p: kv.second){ */
-    /*         cout << "PQ: " << p << "\n"; */
-    /*         auto completions = dtrie.complete(p, 10); */
-    /*         for(const auto& c: completions) */
-    /*             cout << c.comp_strview << "\t" << c.score << "\n"; */
-    /*         cout << "\n\n"; */
-    /*     } */
-    /*     cout << endl; */
-    /* } */
 
-    /* LRLog lrlog; */
-    /* lrlog.generate_lr_log(plog); */
-    /* for(const auto& [k, v]: lrlog) */
-    /*     cout << k << "\t" << boost::join(v, ",") << "\n"; */
+    PQLog plog;
+    cout << "Loading partial query log\n";
+    plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", 10);
+    cout << "Done\n";
+    cout << "Testing on synth log\n";
+    for (const auto& kv: plog) {
+        for(const auto& p: kv.second){
+            cout << "Synth PQ: " << p << "\n";
+            auto completions = ht_comp.complete(p, 10);
+            for (const auto& c: completions) 
+                cout << c.first << "\t" << c.second << "\n";
+            cout << "\n\n";
+        }
+        cout << endl;
+    }
+
+    auto lrlog = plog.lr_log();
+    for(const auto& [k, v]: lrlog){
+        cout << k << "\t" << boost::join(v, ",") << "\n";
+        for(const auto& p: v){
+            cout << "LR PQ: " << p << "\n";
+            auto completions = ht_comp.complete(p, 10);
+            for (const auto& c: completions) {
+                cout << c.first << "\t" << c.second << "\n";
+            }
+            cout << "\n\n";
+        }
+    }
 
     return 0;
 }

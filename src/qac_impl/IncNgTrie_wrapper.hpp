@@ -15,12 +15,11 @@ using namespace dbwsim;
 
 class IncNgTrieCompleter {
     public:
-        IncNgTrieCompleter();
-        IncNgTrieCompleter(int tau);
+        IncNgTrieCompleter(int tau=1);
         void build_index(const StrVec& str_set, const ScoreVec& scores);
         void build_index(const Collection& coll);
         CandidateSet<std::string_view>
-            complete(const string& prefix, const size_t& n_comp);
+            complete(const string& prefix, const int& n_comp);
         void print_index_meta();
     private:
         int max_tau; // Number of mismatches.
@@ -28,6 +27,7 @@ class IncNgTrieCompleter {
         SearcherBase *searcher = NULL;
         ActiveNodePool *active_pool = NULL;
         TrieBase* indextrie;
+        CompHandler<string_view> ch_;
 };
 
 #endif
