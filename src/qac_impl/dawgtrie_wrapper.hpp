@@ -33,6 +33,6 @@ class DAWGTrie{
         std::unique_ptr< RankedCompleter > completer;
         /* Build trie from seperate key and value vectors */
         bool build(const StrVec& keys);
-        CompHandler<string> ch_;
+        CandidateSet<std::string> cs_;
 };
 #endif /* ifndef DAWG_WRAPPER_H */

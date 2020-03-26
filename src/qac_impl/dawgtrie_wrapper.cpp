@@ -118,21 +118,27 @@ bool DAWGTrie::build(const StrVec& keys) {
 
 
 /* TODO: Check if completer->key() is a local variable that gets destroyed after query??
+ * Since DAWGTrie already implements top-k retrival logic, the heap algorithm is
+ * used. Instead, k completed are obtained (in score sorted order) which are
+ * pushed to a candidate set and a canidate set is returned from this function
  */
 CandidateSet <std::string> DAWGTrie::complete(const string& prefix, const int& ncomp) {
     /* RankedCompleter completer(dic, guide); */
-    ch_.reset_completor();
-    assert(ch_.n_comp() == 0);
-    ch_.set_k(ncomp);
+    cs_.reset();
+    assert(cs_.size() == 0);
+    cs_.set_k(ncomp);
 
     dawgdic::BaseType index = dic.root();
+    int k = 0;
     if (dic.Follow(prefix.c_str(), prefix.length(), &index)) {
         completer->Start(index, prefix.c_str(), prefix.length());
         while (completer->Next()) {
-            auto key_str = string(completer->key(), completer->length());
-            ch_.insert(key_str, completer->value());
+            /* std::cout << completer->key() << "\t" << completer->value() << "\n"; */
+            if(++k == ncomp)
+                break;
+            cs_.push_back(completer->key(), completer->length(), completer->value());
         }
     }
-    return ch_.topk_completions();
+    return cs_;
 }
 
