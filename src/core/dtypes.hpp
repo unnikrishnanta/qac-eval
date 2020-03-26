@@ -1,6 +1,7 @@
 #ifndef DTYPES_H
 #define DTYPES_H
 
+#include <iostream>
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -42,6 +43,23 @@ class CandidateSet {
             k_ = k;
         }
 
+        void push_back(const string& comp_str, const ScoreType& score) {
+            c_[n_comp_++] = std::make_pair(comp_str, score);
+        }
+
+        /* The above function overloaded for char* instead of string */
+        void push_back(const char* comp_str, const int& slen, const ScoreType& score) {
+            std::cout << "comp_str " << comp_str << "\n";
+            /* c_[n_comp_].first =  std::string(comp_str, slen); */
+            c_[n_comp_].first.assign(comp_str, slen);
+            c_[n_comp_].second = score;
+            ++n_comp_;
+        }
+
+        void reset() {
+            n_comp_ = 0;
+        }
+
         iterator begin() noexcept { return c_.begin(); }
         const_iterator cbegin() const noexcept { return c_.cbegin(); }
         iterator end() noexcept { return c_.begin() + n_comp_; }
@@ -63,9 +81,6 @@ template <typename StrType>
 class CompHandler: public CandidateSet<StrType> {
     public: 
 
-        void reset_completor () {
-            this->n_comp_ = 0;
-        }
 
         /* Mantain top k elements in a min-heap. If there are k elements and a
          * new element comes in, add it to the heap if it is greater than the

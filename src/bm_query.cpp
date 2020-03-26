@@ -14,44 +14,50 @@
 #include <benchmark/benchmark.h>
 #include <timeprof/benchmark_query.hpp>
 
+
 BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie)
     ->RangeMultiplier(8)
-    ->Ranges({{1<<5, 1<<5},
-    /* ->Ranges({{NROWS, NROWS}, */
-             {1<<4, WIKISYNTH_SIZE},
-             {SYNTHLOG, SYNTHLOG}})
+    /* ->Ranges({{1<<5, 1<<5}, */
+    ->Ranges({{NROWS, NROWS},
+             /* {1<<4, WIKISYNTH_SIZE}, */
+             {1<<4, 1<<12},
+             {SYNTHLOG, LRLOG}})
     ->Unit(benchmark::kMillisecond);
 
-/* BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa) */
-/*     ->RangeMultiplier(8) */
-/*     ->Ranges({{1<<5, 1<<5}, */
-/*     /1* ->Ranges({{NROWS, NROWS}, *1/ */
-/*              {1<<4, WIKISYNTH_SIZE}, */
-/*              {SYNTHLOG, SYNTHLOG}}) */
-/*     ->Unit(benchmark::kMillisecond); */
+BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1<<5, 1<<5}, */
+    ->Ranges({{NROWS, NROWS},
+             /* {1<<4, WIKISYNTH_SIZE}, */
+             {1<<4, 1<<12},
+             {SYNTHLOG, LRLOG}})
+    ->Unit(benchmark::kMillisecond);
 
-/* BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG) */
-/*     ->RangeMultiplier(8) */
-/*     ->Ranges({{1<<5, 1<<5}, */
-/*     /1* ->Ranges({{NROWS, NROWS}, *1/ */
-/*              {1<<4, WIKISYNTH_SIZE}, */
-/*              {SYNTHLOG, SYNTHLOG}}) */
-/*     ->Unit(benchmark::kMillisecond); */
+BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1<<5, 1<<5}, */
+    ->Ranges({{NROWS, NROWS},
+             /* {1<<4, WIKISYNTH_SIZE}, */
+             {1<<4, 1<<12},
+             {SYNTHLOG, LRLOG}})
+    ->Unit(benchmark::kMillisecond);
 
-/* BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG) */
-/*     ->RangeMultiplier(8) */
-/*     ->Ranges({{1<<5, 1<<5}, */
-/*     /1* ->Ranges({{NROWS, NROWS}, *1/ */
-/*              {1<<4, WIKISYNTH_SIZE}, */
-/*              {SYNTHLOG, SYNTHLOG}}) */
-/*     ->Unit(benchmark::kMillisecond); */
+BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1<<5, 1<<5}, */
+    ->Ranges({{NROWS, NROWS},
+             /* {1<<4, WIKISYNTH_SIZE}, */
+             {1<<4, 1<<12},
+             {SYNTHLOG, LRLOG}})
+    ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_REGISTER_F(QueryFixture, QueryIncNgTrie)
     ->RangeMultiplier(8)
-    ->Ranges({{1<<5, 1<<5},
-    /* ->Ranges({{NROWS, NROWS}, */
-             {1<<4, WIKISYNTH_SIZE},
-             {SYNTHLOG, SYNTHLOG}})
+    /* ->Ranges({{1<<5, 1<<5}, */
+    ->Ranges({{NROWS, NROWS},
+             /* {1<<4, WIKISYNTH_SIZE}, */
+             {1<<4, 1<<12},
+             {SYNTHLOG, LRLOG}})
     ->Unit(benchmark::kMillisecond);
 
 string get_current_datetime() {

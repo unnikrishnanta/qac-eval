@@ -93,12 +93,13 @@ MarisaCompleter::complete(const string& prefix, const int& n_comp){
         keyset.push_back(agent.key());
     }
     if (!keyset.empty()) {
-        ch_.reset_completor();
+        ch_.reset();
         assert(ch_.n_comp() == 0);
         ch_.set_k(n_comp);
         for (std::size_t i = 0; i < keyset.size(); ++i) {
             auto key_str = string_view(keyset[i].ptr(), keyset[i].length());
             auto score = weights[keyset[i].id()];
+            std::cout << key_str << "\t" << score  << "\n";
             ch_.insert(key_str, score);
         }
         return ch_.topk_completions();

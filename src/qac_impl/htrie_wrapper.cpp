@@ -27,7 +27,7 @@ void HTrieCompleter::build_index(const StrVec& str_set, const ScoreVec& scores){
 
 CandidateSet<std::string>
 HTrieCompleter::complete(const string& prefix, const int& n_comp){
-    ch_.reset_completor();
+    ch_.reset();
     assert(ch_.n_comp() == 0);
     ch_.set_k(n_comp);
     string key_buffer;
