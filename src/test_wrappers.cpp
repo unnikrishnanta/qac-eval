@@ -11,10 +11,10 @@
 #include "qac_impl/IncNgTrie_wrapper.hpp"
 #include <numeric>
 
-/* #define TEST_HTRIE 1 */
+#define TEST_HTRIE 1
 /* #define TEST_MARISA 1 */
-#define TEST_DAWG 1
-/* #define TEST_INCGT 1 */
+/* /1* #define TEST_DAWG 1 *1/ */
+/* /1* #define TEST_INCGT 1 *1/ */
 #define NCOMP 10
 #define COLLECTION 'w'
 
@@ -119,13 +119,13 @@ int main(int argc, char *argv[])
 
     PQLog plog;
     cout << "Loading partial query log\n";
-    plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", 4<<16);
+    plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", 1<<9);
     cout << "Done\n";
     cout << "Testing on synth log\n";
     for (const auto& kv: plog) {
         for(const auto& p: kv.second){
             cout << "Synth PQ: " << p << "\n";
-            auto completions = dtrie.complete(p, 10);
+            auto completions = ht_comp.complete(p, 10);
             for (const auto& c: completions) 
                 cout << c.first << "\t" << c.second << "\n";
             cout << "\n\n";
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
         cout << k << "\t" << boost::join(v, ",") << "\n";
         for(const auto& p: v){
             cout << "LR PQ: " << p << "\n";
-            auto completions = dtrie.complete(p, 10);
+            auto completions = ht_comp.complete(p, 10);
             for (const auto& c: completions) {
                 cout << c.first << "\t" << c.second << "\n";
             }

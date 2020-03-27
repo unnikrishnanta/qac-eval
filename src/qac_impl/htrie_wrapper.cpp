@@ -33,6 +33,7 @@ HTrieCompleter::complete(const string& prefix, const int& n_comp){
     string key_buffer;
     auto prefix_range = ht_map.equal_prefix_range(prefix);
     for(auto it = prefix_range.first; it != prefix_range.second; ++it){
+        /* std::cout << "key " << it.key() << "\t" << "value " << it.value() << "\n"; */
         ch_.insert(it.key(), it.value());
     }
     return ch_.topk_completions();

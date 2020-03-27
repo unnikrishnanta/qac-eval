@@ -629,7 +629,6 @@ public:
         std::basic_string<CharT> key() const {
             std::basic_string<CharT> key_buffer;
             key(key_buffer);
-            
             return key_buffer;
         }
         

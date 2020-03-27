@@ -49,8 +49,6 @@ class CandidateSet {
 
         /* The above function overloaded for char* instead of string */
         void push_back(const char* comp_str, const int& slen, const ScoreType& score) {
-            std::cout << "comp_str " << comp_str << "\n";
-            /* c_[n_comp_].first =  std::string(comp_str, slen); */
             c_[n_comp_].first.assign(comp_str, slen);
             c_[n_comp_].second = score;
             ++n_comp_;
@@ -90,7 +88,6 @@ class CompHandler: public CandidateSet<StrType> {
             assert(this->n_comp_ <= this->k_);  // Invariant to maintain top-k
             if (this->n_comp_ < this->k_){ // Add to the heap straight away
                 this->c_[this->n_comp_++] = make_pair(comp_str, score);
-                //cout << "inserted " << c_[n_comp_ -1].first << "\n";
                 if (this->n_comp_ == this->k_) // c_begin() + k_ is c_end()
                     make_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
             }
@@ -104,12 +101,32 @@ class CompHandler: public CandidateSet<StrType> {
             }
         }
 
+        void insert(const string& comp_str, const ScoreType& score){
+            assert(this->n_comp_ <= this->k_);  // Invariant to maintain top-k
+            if (this->n_comp_ < this->k_){ // Add to the heap straight away
+                this->c_[this->n_comp_].first.assign(comp_str);
+                this->c_[this->n_comp_].second  = score;
+                ++(this->n_comp_); 
+                //cout << "inserted " << c_[n_comp_ -1].first << "\n";
+                if (this->n_comp_ == this->k_) // c_begin() + k_ is c_end()
+                    make_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+            }
+            else if (score > this->c_[0].second) {
+                // moves the smallest to the end
+                std::pop_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                this->c_.back().first.assign(comp_str);
+                this->c_.back().second = score;
+                /* Insert the element at the position last-1
+                into the max heap defined by the range [first, last-1) */
+                std::push_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+            }
+        }
         /* Traverse the heap and fill in the elements in reverse order to
          * obtain completions in descendng order of the score 
          */
         CandidateSet<StrType> topk_completions() {
             if (this->n_comp_ < this->k_)
-                std::sort(this->c_.begin(), this->c_.end(),
+                std::sort(this->c_.begin(), this->c_.begin() + this->n_comp_,
                         [](auto &left, auto &right) {
                             return left.second > right.second;
                         });
