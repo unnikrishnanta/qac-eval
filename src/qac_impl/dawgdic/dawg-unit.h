@@ -81,4 +81,4 @@ class DawgUnit {
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_DAWG_UNIT_H
+#endif  // DAWGDIC_DAWG_UNIT_Hendif  // DAWGDIC_DAWG_UNIT_H

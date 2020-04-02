@@ -11,7 +11,8 @@
 #include <benchmark/benchmark.h>
 #include <memory>
 
-#define COLLECTION 'w'
+#define WIKI 'w'
+#define CWEB 'c'
 
 #define COUNTERS 
 
@@ -81,19 +82,3 @@ BENCHMARK_DEFINE_F(BuildFixture, BuildIncNgT)(benchmark::State& state) {
     add_build_counters(coll, state);
 }
 
-/* /1* BENCHMARK_DEFINE_F(BuildFixture, SynthQuery)(benchmark::State& state) { *1/ */
-/* /1*   nrows = static_cast<size_t>(state.range(1)); *1/ */
-/* /1*   /2* cout << "PQ nrows = " << nrows; *2/ *1/ */
-/* /1*   PQLog pqlog; *1/ */
-/* /1*   pqlog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", nrows); *1/ */
-/* /1*   double num_completions=0, plen_sum=0, num_pq=0; *1/ */
-/* /1*   for (auto _ : state) { *1/ */
-/* /1*     for (const auto& [qid, pvec]: pqlog) { *1/ */
-/* /1*       for(const auto& p: pvec){ *1/ */
-/* /1*           ++num_pq; *1/ */
-/* /1*           auto completions = ht_comp.complete(p, true); *1/ */
-/* /1*           num_completions += completions.size(); *1/ */
-/* /1*           plen_sum += p.length(); *1/ */
-/* /1*       } *1/ */
-/* /1*     } *1/ */
-/* /1*   } *1/ */

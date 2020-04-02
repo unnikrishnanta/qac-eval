@@ -148,4 +148,4 @@ class Completer {
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_COMPLETER_H
+#endif  // DAWGDIC_COMPLETER_Hendif  // DAWGDIC_COMPLETER_H

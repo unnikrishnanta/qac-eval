@@ -16,8 +16,6 @@
 #include <timeprof/benchmark_build.hpp>
 
 
-#define WIKI 'w'
-#define CWEB 'c'
 #define WIKI_NROWS 5077651
 #define CWEB_NROWS 195285642
 
@@ -37,9 +35,8 @@
  BENCHMARK_REGISTER_F(BuildFixture, BuildDAWG)
      ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}});
  BENCHMARK_REGISTER_F(BuildFixture, BuildIncNgT)
-     ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}, {1,2}});
+     ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}, {1,1}});
 
- /* BENCHMARK_REGISTER_F(HTrieFixture, SynthQuery)->Args({WIKI, 10000, 1000}); */
 
 // Define the static variable outside all functions
 // https://stackoverflow.com/a/9282425/937153

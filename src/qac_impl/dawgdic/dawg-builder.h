@@ -392,4 +392,4 @@ class DawgBuilder {
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_DAWG_BUILDER_H
+#endif  // DAWGDIC_DAWG_BUILDER_Hendif  // DAWGDIC_DAWG_BUILDER_H

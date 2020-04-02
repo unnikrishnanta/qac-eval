@@ -45,7 +45,7 @@ void RawDataSet::InitFromFile(const string& filename,
 void RawDataSet::InitFromStrings(const vector<string>& input_strings,
                                  const vector<size_t>& scores, int max_length)
 {
-  int total_length = 0;
+  size_t total_length = 0;
   max_length_ = max_length;
   num_documents_ = 0;
   /* vector<string>::iterator it; */

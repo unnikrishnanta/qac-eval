@@ -8,6 +8,7 @@
 #ifndef __MAP_TRIE_H__
 #define __MAP_TRIE_H__
 
+#include "dtypes.hpp"
 #include "trie_base.h"
 
 using namespace std;
@@ -19,6 +20,9 @@ class MapTrie : public TrieBase {
 
   // Define how the children structure.
   map<char, MapTrie*> *children;
+
+  /* SignedSize min_position; */
+  /* SignedSize max_position; */
 
   MapTrie() {
     Init(0, ROOT_NOTE, -1);
@@ -45,16 +49,23 @@ class MapTrie : public TrieBase {
   ~MapTrie() {}
   
   BaseIter* FirstChild();
-
   BaseIter* EndChild();
-
   TrieBase* SearchChar(const char chr);
-
   TrieBase* SearchString(const char *str);
-  
-  int AddString(const char *str, int id = -1, int did = -1);
-  
+  int AddString(const char *str, int pid = -1, int did = -1);
   void BuildTrie(int num_str, const char **strs, int *ids);
+
+  /* void UpdatePositionRange(SignedSize position){ */
+  /*     if (position == -1) */
+  /*         return; */
+  /*     if (min_position == -1 || position < min_position){ */
+  /*         min_position = position; */
+  /*     } */
+  /*     if (max_position == -1 || position > max_position) { */
+  /*         max_position = position; */
+  /*     } */
+  /* } */
+
 };
 
 

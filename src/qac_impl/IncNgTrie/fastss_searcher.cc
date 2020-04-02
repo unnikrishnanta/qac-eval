@@ -9,6 +9,7 @@
 #include "dataset.h"
 #include "resultset.h"
 
+#include <cstddef>
 #include <unordered_set>
 #include <vector>
 
@@ -50,6 +51,12 @@ void FastSSSearcher::ProcessNode(ActiveNode* node){
 
   char current_char = current_query_[current_position_];
   // Check if current node exist.
+  
+  // Added by Unni 
+  if(node->trie_node == NULL) {
+      node->node_state = eInActive;
+      return;
+  }  // End of modifications by Unni
   TrieBase *next_trie_node = node->trie_node->SearchChar(current_char);
   if (next_trie_node == NULL){
     node->node_state = eInActive;
@@ -142,7 +149,7 @@ uint64_t FastSSSearcher::FectchResultsStupid(){
   
   set<string> ancester;
 
-  for (int i = last_expanded_; i < (int)current_active_.size(); i++) {
+  for (size_t i = last_expanded_; i < current_active_.size(); i++) {
     if (current_active_[i]->node_str[current_active_[i]->node_len-1]
         == DELETION_NOTE)
       // Current Node end with ~/ We don't need to fatch result.
@@ -171,8 +178,8 @@ uint64_t FastSSSearcher::FectchResultsStupid(){
       //}
     }
       
-    int minpos = current_active_[i]->trie_node->min_position;
-    int maxpos = current_active_[i]->trie_node->max_position;
+    auto minpos = current_active_[i]->trie_node->min_position;
+    auto maxpos = current_active_[i]->trie_node->max_position;
     
     while (minpos <= maxpos){
       fetched ++;
@@ -193,7 +200,7 @@ uint64_t FastSSSearcher::FectchResults(bool stupidfetch)
   uint64_t fetched = 0;
   unordered_set<string> ancester;
   result_set_.Clear();
-  for (int i = last_expanded_; i < (int)current_active_.size(); i++) {
+  for (size_t i = last_expanded_; i < current_active_.size(); i++) {
     if (current_active_[i]->node_str[current_active_[i]->node_len-1]
         == DELETION_NOTE)
       // Current Node end with ~/ We don't need to fatch result.
@@ -201,9 +208,9 @@ uint64_t FastSSSearcher::FectchResults(bool stupidfetch)
     if (current_active_[i]->key_match > current_position_)
       // If we reach next level of nodex. We finished. 
       break;
-    int checkpos = i + 1;
+    size_t checkpos = i + 1;
     bool covered = false;   
-    while (checkpos < (int)current_active_.size()){
+    while (checkpos < current_active_.size()){
       int cover;
       cover  = current_active_[checkpos]->CheckCover(current_active_[i]);
       if (cover != 0) {        
@@ -242,8 +249,8 @@ uint64_t FastSSSearcher::FectchResults(bool stupidfetch)
     // Not covered.
     if (covered != true){
       current_active_[i]->is_fetched = true;
-      int minpos = current_active_[i]->trie_node->min_position;
-      int maxpos = current_active_[i]->trie_node->max_position;
+      auto minpos = current_active_[i]->trie_node->min_position;
+      auto maxpos = current_active_[i]->trie_node->max_position;
       
       while (minpos <= maxpos){
         fetched ++;

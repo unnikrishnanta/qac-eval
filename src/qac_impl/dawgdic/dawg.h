@@ -134,4 +134,4 @@ class Dawg {
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_DAWG_H
+#endif  // DAWGDIC_DAWG_Hendif  // DAWGDIC_DAWG_H

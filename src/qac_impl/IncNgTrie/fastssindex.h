@@ -13,6 +13,7 @@
 #include "trie_base.h"
 #include "map_trie.h"
 #include "brother_trie.h"
+#include "dtypes.hpp"
 
 #include <string>
 #include <vector>
@@ -35,7 +36,7 @@ class FastssIndex {
   TrieBase* trie_;
   VariantGenerator variant_generator_;
   VariantTuple* variant_tuples;
-  int num_variant_tuples;
+  SizeType num_variant_tuples;
   BrotherTrie *temptrie;
 
   // Empty index.
@@ -58,7 +59,7 @@ class FastssIndex {
                      TrieBase *trie = NULL);
 
   void DumpIndex(bool print_trie = false){
-    for (int i = 0; i < num_variant_tuples; i ++){
+    for (auto i = 0; i < num_variant_tuples; i ++){
       cout << i << ":" <<  variant_tuples[i].variant_string << " "
            << variant_tuples[i].document_id << " " << variant_tuples[i].next << endl;
     }

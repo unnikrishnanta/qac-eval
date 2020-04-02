@@ -2,6 +2,7 @@
 // Author: jqin@cse.unsw.edu.au (Jianbin Qin)
 
 #include "searcher_base.h"
+#include <cstddef>
 
 using namespace std;
 
@@ -73,16 +74,16 @@ void SearcherBase::ResultsStatistic(ostream& out, bool show_node, bool show_resu
   out << "\t Result#: " << result_set_.size();
   out << "\t Active#: " << current_active_.size() << endl;
   if (show_node) {
-    for (int i = 0; i < (int)current_active_.size(); i ++){
+    for (size_t i = 0; i < current_active_.size(); i ++){
       out << "  >> ANode: " << i << "\t" << current_active_[i]->ToString() << endl;
     }
   }
   if (show_results){
     int i = 0; 
-    for (unordered_set<int>::iterator it = result_set_.result_ids_.begin();
+    for (unordered_set<size_t>::iterator it = result_set_.result_ids_.begin();
          it != result_set_.result_ids_.end(); it ++)
     {
-      int did = *it;
+      auto did = *it;
       const string data = index_->dataset_.GetDocumentByID(did);
       out << "  << Result: " << i << "\t" << current_query_ << "\t DID: " << did <<  "\t\"" << data << "\"" << endl;
     }
@@ -90,4 +91,3 @@ void SearcherBase::ResultsStatistic(ostream& out, bool show_node, bool show_resu
 }
 
 } // namespace dbwsvn
-

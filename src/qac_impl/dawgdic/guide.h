@@ -121,4 +121,4 @@ class Guide {
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_GUIDE_H
+#endif  // DAWGDIC_GUIDE_Hendif  // DAWGDIC_GUIDE_H

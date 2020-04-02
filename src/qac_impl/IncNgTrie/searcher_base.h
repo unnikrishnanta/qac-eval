@@ -9,6 +9,7 @@
 #include "variants.h"
 #include "dataset.h"
 #include "resultset.h"
+#include "dtypes.hpp"
 
 #include <set>
 

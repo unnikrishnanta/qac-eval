@@ -5,6 +5,7 @@
 // construct a trie. 
 
 #include "map_trie.h"
+#include "dtypes.hpp"
 
 using namespace std;
 
@@ -140,6 +141,7 @@ int MapTrie::AddString(const char *str, int pid, int did)
   return num_new_nodes;        
 }
 
+
 void MapTrie::BuildTrie(int num_str, const char **strs, int *ids) {
   for (int i = 0; i < num_str; i++){
     if (ids == NULL)
@@ -149,5 +151,6 @@ void MapTrie::BuildTrie(int num_str, const char **strs, int *ids) {
   }
 }
 
-}
 
+// End of namespace
+}

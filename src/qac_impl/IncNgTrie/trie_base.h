@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "dtypes.hpp"
 
 using namespace std;
 
@@ -42,7 +43,7 @@ class TrieBase{
   // Data area;
   int min_position;
   int max_position;
-  int num_results;  
+  SizeType num_results;  
 
   //TrieBase() {}
   

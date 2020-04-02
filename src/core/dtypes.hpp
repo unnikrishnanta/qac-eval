@@ -22,7 +22,6 @@ using ScoredStr = pair<string, ScoreType>;
 using StringDict = vector<ScoredStr>;
 using QueryLog = map<string, vector<string>>;
 
-/* Type declaration for a single completion */
 
 template <typename StrType>
 class CandidateSet {
@@ -38,7 +37,7 @@ class CandidateSet {
         }
 
         void set_k(const int& k) {
-            if(k > k_) 
+            if(k !=  k_) 
                 c_.resize(k);
             k_ = k;
         }
@@ -69,6 +68,8 @@ class CandidateSet {
         vector<pair<StrType, ScoreType>> c_;
         int k_;
         int n_comp_; // #active completions. Needed here for iterators
+
+        
 };
 
 
@@ -78,8 +79,6 @@ class CandidateSet {
 template <typename StrType>
 class CompHandler: public CandidateSet<StrType> {
     public: 
-
-
         /* Mantain top k elements in a min-heap. If there are k elements and a
          * new element comes in, add it to the heap if it is greater than the
          * heap top (lowest value)
@@ -88,16 +87,17 @@ class CompHandler: public CandidateSet<StrType> {
             assert(this->n_comp_ <= this->k_);  // Invariant to maintain top-k
             if (this->n_comp_ < this->k_){ // Add to the heap straight away
                 this->c_[this->n_comp_++] = make_pair(comp_str, score);
-                if (this->n_comp_ == this->k_) // c_begin() + k_ is c_end()
-                    make_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                if (this->n_comp_ == this->k_){ // c_begin() + k_ is c_end()
+                    make_heap(this->c_.begin(), this->c_.end(), greater_than_key());
+                }
             }
             else if (score > this->c_[0].second) {
                 // moves the smallest to the end
-                std::pop_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                std::pop_heap(this->c_.begin(), this->c_.end(), greater_than_key());
                 this->c_.back() = make_pair(comp_str, score);
                 /* Insert the element at the position last-1
                    into the max heap defined by the range [first, last-1) */
-                std::push_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                std::push_heap(this->c_.begin(), this->c_.end(), greater_than_key());
             }
         }
 
@@ -108,17 +108,18 @@ class CompHandler: public CandidateSet<StrType> {
                 this->c_[this->n_comp_].second  = score;
                 ++(this->n_comp_); 
                 //cout << "inserted " << c_[n_comp_ -1].first << "\n";
-                if (this->n_comp_ == this->k_) // c_begin() + k_ is c_end()
-                    make_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                if (this->n_comp_ == this->k_){ // c_begin() + k_ is c_end()
+                    make_heap(this->c_.begin(), this->c_.end(), greater_than_key());
+                }
             }
             else if (score > this->c_[0].second) {
                 // moves the smallest to the end
-                std::pop_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                std::pop_heap(this->c_.begin(), this->c_.end(), greater_than_key());
                 this->c_.back().first.assign(comp_str);
                 this->c_.back().second = score;
                 /* Insert the element at the position last-1
                 into the max heap defined by the range [first, last-1) */
-                std::push_heap(this->c_.begin(), this->c_.end(), std::greater<>{});
+                std::push_heap(this->c_.begin(), this->c_.end(), greater_than_key());
             }
         }
         /* Traverse the heap and fill in the elements in reverse order to
@@ -130,16 +131,26 @@ class CompHandler: public CandidateSet<StrType> {
                         [](auto &left, auto &right) {
                             return left.second > right.second;
                         });
-            else 
+            else {
                 std::sort_heap(this->c_.begin(), this->c_.end(),
                         [](auto &left, auto &right) {
                             return left.second > right.second;
                         });
+            }
             return *this;
         }
 
         /* Both these functions return the same value */
         int n_comp() const { return std::as_const(this->n_comp_);}
+
+
+    private:
+        struct greater_than_key {
+            inline bool operator() (const pair<StrType, ScoreType>& left, 
+                             const pair<StrType, ScoreType>& right) {
+                return (left.second > right.second);
+            }
+        };
 
 };
 

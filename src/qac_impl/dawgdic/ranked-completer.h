@@ -220,4 +220,4 @@ typedef RankedCompleterBase<> RankedCompleter;
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_RANKED_COMPLETER_H
+#endif  // DAWGDIC_RANKED_COMPLETER_Hendif  // DAWGDIC_RANKED_COMPLETER_H

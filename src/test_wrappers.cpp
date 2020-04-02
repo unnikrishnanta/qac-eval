@@ -11,12 +11,12 @@
 #include "qac_impl/IncNgTrie_wrapper.hpp"
 #include <numeric>
 
-#define TEST_HTRIE 1
+/* #define TEST_HTRIE 1 */
 /* #define TEST_MARISA 1 */
 /* /1* #define TEST_DAWG 1 *1/ */
-/* /1* #define TEST_INCGT 1 *1/ */
+#define TEST_INCGT 1
 #define NCOMP 10
-#define COLLECTION 'w'
+#define COLLECTION 'c'
 
 using namespace std;
 using namespace boost::program_options;
@@ -110,41 +110,41 @@ int main(int argc, char *argv[])
     IncNgTrieCompleter inc(1); // Allow edit distance of 1
     inc.build_index(coll_wiki);
     cout << "IncNgTrieCompletions\n" << string(30, '-') << endl;
-    auto inc_completions = inc.complete(prefix, 10);
+    auto inc_completions = inc.complete(prefix, 5);
     for (const auto& c : inc_completions) {
         cout << c.first << "\t" << c.second << "\n";
     }
 
 #endif
 
-    PQLog plog;
-    cout << "Loading partial query log\n";
-    plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", 1<<9);
-    cout << "Done\n";
-    cout << "Testing on synth log\n";
-    for (const auto& kv: plog) {
-        for(const auto& p: kv.second){
-            cout << "Synth PQ: " << p << "\n";
-            auto completions = ht_comp.complete(p, 10);
-            for (const auto& c: completions) 
-                cout << c.first << "\t" << c.second << "\n";
-            cout << "\n\n";
-        }
-        cout << endl;
-    }
+    /* PQLog plog; */
+    /* cout << "Loading partial query log\n"; */
+    /* plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", 1<<15); */
+    /* cout << "Done\n"; */
+    /* cout << "Testing on synth log\n"; */
+    /* for (const auto& kv: plog) { */
+    /*     for(const auto& p: kv.second){ */
+    /*         cout << "Synth PQ: " << p << "\n"; */
+    /*         auto completions = ht_comp.complete(p, 10); */
+    /*         for (const auto& c: completions) */ 
+    /*             cout << c.first << "\t" << c.second << "\n"; */
+    /*         cout << "\n\n"; */
+    /*     } */
+    /*     cout << endl; */
+    /* } */
 
-    auto lrlog = plog.lr_log();
-    for(const auto& [k, v]: lrlog){
-        cout << k << "\t" << boost::join(v, ",") << "\n";
-        for(const auto& p: v){
-            cout << "LR PQ: " << p << "\n";
-            auto completions = ht_comp.complete(p, 10);
-            for (const auto& c: completions) {
-                cout << c.first << "\t" << c.second << "\n";
-            }
-            cout << "\n\n";
-        }
-    }
+    /* auto lrlog = plog.lr_log(); */
+    /* for(const auto& [k, v]: lrlog){ */
+    /*     cout << k << "\t" << boost::join(v, ",") << "\n"; */
+    /*     for(const auto& p: v){ */
+    /*         cout << "LR PQ: " << p << "\n"; */
+    /*         auto completions = ht_comp.complete(p, 10); */
+    /*         for (const auto& c: completions) { */
+    /*             cout << c.first << "\t" << c.second << "\n"; */
+    /*         } */
+    /*         cout << "\n\n"; */
+    /*     } */
+    /* } */
 
     return 0;
 }

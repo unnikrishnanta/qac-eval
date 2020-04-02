@@ -8,6 +8,7 @@
 #define __DATASET_H__
 
 #include "cstddef"
+#include "dtypes.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -52,8 +53,8 @@ class RawDataSet {
 
   //private:
   vector<string> documents_;
-  vector<size_t> weights_; // Added by Unni
-  int num_documents_;
+  vector<ValType> weights_; // Added by Unni
+  SizeType num_documents_;  // Unni: changed int to size_t
   int max_length_;
   double average_length_;
 };

@@ -2,6 +2,7 @@
 // Author: jqin@cse.unsw.edu.au (Jianbin Qin)
 
 #include "fastssindex.h"
+#include "dtypes.hpp"
 #include "variants.h"
 #include <iostream>
 #include <utility>
@@ -15,7 +16,8 @@ using namespace std;
 
 namespace dbwsim{
 
-bool _compare_variants_pair( const pair<string, int>& i, const pair<string, int>& j ) {
+bool _compare_variants_pair( const pair<string, SizeType>& i,
+        const pair<string, SizeType>& j ) {
   if( i.first < j.first ) return true;
   if( i.first > j.first ) return false;
   return i.second < j.second;
@@ -28,7 +30,7 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
 {
   dataset_.InitFromStrings(input_strings, weights);
   variant_generator_.set_tau(tau);
-  vector< pair<string, int> > variants_did_list;
+  vector< pair<string, SizeType> > variants_did_list;
 
 #ifdef DEBUG
   EasyTimer indexing_timer;
@@ -36,7 +38,7 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
   cerr << "Indexing Start NG Generation" << endl;
 #endif
 
-  for (int i = 0; i < dataset_.num_documents_; i++) {
+  for (SizeType i = 0; i < dataset_.num_documents_; i++) {
     vector<string> variants;
     const string & doc_str = dataset_.GetDocumentByID(i);
     if (normalized) {
@@ -45,8 +47,7 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
       variant_generator_.GenerateVariants(doc_str, variants);
     }
 
-    for (vector<string>::iterator it = variants.begin();
-         it < variants.end(); it ++ ) {
+    for (auto it = variants.begin(); it < variants.end(); it ++ ) {
       variants_did_list.push_back (make_pair(*it, i));
     }
   }
@@ -72,14 +73,14 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
   variant_tuples = new VariantTuple[variants_did_list.size()];
   int prev_last_del_location[256];
   for (int i = 0; i < 256; i ++ ) prev_last_del_location[i] = -1;
-  int count  = 0;
-  for (vector<pair<string, int> >::iterator it = variants_did_list.begin();
-       it < variants_did_list.end(); it ++, count ++) {
+  SizeType count  = 0; // Modified by Unni from int to size_t
+  for (auto it = variants_did_list.begin();
+          it < variants_did_list.end(); it ++, count ++) {
     variant_tuples[count].variant_string = it->first;
     variant_tuples[count].document_id = it->second;
     variant_tuples[count].next = count;
 
-    size_t last_del = it->first.rfind(DELETION_NOTE);
+    auto last_del = it->first.rfind(DELETION_NOTE);
     if (last_del==string::npos) {
       //variant_tuples[count].last_del_pos = - 1;
       if (prev_last_del_location[255] >= 0) {
@@ -108,7 +109,8 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
     trie = new MapTrie();
   }
   trie_ = trie;
-  for (int i = 0; i < num_variant_tuples; i ++) {
+  /* std::cerr<< "Number of variant_tuples " << num_variant_tuples << "\n"; */
+  for (SizeType i = 0; i < num_variant_tuples; i ++) {
     trie_->AddString(variant_tuples[i].variant_string.c_str(), i);
   }
 
@@ -117,8 +119,8 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
   cerr << "Indexing Start NG Trie BUILDING takes " << indexing_timer.ToString() << endl;
   cerr << "Indexing Finished NG" << endl;
 #endif
-
 }
+
 void FastssIndex::Initilization(const string &filename, int tau,
                                 bool normalized, int norm_gap, TrieBase *trie)
 {

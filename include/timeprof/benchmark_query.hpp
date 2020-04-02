@@ -82,16 +82,21 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
             state.counters["NComp"] = num_completions;
             state.counters["NPQ"] = num_pq; // number of partial queries
             // Total length of partial queries processed.
-            state.counters["PQBytes"] = benchmark::Counter(plen_sum,
-                                benchmark::Counter::kIsIterationInvariantRate,
-                                benchmark::Counter::OneK::kIs1024);
+            state.counters["PQBytes"] = plen_sum;
             // How many partial queries are processed per second
-            state.counters["PQRate"] = benchmark::Counter(num_pq,
+            state.counters["NPQRate"] = benchmark::Counter(num_pq,
                                             benchmark::Counter::kIsRate);
+            state.counters["PQBytesRate"] = benchmark::Counter(plen_sum,
+                                            benchmark::Counter::kIsRate,
+                                            benchmark::Counter::OneK::kIs1024);
             // How many seconds it takes to process one partial query
-            state.counters["PQInvRate"] = benchmark::Counter(num_pq,
+            state.counters["NPQInvRate"] = benchmark::Counter(num_pq,
+                                           benchmark::Counter::kIsRate |
+                                           benchmark::Counter::kInvert);
+            state.counters["PQByesInvRate"] = benchmark::Counter(plen_sum,
                                             benchmark::Counter::kIsRate |
-                                            benchmark::Counter::kInvert);
+                                            benchmark::Counter::kInvert, 
+                                            benchmark::Counter::OneK::kIs1024);
         }
 
 };

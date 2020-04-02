@@ -17,7 +17,7 @@ namespace dbwsim {
 
 #define kACTIVENODE_POOL_SIZE 1024*1024
 //#define kPREFIX_LEN 20
-#define kPREFIX_LEN 65 // Modified by Unni
+#define kPREFIX_LEN 33 // Modified by Unni
 enum ActiveNodeState {
   eActive   = 0,
   eInActive = 1,

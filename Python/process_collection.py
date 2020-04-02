@@ -22,7 +22,7 @@ def process_file(file_name, cut_off_len):
         for row in csv_reader:
             s = apply_processing(row[0], cut_off_len)
             if(s):
-                processed.append((s, row[1]))
+                processed.append((s, row[2]))
     return processed
 
 

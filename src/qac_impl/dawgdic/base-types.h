@@ -10,14 +10,14 @@ typedef char CharType;
 typedef unsigned char UCharType;
 
 // 32-bit integer.
-typedef long ValueType;
+typedef int ValueType;
 
 // 32-bit unsigned integer.
-typedef unsigned long BaseType;
+typedef unsigned int BaseType;
 
 // 32 or 64-bit unsigned integer.
 typedef std::size_t SizeType;
 
 }  // namespace dawgdic
 
-#endif  // DAWGDIC_BASE_TYPES_H
+#endif  // DAWGDIC_BASE_TYPES_Hendif  // DAWGDIC_BASE_TYPES_H

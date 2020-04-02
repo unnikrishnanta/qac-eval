@@ -99,7 +99,6 @@ MarisaCompleter::complete(const string& prefix, const int& n_comp){
         for (std::size_t i = 0; i < keyset.size(); ++i) {
             auto key_str = string_view(keyset[i].ptr(), keyset[i].length());
             auto score = weights[keyset[i].id()];
-            std::cout << key_str << "\t" << score  << "\n";
             ch_.insert(key_str, score);
         }
         return ch_.topk_completions();
