@@ -13,8 +13,8 @@
 
 /* #define TEST_HTRIE 1 */
 /* #define TEST_MARISA 1 */
-/* /1* #define TEST_DAWG 1 *1/ */
-#define TEST_INCGT 1
+#define TEST_DAWG 1
+/* #define TEST_INCGT 1 */
 #define NCOMP 10
 #define COLLECTION 'c'
 
@@ -80,12 +80,20 @@ int main(int argc, char *argv[])
 
 #ifdef TEST_DAWG
     cout << "Building DAWG Trie\n";
+
+    /* for (size_t i = 118489088; i < 195285642; i = i + (1<<20)) { */
+    /*     cout << "Sample size " << i << "\n"; */
+    /*     DAWGTrie dtrie; */
+    /*     coll_wiki.uniform_sample(i); */
+    /*     dtrie.build_index(coll_wiki); */
+    /*     if(!dtrie.build_status){ */
+    /*         cout << "\nDAWG Trie construction failed\n"; */
+    /*         return 1; */
+    /*     } */
+    /* } */
+
     DAWGTrie dtrie;
     dtrie.build_index(coll_wiki);
-    if(!dtrie.build_status){
-        cout << "\nDAWG Trie construction failed\n";
-        return 1;
-    }
     cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl;
     auto dt_completions = dtrie.complete(prefix, 10);
     for (const auto& c : dt_completions) {
@@ -119,13 +127,13 @@ int main(int argc, char *argv[])
 
     /* PQLog plog; */
     /* cout << "Loading partial query log\n"; */
-    /* plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", 1<<15); */
+    /* plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", SIZE_MAX); */
     /* cout << "Done\n"; */
     /* cout << "Testing on synth log\n"; */
     /* for (const auto& kv: plog) { */
     /*     for(const auto& p: kv.second){ */
     /*         cout << "Synth PQ: " << p << "\n"; */
-    /*         auto completions = ht_comp.complete(p, 10); */
+    /*         auto completions = inc.complete(p, 10); */
     /*         for (const auto& c: completions) */ 
     /*             cout << c.first << "\t" << c.second << "\n"; */
     /*         cout << "\n\n"; */
@@ -138,7 +146,7 @@ int main(int argc, char *argv[])
     /*     cout << k << "\t" << boost::join(v, ",") << "\n"; */
     /*     for(const auto& p: v){ */
     /*         cout << "LR PQ: " << p << "\n"; */
-    /*         auto completions = ht_comp.complete(p, 10); */
+    /*         auto completions = inc.complete(p, 10); */
     /*         for (const auto& c: completions) { */
     /*             cout << c.first << "\t" << c.second << "\n"; */
     /*         } */

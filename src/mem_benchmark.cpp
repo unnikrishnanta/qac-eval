@@ -71,28 +71,6 @@ int main(int argc, char *argv[])
     delete(coll_wiki);
     std::this_thread::sleep_for(std::chrono::seconds(40));
 
-    /* cout << "Testing completor\n\n"; */
-    /* auto completions = ht_comp.complete("pre", 5); */
-    /* for (const auto& c : completions) { */
-    /*    cout << c.first << "\t" << c.second << "\n"; */
-    /* } */
-
-    /* PQLog plog; */
-    /* cout << "Loading partial query log\n"; */
-    /* plog.load_pqlog("../../synth_log/data/wiki-synthlog.tsv", n_rows); */
-    /* for (const auto& kv: plog) { */
-    /*     for(const auto& p: kv.second){ */
-    /*         cout << "PQ: " << p << "\n____________________________\n"; */
-    /*         auto completions = ht_comp.complete(p, 10); */
-    /*         for(const auto& c: completions) */
-    /*             cout << c.first << "\n"; */
-    /*     } */
-    /* } */
-
-    /* LRLog lrlog; */
-    /* lrlog.generate_lr_log(plog); */
-    /* for(const auto& [k, v]: lrlog) */
-    /*     cout << k << "\t" << boost::join(v, ",") << "\n"; */
-
+    
     return 0;
 }

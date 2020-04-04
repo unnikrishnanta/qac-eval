@@ -15,49 +15,57 @@
 #include <timeprof/benchmark_query.hpp>
 
 
-BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie)
-    ->RangeMultiplier(8)
-    /* ->Ranges({{1<<5, 1<<5}, */
-    ->Ranges({{NROWS, NROWS},
-             /* {1<<4, WIKISYNTH_SIZE}, */
-             {1<<4, 1<<12},
-             {SYNTHLOG, LRLOG}})
-    ->Unit(benchmark::kMillisecond);
+/* BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie) */
+/*     ->RangeMultiplier(8) */
+/*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
+/*     ->Ranges({{NROWS, NROWS}, */
+/*              /1* {1<<4, WIKISYNTH_SIZE}, *1/ */
+/*              {1<<4, 1<<12}, */
+/*              {SYNTHLOG, LRLOG}}) */
+/*     ->Unit(benchmark::kMillisecond); */
 
-BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa)
-    ->RangeMultiplier(8)
-    /* ->Ranges({{1<<5, 1<<5}, */
-    ->Ranges({{NROWS, NROWS},
-             /* {1<<4, WIKISYNTH_SIZE}, */
-             {1<<4, 1<<12},
-             {SYNTHLOG, LRLOG}})
-    ->Unit(benchmark::kMillisecond);
+/* BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa) */
+/*     ->RangeMultiplier(8) */
+/*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
+/*     ->Ranges({{NROWS, NROWS}, */
+/*              /1* {1<<4, WIKISYNTH_SIZE}, *1/ */
+/*              {1<<4, 1<<12}, */
+/*              {SYNTHLOG, LRLOG}}) */
+/*     ->Unit(benchmark::kMillisecond); */
 
-BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG)
-    ->RangeMultiplier(8)
-    /* ->Ranges({{1<<5, 1<<5}, */
-    ->Ranges({{NROWS, NROWS},
-             /* {1<<4, WIKISYNTH_SIZE}, */
-             {1<<4, 1<<12},
-             {SYNTHLOG, LRLOG}})
-    ->Unit(benchmark::kMillisecond);
+/* BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG) */
+/*     ->RangeMultiplier(8) */
+/*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
+/*     ->Ranges({{NROWS, NROWS}, */
+/*              /1* {1<<4, WIKISYNTH_SIZE}, *1/ */
+/*              {1<<4, 1<<12}, */
+/*              {SYNTHLOG, LRLOG}}) */
+/*     ->Unit(benchmark::kMillisecond); */
 
-BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG)
-    ->RangeMultiplier(8)
-    /* ->Ranges({{1<<5, 1<<5}, */
-    ->Ranges({{NROWS, NROWS},
-             /* {1<<4, WIKISYNTH_SIZE}, */
-             {1<<4, 1<<12},
-             {SYNTHLOG, LRLOG}})
-    ->Unit(benchmark::kMillisecond);
+/* BENCHMARK_REGISTER_F(QueryFixture, QueryDAWG) */
+/*     ->RangeMultiplier(8) */
+/*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
+/*     ->Ranges({{NROWS, NROWS}, */
+/*              /1* {1<<4, WIKISYNTH_SIZE}, *1/ */
+/*              {1<<4, 1<<12}, */
+/*              {SYNTHLOG, LRLOG}}) */
+/*     ->Unit(benchmark::kMillisecond); */
+
+/* BENCHMARK_REGISTER_F(QueryFixture, QueryIncNgTrie) */
+/*     ->RangeMultiplier(8) */
+/*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
+/*     ->Ranges({{NROWS, NROWS}, */
+/*              /1* {1<<4, WIKISYNTH_SIZE}, *1/ */
+/*              {1<<4, 1<<12}, */
+/*              {SYNTHLOG, LRLOG}}) */
+/*     ->Unit(benchmark::kMillisecond); */
 
 BENCHMARK_REGISTER_F(QueryFixture, QueryIncNgTrie)
     ->RangeMultiplier(8)
-    /* ->Ranges({{1<<5, 1<<5}, */
     ->Ranges({{NROWS, NROWS},
              /* {1<<4, WIKISYNTH_SIZE}, */
              {1<<4, 1<<12},
-             {SYNTHLOG, LRLOG}})
+             {LRLOG, LRLOG}})
     ->Unit(benchmark::kMillisecond);
 
 string get_current_datetime() {
@@ -67,17 +75,6 @@ string get_current_datetime() {
     oss << std::put_time(&tm, "%d-%m-%Y_%H-%M-%S");
     auto str = oss.str();
     return str;
-}
-
-/* Set BENCHMARK_OUT_FORMAT and BENCHMARK_OUT environment variables to redirect
- * the output to the format and file. 
- * Output filename: ../export/data/current_datatime.csv
- */
-void setenv_vars(const string& format="csv") {
-    std::stringstream ss_out;
-    ss_out << "../export/data/" << get_current_datetime() << "-query.csv";
-    setenv("BENCHMARK_OUT_FORMAT", format.c_str(), 1);
-    setenv("BENCHMARK_OUT", ss_out.str().c_str(), 1);
 }
 
 /* Declaring static members */

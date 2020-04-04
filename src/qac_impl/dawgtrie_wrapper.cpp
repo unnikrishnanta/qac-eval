@@ -34,7 +34,7 @@ bool DAWGTrie::build_index(const StrVec& keys, const ScoreVec& values) {
     dawgdic::DawgBuilder dawg_builder;
     // Reads keys from an input stream and inserts them into a dawg.
     std::string key;
-    /* std::size_t key_count = 0; */
+    std::size_t key_count = 0;
     for (size_t i = 0; i < keys.size(); ++i) {
         static const dawgdic::ValueType MAX_VALUE =
             std::numeric_limits<dawgdic::ValueType>::max();
@@ -58,9 +58,10 @@ bool DAWGTrie::build_index(const StrVec& keys, const ScoreVec& values) {
             assert(build_status);
         }
 
-        /* if (++key_count % 10000 == 0) { */
+        /* if (++key_count % 100000 == 0) { */
         /*     std::cerr << "no. keys: " << key_count << '\r'; */
         /* } */
+
     }
 
     dawgdic::Dawg dawg;

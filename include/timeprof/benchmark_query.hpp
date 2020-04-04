@@ -22,7 +22,7 @@
 #define SYNTHLOG 's'
 #define LRLOG 'l'
 
-#define COLLECTION WIKI
+#define COLLECTION CWEB
 
 #if COLLECTION==WIKI 
 #define NROWS WIKI_NROWS
