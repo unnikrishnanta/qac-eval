@@ -47,6 +47,7 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
         PQLog pqlog;
 
         void SetUp(const benchmark::State& state) {
+            assert(qac_impl.get() != nullptr);  // Entry check
             auto coll_nrows = static_cast<size_t>(state.range(0));
             auto n_conv = static_cast<size_t>(state.range(1));
             auto log_type = state.range(2);

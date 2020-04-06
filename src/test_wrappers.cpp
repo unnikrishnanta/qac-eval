@@ -81,24 +81,24 @@ int main(int argc, char *argv[])
 #ifdef TEST_DAWG
     cout << "Building DAWG Trie\n";
 
-    /* for (size_t i = 118489088; i < 195285642; i = i + (1<<20)) { */
-    /*     cout << "Sample size " << i << "\n"; */
-    /*     DAWGTrie dtrie; */
-    /*     coll_wiki.uniform_sample(i); */
-    /*     dtrie.build_index(coll_wiki); */
-    /*     if(!dtrie.build_status){ */
-    /*         cout << "\nDAWG Trie construction failed\n"; */
-    /*         return 1; */
-    /*     } */
-    /* } */
-
-    DAWGTrie dtrie;
-    dtrie.build_index(coll_wiki);
-    cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl;
-    auto dt_completions = dtrie.complete(prefix, 10);
-    for (const auto& c : dt_completions) {
-        cout << c.first << "\t" << c.second << "\n";
+    for (size_t i = 126367744; i < 195285642; i = i + (1<<5)) {
+        cout << "Sample size " << i << "\n";
+        DAWGTrie dtrie;
+        coll_wiki.uniform_sample(i);
+        dtrie.build_index(coll_wiki);
+        if(!dtrie.build_status){
+            cout << "\nDAWG Trie construction failed\n";
+            return 1;
+        }
     }
+
+    /* DAWGTrie dtrie; */
+    /* dtrie.build_index(coll_wiki); */
+    /* cout << "\nDAWG Trie Completions\n" << string(30, '-') << endl; */
+    /* auto dt_completions = dtrie.complete(prefix, 10); */
+    /* for (const auto& c : dt_completions) { */
+    /*     cout << c.first << "\t" << c.second << "\n"; */
+    /* } */
 
 #endif
 
