@@ -34,8 +34,8 @@ set(MEM_PROF mem_prof)
 set(TEST_WRAPPERS test_wrappers)
 
 # Boost libraries
-find_package( Boost REQUIRED COMPONENTS program_options iostreams)
-include_directories( ${Boost_INCLUDE_DIRS} )
+# find_package( Boost REQUIRED COMPONENTS program_options iostreams)
+# include_directories( ${Boost_INCLUDE_DIRS} )
 
 
 add_subdirectory(src/core)
@@ -55,9 +55,9 @@ add_executable(${QUERY_TPROF} src/bm_query.cpp)
 add_executable(${TEST_WRAPPERS} src/test_wrappers.cpp)
 
 # Boost
-target_link_libraries( ${MEM_PROF} ${Boost_LIBRARIES})
-target_link_libraries( ${BUILD_TPROF} ${Boost_LIBRARIES})
-target_link_libraries( ${TEST_WRAPPERS} ${Boost_LIBRARIES})
+# target_link_libraries( ${MEM_PROF} ${Boost_LIBRARIES})
+# target_link_libraries( ${BUILD_TPROF} ${Boost_LIBRARIES})
+# target_link_libraries( ${TEST_WRAPPERS} ${Boost_LIBRARIES})
 # google benchmark
 target_link_libraries(${BUILD_TPROF} "-L ../external/benchmark/build/src" benchmark)
 target_link_libraries(${QUERY_TPROF} "-L ../external/benchmark/build/src" benchmark)

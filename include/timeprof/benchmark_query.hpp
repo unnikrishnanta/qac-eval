@@ -1,8 +1,6 @@
 #include <cassert>
 #include <cstdint>
 #include <iostream>
-#include <boost/program_options.hpp>
-#include <boost/algorithm/string/join.hpp>
 #include "../src/core/collection.hpp"
 #include "../src/core/pqlog.hpp"
 #include "../src/qac_impl/htrie_wrapper.hpp"

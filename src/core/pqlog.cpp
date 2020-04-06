@@ -8,8 +8,8 @@
  * @Last Modified time: 2019-10-27
  */
 
-#include <boost/iostreams/device/mapped_file.hpp> // for mmap
-#include <boost/tokenizer.hpp>
+/* #include <boost/iostreams/device/mapped_file.hpp> // for mmap */
+/* #include <boost/tokenizer.hpp> */
 #include <iostream>
 #include <fstream>
 #include <iterator>
@@ -22,38 +22,36 @@
 
 #include "dtypes.hpp"
 #include "pqlog.hpp"
-
+#include "mem_map.hpp"
 using namespace std;
-using namespace boost::iostreams;
+/* using namespace boost::iostreams; */
 
 void PQLog::load_synthlog(const string& file_name, const size_t& n_rows){
-
-
-  cout << "Reading synthetic log from " << file_name << "\n";
-  mapped_file mmap(file_name, mapped_file::readonly);
-  auto file_data = mmap.const_data();
-  stringstream ss;
-  ss << file_data;
-  string line;
-  size_t lines = 0;
-
-  while (std::getline(ss, line)) {
-      if(++lines == n_rows)
-          break;
-
-      if (!line.empty()){
-        istringstream iss(line);
-        string pq, qid; 
-        getline(iss, pq, '\t');
-        getline(iss, qid, '\t');
-
-        if(pq_log_.find(qid) == pq_log_.end()){ // qid not in the map
-            pq_log_[qid] = vector<string>();
+    cout << "Reading synthetic log from " << file_name << "\n";
+    size_t length;
+    auto f = map_file(file_name.c_str(), length);
+    auto l = f + length;
+    const char* newl_f;
+    size_t lines = 0;
+    while (f && f!=l){
+        if ((newl_f = static_cast<const char*>(memchr(f, '\n', l-f)))){
+            string f_str = string(f, newl_f-f);
+            string::size_type pos = f_str.find('\t');
+            if(f_str.npos != pos) {
+                auto pq = f_str.substr(0, pos);
+                auto qid = f_str.substr(pos + 1);
+                /* cout << pq << "\t" << qid << "\n"; */
+                if(pq_log_.find(qid) == pq_log_.end()){ // qid not in the map
+                    pq_log_[qid] = vector<string>();
+                }
+                pq_log_[qid].push_back(pq);
+            }
+            f = newl_f;
+            lines++;
+            f++;
         }
-        
-        pq_log_[qid].push_back(pq);
-        
-        }
+        if(lines == n_rows)
+            break;
     }
     cout << lines << " rows read from " << file_name << "\n";
     cout << pq_log_.size() << " conversations\n";
