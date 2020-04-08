@@ -6,9 +6,13 @@ add_compile_options(
   "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"
   "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>"
 )
-include_directories("/usr/local/opt/openssl/include")
+# include_directories("/usr/local/opt/openssl/include")
+include_directories("${CMAKE_SOURCE_DIR}/external/openssl/install/include")
+message("${CMAKE_PROJECT_DIR}")
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 file(GLOB QAC_SOURCES "*.cc" ".h")
 add_library(IncNgTrie  SHARED ${QAC_SOURCES})
-target_link_libraries(IncNgTrie "-L/usr/local/opt/openssl/lib" ssl)
-target_link_libraries(IncNgTrie crypto)
+# target_link_libraries(IncNgTrie "-L/usr/local/opt/openssl/lib" ssl)
+# target_link_libraries(IncNgTrie crypto)
+target_link_libraries(IncNgTrie "-L${CMAKE_SOURCE_DIR}/external/openssl/install/lib" ssl)
+target_link_libraries(IncNgTrie "-L${CMAKE_SOURCE_DIR}/external/openssl/install/lib" crypto)

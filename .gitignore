@@ -3,7 +3,7 @@
 /debug/*
 */bin/*
 /out/
-/external/
+external/*
 
 .DS_Store
 *.swp
