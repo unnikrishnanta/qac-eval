@@ -2,6 +2,7 @@
 /build/*
 /debug/*
 */bin/*
+*/lib/*
 /out/
 external/*
 
