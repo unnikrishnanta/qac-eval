@@ -61,14 +61,17 @@ def read_file(file_name):
     str_dict = list()
     empty_lines = 0
     with open(file_name, "r", encoding='utf-8') as infile:
-        for line in infile.readlines():
+        for i,line in enumerate(infile.readlines()):
             line = line.strip()
             if len(line) == 0: # strange!
                 empty_lines += 1
             line = line.split('\t')
-            print(line)
+            if i % 10000 == 0:
+                sys.stdout.write("\r" + str(i) + " lines processed")
             s = preprocess_str(line[0])
             str_dict.append((s, int(line[1])))  # line -> partial queries
+    sys.stdout.write("\r" + str(i) + " lines processed")
+    sys.stdout.write("\n")
     return str_dict
 
 def freq_accum(str_dict):
