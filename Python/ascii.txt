@@ -1,6 +1,5 @@
-abakan:10
-republic_o_f_khakassia:20
-abaza:100
-republic_of_khakassia:7
-abdu_lino:11
-abdulino:33
+republic_o_f_khakassia	20
+abaza	100
+republic_of_khakassia	7
+abdu_lino	11
+abdulino	33

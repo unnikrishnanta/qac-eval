@@ -19,10 +19,10 @@ def process_file(file_name, cut_off_len):
     processed = list()
     with open(file_name) as infile: 
         csv_reader = csv.reader(infile, delimiter='\t')
-        for row in csv_reader:
+        for i,row in enumerate(csv_reader):
             s = apply_processing(row[0], cut_off_len)
             if(s):
-                processed.append((s, row[2]))
+                processed.append((s, row[1]))
     return processed
 
 

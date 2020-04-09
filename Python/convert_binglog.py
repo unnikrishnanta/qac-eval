@@ -60,18 +60,29 @@ def preprocess_str(s):
 def read_file(file_name):
     str_dict = list()
     empty_lines = 0
+    bad_format = 0
     with open(file_name, "r", encoding='utf-8') as infile:
         for i,line in enumerate(infile.readlines()):
             line = line.strip()
             if len(line) == 0: # strange!
+                sys.stdout.write("\n")
+                print("Empty line: {0}".format(i+1))
                 empty_lines += 1
+                continue
             line = line.split('\t')
             if i % 10000 == 0:
                 sys.stdout.write("\r" + str(i) + " lines processed")
             s = preprocess_str(line[0])
+            if len(line) != 2:
+                sys.stdout.write("\n")
+                print(" ".join(line), " badly formatted. Line: ", i+1)
+                bad_format += 1
+                continue
             str_dict.append((s, int(line[1])))  # line -> partial queries
     sys.stdout.write("\r" + str(i) + " lines processed")
     sys.stdout.write("\n")
+    print("Empty lines ", empty_lines)
+    print("Lines with bad formatting ", bad_format)
     return str_dict
 
 def freq_accum(str_dict):
@@ -95,7 +106,6 @@ if __name__ == "__main__":
         verbose = True
 
     str_dict = read_file(args['infile'])
-    print("File ", args['infile'], " loaded.")
 
     if args['outfile'] :
         export_file = args['outfile']
@@ -107,7 +117,7 @@ if __name__ == "__main__":
     # https://stackoverflow.com/a/3191811/937153
     with open(export_file, "w", encoding='ascii', newline='') as outfile:
         for k in str_freq:
-            outfile.write('{0}:{1}\n'.format(k, str_freq[k]))
+            outfile.write('{0}\t{1}\n'.format(k, str_freq[k]))
 
     print("Converted data written to ", export_file)
 

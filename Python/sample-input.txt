@@ -1,4 +1,5 @@
-Абакан	10
+Абакан
+
 Republic o(~)f Khakassia	20
 Абаза	100
 Republic of-Khakassia	7
