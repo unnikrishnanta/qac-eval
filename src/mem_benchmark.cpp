@@ -24,6 +24,8 @@ tsl::htrie_map<char, size_t> build_index(const StringDict& str_dict){
 
 int main(int argc, char *argv[])
 {
+    std::cout << "Args count by " << argv[0] << ": " << argc << "\n";
+    //todo: take collection as an argument
     size_t n_rows = SIZE_MAX;
     const char COLLECTION = 'w';
 

@@ -134,7 +134,7 @@ void FastssIndex::Initilization(const string &filename, int tau,
   cerr << "Indexing Start NG Generation" << endl;
 #endif
 
-  for (int i = 0; i < dataset_.num_documents_; i++) {
+  for (SizeType i = 0; i < dataset_.num_documents_; i++) {
     vector<string> variants;
     const string & doc_str = dataset_.GetDocumentByID(i);
     if (normalized) {
@@ -206,7 +206,7 @@ void FastssIndex::Initilization(const string &filename, int tau,
     trie = new MapTrie();
   }
   trie_ = trie;
-  for (int i = 0; i < num_variant_tuples; i ++) {
+  for (SizeType i = 0; i < num_variant_tuples; i ++) {
     trie_->AddString(variant_tuples[i].variant_string.c_str(), i);
   }
 
@@ -220,7 +220,8 @@ void FastssIndex::Initilization(const string &filename, int tau,
 
 
 void FastssIndex::FastInit(const string &filename, int tau,
-                           bool normalized, int norm_gap, TrieBase *trie)
+                           bool normalized, int norm_gap)
+                           /* , TrieBase *trie) */
 {
   dataset_.InitFromFile(filename, 200);
   variant_generator_.set_tau(tau);
@@ -232,7 +233,7 @@ void FastssIndex::FastInit(const string &filename, int tau,
   cerr << "Indexing Start NG Generation" << endl;
 #endif
 
-  for (int i = 0; i < dataset_.num_documents_; i++) {
+  for (SizeType i = 0; i < dataset_.num_documents_; i++) {
     vector<string> variants;
     const string & doc_str = dataset_.GetDocumentByID(i);
     if (normalized) {

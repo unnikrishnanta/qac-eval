@@ -85,12 +85,12 @@ class VectorIter: public BaseIter{
     end = node->children->end();
   }  
   ~VectorIter() {}
-  const void restart(TrieBase* node) {
+  void restart(TrieBase* node) {
     VectorTrie* vector_node = (VectorTrie*) node;
     current = vector_node->children->begin();
     end = vector_node->children->end();   
   }  
-  const void next() {current ++;}
+  void next() {current ++;}
   TrieBase* value() {return *current;}
   bool IsEnd(){return current == end;}
 };  

@@ -60,21 +60,27 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
             assert(pqlog.size());
         }
 
-        void TearDown(const benchmark::State& state) {
+        void TearDown() {
             assert(qac_impl.get() != nullptr);
             qac_impl.reset();
         }
 
     protected:
         void run_benchmarks(benchmark::State& state){
-            double num_completions=0, plen_sum=0, num_pq=0;
+            double num_completions=0, plen_sum=0, num_pq=0, comp_len_sum=0;
             for (auto _ : state) {
-                for (const auto& [qid, pvec]: pqlog) {
+                for (const auto& qid_pvec: pqlog) {
+                    const auto& pvec = qid_pvec.second;  // partial q vector
                     for(const auto& p: pvec){
-                        ++num_pq;
                         auto completions = qac_impl->complete(p, NCOMP);
+                        state.PauseTiming(); //Stop timers.Warning:high overhead
+                        ++num_pq;
                         num_completions += completions.size();
                         plen_sum += p.length();
+                        for (const auto& c : completions) {
+                            comp_len_sum += c.first.length();  // len(comp str)
+                        }
+                        state.ResumeTiming();
                     }
                 }
             }
@@ -88,11 +94,18 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
             state.counters["PQBytesRate"] = benchmark::Counter(plen_sum,
                                             benchmark::Counter::kIsRate,
                                             benchmark::Counter::OneK::kIs1024);
+            state.counters["CompBytesRate"] = benchmark::Counter(comp_len_sum,
+                                            benchmark::Counter::kIsRate,
+                                            benchmark::Counter::OneK::kIs1024);
             // How many seconds it takes to process one partial query
             state.counters["NPQInvRate"] = benchmark::Counter(num_pq,
                                            benchmark::Counter::kIsRate |
                                            benchmark::Counter::kInvert);
             state.counters["PQByesInvRate"] = benchmark::Counter(plen_sum,
+                                            benchmark::Counter::kIsRate |
+                                            benchmark::Counter::kInvert, 
+                                            benchmark::Counter::OneK::kIs1024);
+            state.counters["CompByesInvRate"] = benchmark::Counter(comp_len_sum,
                                             benchmark::Counter::kIsRate |
                                             benchmark::Counter::kInvert, 
                                             benchmark::Counter::OneK::kIs1024);

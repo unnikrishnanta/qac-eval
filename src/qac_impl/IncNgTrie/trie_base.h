@@ -61,7 +61,7 @@ class TrieBase{
 
   virtual int AddString(const char *str, int id = -1, int did = -1) = 0;
 
-  virtual void BuildTrie(int num_str, const char **strs, int *ids) {}
+  /* virtual void BuildTrie(int num_str, const char **strs, int *ids) {} */
   
   
   void PrintTrie(bool first=true, ostream& out = cout);
@@ -73,9 +73,12 @@ class BaseIter{
   // TrieBase* current;
  public:
   BaseIter(){}
-  BaseIter(TrieBase* current){}
-  virtual const void restart(TrieBase* current) = 0;
-  virtual const void next() = 0;
+  virtual ~BaseIter(){}  // so that a delete at trie_base.cc:35:12 won't complain
+  /* BaseIter(TrieBase* current){} */
+  /* virtual const void restart(TrieBase* current) = 0; */
+  /* virtual const void next() = 0; */
+  virtual void restart(TrieBase* current) = 0;
+  virtual void next() = 0;
   virtual TrieBase* value() = 0;
   virtual bool IsEnd() = 0;
 };

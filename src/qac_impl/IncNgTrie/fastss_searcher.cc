@@ -159,7 +159,7 @@ uint64_t FastSSSearcher::FectchResultsStupid(){
       break;
 
     {
-      bool covered = false;
+      /* bool covered = false;  Unni: commented out*/
       ancester.insert(current_active_[i]->node_str);
       char sub;
       int sub_pos  = current_active_[i]->node_len - 1;
@@ -167,12 +167,12 @@ uint64_t FastSSSearcher::FectchResultsStupid(){
         //if (sub_pos){
         sub = current_active_[i]->node_str[sub_pos];        
         current_active_[i]->node_str[sub_pos] = '\0';
-        set<string>::iterator it =
-            ancester.find(current_active_[i]->node_str);
+        /* set<string>::iterator it = */
+        /*     ancester.find(current_active_[i]->node_str); */
         current_active_[i]->node_str[sub_pos] = sub;
-        if (it != ancester.end()){
-          covered = true;
-        }
+        /* if (it != ancester.end()){ */
+        /*   covered = true; */
+        /* } Unni: Commented out: No effect */
         sub_pos --;
       }
       //}

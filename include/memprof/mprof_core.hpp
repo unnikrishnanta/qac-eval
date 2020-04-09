@@ -29,7 +29,7 @@ class MemProfiler {
          *
          * desc: A description for this benchmark
          */
-        void mem_bm_build(const string& desc="") {
+        void mem_bm_build() {
             std::cout << std::string(40, '=') << std::endl;
             std::cout << "BM_BUILD\t" << typeid(T).name() << "\n";
             std::cout << std::string(40, '=') << std::endl;

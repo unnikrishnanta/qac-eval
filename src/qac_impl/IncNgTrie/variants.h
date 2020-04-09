@@ -54,8 +54,8 @@ class VariantGenerator {
   int *comb_;
   int num_comb_;
   int tau_;
-  int num_comb;
-  int comb[5000][5];  
+  /* int num_comb; */
+  /* int comb[5000][5]; */  
   
  public:
 

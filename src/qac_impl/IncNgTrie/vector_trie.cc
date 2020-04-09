@@ -120,7 +120,8 @@ int VectorTrie::AddString(const char *str, int pid, int did)
     node->UpdatePositionRange(pid);
     node->UpdateNumResults(last_del);
   }
-  node->leaf_count ++;
+  /* node->leaf_count ++; */
+  node->leaf_count = true;  // Modified by Unni
   node->AddDocId(did);
   return num_new_nodes;
 }

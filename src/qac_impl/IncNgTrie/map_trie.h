@@ -81,13 +81,13 @@ class MapIter: public BaseIter{
   
   ~MapIter() {}
 
-  const void restart(TrieBase* node) {
+  void restart(TrieBase* node) {
     MapTrie* map_node = (MapTrie*) node;
     current = map_node->children->begin();
     end = map_node->children->end();    
   }
   
-  const void next() {current ++;}
+  void next() {current ++;}
   TrieBase* value() {return current->second;}
   //bool IsEnd(){return current == trienode->children->end();}
   bool IsEnd(){return current == end;}  

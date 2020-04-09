@@ -97,7 +97,7 @@ const string TrieStatistic::ToString(){
   return str_stream.str();
 }
 
-};
+}
 
 
 

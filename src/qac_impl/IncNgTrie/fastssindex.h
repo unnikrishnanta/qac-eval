@@ -55,11 +55,11 @@ class FastssIndex {
                      TrieBase *trie = NULL);
 
   void FastInit(const string &filename, int tau = 3,
-                     bool normalized = false, int norm_gap = 5,
-                     TrieBase *trie = NULL);
+                     bool normalized = false, int norm_gap = 5);
+                     /* TrieBase *trie = NULL); Not used. Commented: Unni*/
 
   void DumpIndex(bool print_trie = false){
-    for (auto i = 0; i < num_variant_tuples; i ++){
+    for (SizeType i = 0; i < num_variant_tuples; i ++){
       cout << i << ":" <<  variant_tuples[i].variant_string << " "
            << variant_tuples[i].document_id << " " << variant_tuples[i].next << endl;
     }

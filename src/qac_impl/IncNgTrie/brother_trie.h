@@ -95,11 +95,11 @@ class BrotherIter: public BaseIter{
     current = node->firstchild;
   }  
   ~BrotherIter() {}
-  const void restart(TrieBase* node) {
+  void restart(TrieBase* node) {
     BrotherTrie* brother_node = (BrotherTrie*) node;
     current = brother_node->firstchild;
   }  
-  const void next() {current = current->brother;}
+  void next() {current = current->brother;}
   TrieBase* value() {return current;}
   bool IsEnd(){return current == NULL;}
 };  
