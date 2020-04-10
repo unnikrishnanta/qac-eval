@@ -9,6 +9,7 @@
  * Written by: Unni Krishnan. Last major modification: 18/03/2020.
  */
 #include "core/collection.hpp"
+#include "core/config.hpp"
 #include <cstdint>
 #include <iostream>
 #include <benchmark/benchmark.h>
@@ -16,25 +17,13 @@
 #include <timeprof/benchmark_build.hpp>
 
 
-#define WIKI_NROWS 5077651
-#define CWEB_NROWS 195285642
-
-#define COLLECTION WIKI
-
-#if COLLECTION==WIKI 
-#define NROWS WIKI_NROWS
-#else
-#define NROWS CWEB_NROWS
-#endif
-
-
- BENCHMARK_REGISTER_F(BuildFixture, BuildHTrie)
+BENCHMARK_REGISTER_F(BuildFixture, BuildHTrie)
      ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}});
- BENCHMARK_REGISTER_F(BuildFixture, BuildMarisa)
+BENCHMARK_REGISTER_F(BuildFixture, BuildMarisa)
      ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}});
- BENCHMARK_REGISTER_F(BuildFixture, BuildDAWG)
+BENCHMARK_REGISTER_F(BuildFixture, BuildDAWG)
      ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}});
- BENCHMARK_REGISTER_F(BuildFixture, BuildIncNgT)
+BENCHMARK_REGISTER_F(BuildFixture, BuildIncNgT)
      ->RangeMultiplier(2)->Ranges({{1<<9, NROWS}, {1,1}});
 
 

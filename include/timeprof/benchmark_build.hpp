@@ -9,10 +9,6 @@
 #include <benchmark/benchmark.h>
 #include <memory>
 
-#define WIKI 'w'
-#define CWEB 'c'
-
-#define COUNTERS 
 
 class BuildFixture : public ::benchmark::Fixture {
  public:
@@ -20,17 +16,36 @@ class BuildFixture : public ::benchmark::Fixture {
 };
 
 /* Add a set of counters derived from coll  to the State object.
- * The counters will be included in the benchmark reporting */
+ * The counters will be included in the benchmark reporting
+ *  NPQ: No. of partial queries processed. 
+ *  PQBytes: No. of bytes from partial query strings processed. 
+ *  TotalBytes: Total no. of bytes processed including strings and scores
+ */
 void add_build_counters(const Collection& coll, benchmark::State& state) {
-    double nbytes = 0;
+    auto nrows = static_cast<size_t>(state.range(0));
+    double plen_sum=0, total_bytes=0;
     for (const auto s : coll.get_strings()) {
-        nbytes += s.length();
+        plen_sum += s.length();
+        total_bytes = total_bytes + s.length() + sizeof(ScoreType);
     }
-    state.counters["NBytes"] = benchmark::Counter(nbytes);
+    state.counters["NPQ"] = nrows; // number of partial queries
+    state.counters["PQBytes"] = benchmark::Counter(plen_sum);
+    state.counters["TotalBytes"] = benchmark::Counter(total_bytes);
     // We process with the rate of state.range(0) bytes every iteration:
-    state.counters["BytesProcessed"] = benchmark::Counter(nbytes,
+    state.counters["PQBytesRate"] = benchmark::Counter(plen_sum,
                                 benchmark::Counter::kIsIterationInvariantRate,
                                 benchmark::Counter::OneK::kIs1024);
+    state.counters["TotalBytesRate"] = benchmark::Counter(total_bytes,
+                                benchmark::Counter::kIsIterationInvariantRate,
+                                benchmark::Counter::OneK::kIs1024);
+    state.counters["PQByesInvRate"] = benchmark::Counter(plen_sum,
+                                    benchmark::Counter::kIsRate |
+                                    benchmark::Counter::kInvert, 
+                                    benchmark::Counter::OneK::kIs1024);
+    state.counters["TotalByesInvRate"] = benchmark::Counter(total_bytes,
+                                    benchmark::Counter::kIsRate |
+                                    benchmark::Counter::kInvert, 
+                                    benchmark::Counter::OneK::kIs1024);
 }
 
 

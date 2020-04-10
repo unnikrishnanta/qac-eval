@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string_view>
 #include "core/collection.hpp"
+#include "core/config.hpp"
 #include "core/pqlog.hpp"
 #include "qac_impl/htrie_wrapper.hpp"
 #include "qac_impl/dawgtrie_wrapper.hpp"
@@ -14,8 +15,6 @@
 /* #define TEST_MARISA 1 */
 /* #define TEST_DAWG 1 */
 #define TEST_INCGT 1
-#define NCOMP 10
-#define COLLECTION 'w'
 
 using namespace std;
 
@@ -29,6 +28,7 @@ int main(int argc, char *argv[])
         cout << "-t testsize: Run on testsize number of lines\n";
         cout << "-s size for synth log\n";
         cout << "-p : Partial query to search\n";
+        cout << "-c : Collection. w: Wiki, c:CWeb, b:Bing\n";
         return 0;
     }
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         cout  << "Test mode. Loading " << n_rows << " lines from file\n";
     }
 
-    size_t sln_rows = SIZE_MAX;
+    [[maybe_unused]] size_t sln_rows = SIZE_MAX;
     char *sl_size = getCmdOption(argv, argv + argc, "-s");
     if(sl_size){
         sln_rows = atoi(sl_size);
@@ -55,10 +55,17 @@ int main(int argc, char *argv[])
     if(pf){
         prefix = string(pf);
     }
+    cout << "Prefix: " << prefix << "\n";
+
+    char *coll = getCmdOption(argv, argv + argc, "-c");
+    if(!coll){
+        std::cout << "Must specify collection with -c. Run with -h for help\n";
+        return 1;
+    }
 
     Collection coll_wiki;
     cout << "Reading collection\n";
-    coll_wiki.read_collection(COLLECTION, n_rows, true);
+    coll_wiki.read_collection(*coll, n_rows, true);
 
 #ifdef TEST_HTRIE
     cout << "\nBuilding HAT Trie\n";
@@ -98,7 +105,7 @@ int main(int argc, char *argv[])
 
 #ifdef TEST_MARISA
     cout << "\nBuilding marisa trie";
-    MarisaCompleter mtc;
+    MarisaCompleter m tc;
     mtc.build_index(coll_wiki);
     cout << "\nMarisa Trie Completions\n" << string(30, '-') << endl;
     auto mt_completions = mtc.complete(prefix, 10);
@@ -111,42 +118,54 @@ int main(int argc, char *argv[])
     cout << "\nBuilding IncNgTrie\n";
     IncNgTrieCompleter inc(1); // Allow edit distance of 1
     inc.build_index(coll_wiki);
-    cout << "IncNgTrieCompletions\n" << string(30, '-') << endl;
-    auto inc_completions = inc.complete(prefix, 5);
-    for (const auto& c : inc_completions) {
-        cout << c.first << "\t" << c.second << "\n";
+    std::string input;
+    std::cout << "Enter prefix: ";
+    while(std::getline(std::cin, input)) { // quit the program with ctrl-d
+        auto inc_completions = inc.complete(input, NCOMP);
+        cout << "\nIncNgTrieCompletions\n" << string(30, '-') << endl;
+        for (const auto& c : inc_completions) {
+            cout << c.first << "\t" << c.second << "\n";
+        }
+#ifdef TEST_HTRIE
+        cout << "\nHAT Trie Completions\n" << string(30,'-') << endl;
+        auto htrie_completions = ht_comp.complete(input, NCOMP);
+        for (const auto& c : htrie_completions) {
+            cout << c.first << "\t" << c.second << "\n";
+        }
+#endif
+        std::cout << "Enter prefix: ";
     }
 
 #endif
 
-    PQLog plog;
-    cout << "Loading partial query log\n";
-    plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", sln_rows);
-    cout << "Done\n";
-    cout << "Testing on synth log\n";
-    for (const auto& kv: plog) {
-        for(const auto& p: kv.second){
-            cout << "Synth PQ: " << p << "\n";
-            auto completions = ht_comp.complete(p, 10);
-            for (const auto& c: completions) 
-                cout << c.first << "\t" << c.second << "\n";
-            cout << "\n\n";
-        }
-        cout << endl;
-    }
+    /* PQLog plog; */
+    /* cout << "Loading partial query log\n"; */
+    /* plog.load_synthlog("../../synth_log/data/wiki-synthlog.tsv", sln_rows); */
+    /* cout << "Done\n"; */
+    /* cout << "Testing on synth log\n"; */
+    /* for (const auto& kv: plog) { */
+    /*     for(const auto& p: kv.second){ */
+    /*         cout << "Synth PQ: " << p << "\n"; */
+    /*         auto completions = ht_comp.complete(p, 10); */
+    /*         for (const auto& c: completions) */ 
+    /*             cout << c.first << "\t" << c.second << "\n"; */
+    /*         cout << "\n\n"; */
+    /*     } */
+    /*     cout << endl; */
+    /* } */
 
-    auto lrlog = plog.lr_log();
-    for(const auto& kv: lrlog){
-        /* cout << k << "\t" << boost::join(v, ",") << "\n"; */
-        for(const auto& p: kv.second){
-            cout << "LR PQ: " << p << "\n";
-            auto completions = ht_comp.complete(p, 10);
-            for (const auto& c: completions) {
-                cout << c.first << "\t" << c.second << "\n";
-            }
-            cout << "\n\n";
-        }
-    }
+    /* auto lrlog = plog.lr_log(); */
+    /* for(const auto& kv: lrlog){ */
+    /*     /1* cout << k << "\t" << boost::join(v, ",") << "\n"; *1/ */
+    /*     for(const auto& p: kv.second){ */
+    /*         cout << "LR PQ: " << p << "\n"; */
+    /*         auto completions = ht_comp.complete(p, 10); */
+    /*         for (const auto& c: completions) { */
+    /*             cout << c.first << "\t" << c.second << "\n"; */
+    /*         } */
+    /*         cout << "\n\n"; */
+    /*     } */
+    /* } */
 
     return 0;
 }

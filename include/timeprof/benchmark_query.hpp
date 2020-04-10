@@ -10,28 +10,6 @@
 #include <benchmark/benchmark.h>
 #include <memory>
 
-
-#define WIKI 'w'
-#define CWEB 'c'
-#define WIKI_NROWS 5077651
-#define CWEB_NROWS 195285642
-
-#define WIKISYNTH_SIZE 1206653
-#define SYNTHLOG 's'
-#define LRLOG 'l'
-
-#define COLLECTION CWEB
-
-#if COLLECTION==WIKI 
-#define NROWS WIKI_NROWS
-#define WIKISYNTH "../../synth_log/data/wiki-synthlog.tsv"
-#else
-#define NROWS CWEB_NROWS
-#define WIKISYNTH "../../synth_log/data/cweb-synthlog.tsv"
-#endif
-
-#define NCOMP 8  // Number of completions 
-
 class QueryBase {
  public:
      static Collection coll;
@@ -60,7 +38,7 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
             assert(pqlog.size());
         }
 
-        void TearDown() {
+        void TearDown([[maybe_unused]] const benchmark::State& state) {
             assert(qac_impl.get() != nullptr);
             qac_impl.reset();
         }

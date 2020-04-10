@@ -13,13 +13,12 @@ void HTrieCompleter::build_index(const StringDict& str_dict){
 void HTrieCompleter::build_index(const Collection& coll){
     const auto& string_set = coll.get_strings();
     const auto& scores = coll.get_scores();
-    for (unsigned int i = 0; i < string_set.size(); ++i) {
-       ht_map.insert(string_set[i], scores[i]); 
-    }
+    build_index(string_set, scores);
 }
 
 void HTrieCompleter::build_index(const StrVec& str_set, const ScoreVec& scores){
     for (unsigned int i = 0; i < str_set.size(); ++i) {
+       /* std::cout << "Inserting: " << str_set[i] << "\t" << scores[i] << "\n"; */
        ht_map.insert(str_set[i], scores[i]); 
     }
 }

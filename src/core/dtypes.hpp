@@ -13,6 +13,12 @@
 #include <algorithm>
 #include <cassert>
 
+/* #define MEM_PROF */
+#ifdef MEM_PROF
+#include "heap_mem.h"
+#endif
+
+
 using namespace std;
 
 using StrVec = vector<string>;

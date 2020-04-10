@@ -9,8 +9,12 @@
 #include <thread>
 #include <chrono>
 #include <memprof/mprof_core.hpp>
+#include "core/heap_mem.h"
 
-using namespace std;
+#define COLLECTION WIKI
+
+/* using namespace std; */
+/* using namespace CGE; */
 
 tsl::htrie_map<char, size_t> build_index(const StringDict& str_dict){
     tsl::htrie_map<char, size_t> ht_map;
@@ -27,7 +31,6 @@ int main(int argc, char *argv[])
     std::cout << "Args count by " << argv[0] << ": " << argc << "\n";
     //todo: take collection as an argument
     size_t n_rows = SIZE_MAX;
-    const char COLLECTION = 'w';
 
     MemProfiler<HTrieCompleter> htrie_mprof(COLLECTION);
     htrie_mprof.set_nrows(n_rows);
@@ -44,6 +47,5 @@ int main(int argc, char *argv[])
     MemProfiler<IncNgTrieCompleter> inct(COLLECTION);
     inct.set_nrows(n_rows);
     inct.mem_bm_build();
-
     return 0;
 }

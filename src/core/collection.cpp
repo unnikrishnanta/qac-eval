@@ -93,6 +93,8 @@ void Collection::read_collection(const char& coll_type, const size_t& n_rows,
         file_name = WIKI_ROOT + WIKI_COLLECTION;
     else if(coll_type == 'c')
         file_name = CWEB_ROOT + CWEB_COLLECTION;
+    else if(coll_type == 'b')
+        file_name = BING_ROOT + BING_COLLECTION;
     cerr << "Reading " << file_name << "\n";
     size_t length;
     auto f = map_file(file_name.c_str(), length);
@@ -104,8 +106,8 @@ void Collection::read_collection(const char& coll_type, const size_t& n_rows,
             string f_str = string(f, newl_f-f);
             string::size_type pos = f_str.find('\t');
             if(f_str.npos != pos) {
-                auto targ_str = f_str.substr(pos + 1);
-                auto freq = f_str.substr(0, pos);
+                auto targ_str = f_str.substr(0, pos);
+                auto freq = f_str.substr(pos + 1);
                 /* cout << targ_str << "\t" << freq << "\n"; */
                 str_set_.push_back(targ_str);
                 scores_.push_back(atoi(freq.c_str()));

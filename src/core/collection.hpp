@@ -4,15 +4,8 @@
 #include<string>
 #include<vector>
 #include<utility>
-
 #include "dtypes.hpp"
-
-using namespace std;
-const string WIKI_ROOT = "../../AutoSuggestions/PyQAC/data/wiki/";
-const string CWEB_ROOT = "../../AutoSuggestions/PyQAC/data/"
-                            "Clue-500M-Anchor-Log-External/";
-const string WIKI_COLLECTION = "clickstream-agg-wiki-32B.tsv";
-const string CWEB_COLLECTION = "clueweb-agg-32B.tsv";
+#include "config.hpp"
 
 
 class Collection {
