@@ -14,6 +14,9 @@ class Collection {
         void read_collection(const char& coll_type, const size_t& n_rows,
                              const bool& skip_header=false, 
                              const bool& sort=true, const int& sort_key=0);
+        void read_collection(const string& file_name, const size_t& n_rows,
+                             const bool& skip_header=false, 
+                             const bool& sort=true, const int& sort_key=0);
         void read_collection(const bool& skip_header=false);
         /* void sort_keys(); */
         StrVec const &get_strings() const { return str_set_; }

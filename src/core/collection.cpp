@@ -94,7 +94,13 @@ void Collection::read_collection(const char& coll_type, const size_t& n_rows,
     else if(coll_type == 'c')
         file_name = CWEB_ROOT + CWEB_COLLECTION;
     else if(coll_type == 'b')
-        file_name = BING_ROOT + BING_COLLECTION;
+    file_name = BING_ROOT + BING_COLLECTION;
+    read_collection(file_name, n_rows, skip_header, sort, sort_key);
+}
+
+void Collection::read_collection(const string& file_name, const size_t& n_rows,
+                                 const bool& skip_header, 
+                                 const bool& sort, const int& sort_key){
     cerr << "Reading " << file_name << "\n";
     size_t length;
     auto f = map_file(file_name.c_str(), length);
