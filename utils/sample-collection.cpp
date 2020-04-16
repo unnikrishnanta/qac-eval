@@ -3,6 +3,7 @@
  * The indexes can be loaded from this file to perform the sampling later. 
     g++ -std=c++17 sample-collection.cpp -o sample-collection
  */
+#include <cstddef>
 #include <iostream>
 #include <algorithm>
 #include <vector>       // std::vector
@@ -23,19 +24,18 @@ using namespace std;
  */
 vector<size_t> sample_indexes(const size_t& sample_size, const size_t& max_size){
   assert(sample_size <= max_size);
-  std::srand (unsigned ( std::time(0) ) );
   std::vector<size_t> index_vec(max_size);
-  // Fill with 0, 1, ..., max_size-1
   std::iota (std::begin(index_vec), std::end(index_vec), 0); 
-  // using built-in random generator:
   std::random_device rd;
-  std::mt19937 g(rd());
+  /* cout << "rd(): " << rd() << "\n"; */
+  /* std::mt19937 g(rd()); */
+  std::mt19937 g(3489352212);  // Hoping we get the same values every run
   std::shuffle (index_vec.begin(), index_vec.end(), g);
   return vector<size_t>(index_vec.begin(), index_vec.begin() + sample_size);
 }
 
 template <typename T>
-void vec_to_file(const vector<T>& data, const string file_name){
+void vec_to_file(const vector<T>& data, const string& file_name){
     ofstream myfile;
     myfile.open (file_name);
     for (const auto& i : data) {
@@ -58,7 +58,6 @@ vector<string> sample_collecton(const vector<string>& coll,
     assert(idx.size() <= coll.size());
     vector<string> sampled; 
     for (const auto& i: idx) {
-        cout << "i = " << i << "\n";
        assert(i < coll.size());
        sampled.push_back(coll[i]);
     }
@@ -70,10 +69,13 @@ void load_file(vector<T>& ret_vec, const string& file_name,
         const string type="str") {
     vector<T> data;
     ifstream infile(file_name);
+    size_t i = 0;
     if (infile) {  // test file open   
         std::string line;
         while (std::getline(infile, line)) {
             data.push_back(getline_as<T>(line));
+            if(!(++i % 10000))
+                std::cerr << "Lines read: " << i << '\r';
         }
     }
     else {
@@ -86,10 +88,13 @@ void load_file(vector<T>& ret_vec, const string& file_name,
 void load_collection(vector<string>& ret_vec, const string& file_name) {
     vector<string> data;
     ifstream infile(file_name);
+    size_t i = 0;
     if (infile) {  // test file open   
         std::string line;
         while (std::getline(infile, line)) {
             data.push_back(line);
+            if(!(++i % 10000))
+                std::cerr << "Lines read: " << i << '\r';
         }
     }
     else {
@@ -102,6 +107,9 @@ void load_collection(vector<string>& ret_vec, const string& file_name) {
 int main(int argc, char *argv[])
 {
     if (cmdOptionExists(argv, argv + argc, "-h")) {
+        std::cout << "./" << argv[0] << " -i collection -s sample_size -e";
+        std::cout << "./" << argv[0]
+            << " -i <collection> -l index file -o outputfile";
         std::cout << "Program options\n";
         std::cout << "==========================================================\n";
         std::cout << "-h Print usage.\n";
@@ -136,33 +144,32 @@ int main(int argc, char *argv[])
         outfile = std::string(o_f);
         std::cout  << "Output file: " << outfile << "\n";
     }
-    size_t sample_size = 128000000;
+    size_t sample_size = 125000000;
     char *ss = getCmdOption(argv, argv + argc, "-s");
     if(ss){
         sample_size = std::atoi(ss);
     }
-    std::cout  << "Sample size: " << sample_size << "\n";
 
     std::cout << "Reading collection\n";
     vector<string> coll;
     load_collection(coll, infile);
     auto coll_size = coll.size();
-    std::cout << "Collection size " << coll_size << "\n";
+    std::cout << "Collection size: " << coll_size << "\n";
     
     if(sample) {
+        std::cout << "Sampling " << sample_size << " collection indexes\n";
         auto idx_sample = sample_indexes(sample_size, coll_size);
         vec_to_file(idx_sample, "cweb-index.txt");
+        cout << "Done" << endl;
         return 0;
     }
 
     vector<size_t> idx; 
     load_file(idx, index_file);
-    cout << "Index file: \n";
-    for (const auto& i : idx) {
-       cout << i << "\n"; 
-    }
+    cout << "Index file size: " << idx.size() << "\n";
     auto sampled = sample_collecton(coll, idx);
     vec_to_file(sampled, outfile);
 
+    cout << "Done" << endl;
     return 0;
 }
