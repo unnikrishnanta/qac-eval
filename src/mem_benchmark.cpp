@@ -11,8 +11,6 @@
 #include <memprof/mprof_core.hpp>
 #include "core/heap_mem.h"
 
-#define COLLECTION WIKI
-
 /* using namespace std; */
 /* using namespace CGE; */
 

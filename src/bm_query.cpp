@@ -15,8 +15,6 @@
 #include <benchmark/benchmark.h>
 #include <timeprof/benchmark_query.hpp>
 
-#define COLLECTION CWEB
-
 /* BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie) */
 /*     ->RangeMultiplier(8) */
 /*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
