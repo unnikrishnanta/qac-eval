@@ -26,7 +26,7 @@
 using namespace std;
 /* using namespace boost::iostreams; */
 
-void PQLog::load_synthlog(const string& file_name, const size_t& n_rows){
+void PQLog::load_qaclog(const string& file_name, const size_t& n_rows){
     cout << "Reading synthetic log from " << file_name << "\n";
     size_t length;
     auto f = map_file(file_name.c_str(), length);

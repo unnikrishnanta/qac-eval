@@ -13,7 +13,7 @@ using namespace std;
 class PQLog {
 
     public: 
-        void load_synthlog(const string& file_name, const size_t& n_rows);
+        void load_qaclog(const string& file_name, const size_t& n_rows);
         QueryLog::const_iterator begin() const { return pq_log_.cbegin(); }
         QueryLog::const_iterator end() const  { return pq_log_.cend(); }
         PQLog uniform_sample(const size_t& sample_size);
@@ -22,8 +22,12 @@ class PQLog {
         vector<string>& operator[] (const string& qid) { return pq_log_[qid]; }
         PQLog lr_log(); // Generaet LR log from the finalPs in pq_log_
 
+        void set_log_type(const char ltype) { log_type_ = ltype; }
+        char log_type() { return log_type_; }
+
     private:
         QueryLog pq_log_;
+        char log_type_;
 };
 
 #endif /* ifndef PQLOG_H */

@@ -1,3 +1,5 @@
+#ifndef MY_TIMERS_H
+#define MY_TIMERS_H
 // https://stackoverflow.com/a/17440673/937153
 //  Windows
 #ifdef _WIN32
@@ -43,4 +45,6 @@ double get_wall_time(){
 double get_cpu_time(){
     return (double)clock() / CLOCKS_PER_SEC;
 }
+
 #endif
+#endif /* ifndef MY_TIMERS_H */

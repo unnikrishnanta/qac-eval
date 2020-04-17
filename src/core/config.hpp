@@ -7,7 +7,7 @@
 #define CWEB 'c'
 #define BING 'b'
 
-#define COLLECTION CWEB
+#define COLLECTION WIKI
 
 #define SLOG 's'
 #define LRLOG 'l'
@@ -23,12 +23,15 @@
 #if COLLECTION==WIKI 
 #define NROWS WIKI_NROWS
 #define SYNTHLOG "../../synth_log/data/wiki-synthlog.tsv"
+#define PQLOG_NCONV WIKI_NCONV
 #elif COLLECTION==CWEB 
 #define NROWS CWEB_NROWS
 #define SYNTHLOG "../../synth_log/data/cweb-synthlog.tsv"
+#define PQLOG_NCONV CWEB_NCONV
 #else
 #define NROWS BING_NROWS
 #define SYNTHLOG ""  // TODO: Bing log (ascii) file name. 
+#define PQLOG_NCONV BING_NCONV
 #endif
 
 #define NCOMP 8  // Default number of completions 
