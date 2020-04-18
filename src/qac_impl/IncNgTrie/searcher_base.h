@@ -13,7 +13,7 @@
 
 #include <set>
 
-#define MAX_QUERY_LENGTH 256
+#define MAX_QUERY_LENGTH 128
 namespace dbwsim {
 
 class SearcherBase {

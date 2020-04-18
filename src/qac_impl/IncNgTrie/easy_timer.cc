@@ -38,7 +38,7 @@ void EasyTimer::Finish()
 
 const string EasyTimer::ToString(){ 
   stringstream str_stream;
-  char message[256];  
+  char message[128];  
   // sprintf(message, "%ld.%06ld",
   //         elapse_time_sec + elapse_time_usec / 100000,
   //         elapse_time_usec % 100000);

@@ -61,7 +61,7 @@ class VariantGenerator {
 
   VariantGenerator (int tau = 3){
     tau_ = tau;
-    num_comb_ = 256;
+    num_comb_ = 128;
     comb_ = new int[num_comb_];
 
     

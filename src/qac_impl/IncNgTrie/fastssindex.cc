@@ -71,8 +71,8 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
 
 
   variant_tuples = new VariantTuple[variants_did_list.size()];
-  int prev_last_del_location[256];
-  for (int i = 0; i < 256; i ++ ) prev_last_del_location[i] = -1;
+  int prev_last_del_location[128];
+  for (int i = 0; i < 128; i ++ ) prev_last_del_location[i] = -1;
   SizeType count  = 0; // Modified by Unni from int to size_t
   for (auto it = variants_did_list.begin();
           it < variants_did_list.end(); it ++, count ++) {
@@ -83,10 +83,10 @@ void FastssIndex::Initilization(const vector<string>& input_strings,
     auto last_del = it->first.rfind(DELETION_NOTE);
     if (last_del==string::npos) {
       //variant_tuples[count].last_del_pos = - 1;
-      if (prev_last_del_location[255] >= 0) {
-        variant_tuples[prev_last_del_location[255]].next = count;
+      if (prev_last_del_location[127] >= 0) {
+        variant_tuples[prev_last_del_location[127]].next = count;
       }
-      prev_last_del_location[255] = count;
+      prev_last_del_location[127] = count;
     } else {
       //variant_tuples[count].last_del_pos = last_del;
       if (prev_last_del_location[last_del] >= 0) {
@@ -168,8 +168,8 @@ void FastssIndex::Initilization(const string &filename, int tau,
 
 
   variant_tuples = new VariantTuple[variants_did_list.size()];
-  int prev_last_del_location[256];
-  for (int i = 0; i < 256; i ++ ) prev_last_del_location[i] = -1;
+  int prev_last_del_location[128];
+  for (int i = 0; i < 128; i ++ ) prev_last_del_location[i] = -1;
   int count  = 0;
   for (vector<pair<string, int> >::iterator it = variants_did_list.begin();
        it < variants_did_list.end(); it ++, count ++) {
@@ -180,10 +180,10 @@ void FastssIndex::Initilization(const string &filename, int tau,
     size_t last_del = it->first.rfind(DELETION_NOTE);
     if (last_del==string::npos) {
       //variant_tuples[count].last_del_pos = - 1;
-      if (prev_last_del_location[255] >= 0) {
-        variant_tuples[prev_last_del_location[255]].next = count;
+      if (prev_last_del_location[127] >= 0) {
+        variant_tuples[prev_last_del_location[127]].next = count;
       }
-      prev_last_del_location[255] = count;
+      prev_last_del_location[127] = count;
     } else {
       //variant_tuples[count].last_del_pos = last_del;
       if (prev_last_del_location[last_del] >= 0) {

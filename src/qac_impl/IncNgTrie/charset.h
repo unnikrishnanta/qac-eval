@@ -3,7 +3,7 @@
 
 namespace dbwsim
 {
-  const int NUMBER_OF_CHARS = 256;
+  const int NUMBER_OF_CHARS = 128;
   
   class CharSet 
   {
