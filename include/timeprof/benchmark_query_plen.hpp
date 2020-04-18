@@ -53,21 +53,14 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 }
             }
             else {  // Work on a full log. 
-                std::cerr<<"Complete pq log loaded\n";
-                std::cerr << "Logtype " << log_type << "\n";
-                std::cerr << "Current logtype " << curr_full_logtype << "\n";
                 // Generate LR log only if it hasn't been loaded. 
                 if(log_type == SLOG){
-                    std::cerr << "Loading QAC log\n";
                     pqlog = qac_loq;
                 }
                 else {  // Load LR log if needed
                     if(curr_full_logtype != LRLOG) {
-                        std::cerr << "Loading LR log\n";
                         pqlog = qac_loq.lr_log();
                     }
-                    else 
-                        std::cerr << "LR preload\t" << pqlog.log_type() << "\n";
                 }
                 curr_full_logtype = log_type;
                 pqlog.set_log_type(curr_full_logtype);
@@ -130,7 +123,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
 
     private:
         void add_counters(double num_pq, double num_completions,
-                double plen_sum, double comp_len_sum, benchmark::State state){
+                double plen_sum, double comp_len_sum, benchmark::State& state){
             state.counters["NComp"] = num_completions;
             state.counters["NPQ"] = num_pq; // number of partial queries
             // Total length of partial queries processed.

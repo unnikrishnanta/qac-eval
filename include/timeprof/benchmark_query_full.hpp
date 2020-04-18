@@ -89,7 +89,7 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
     private:
 
         void add_counters(double num_pq, double num_completions,
-                double plen_sum, double comp_len_sum, benchmark::State state){
+                double plen_sum, double comp_len_sum, benchmark::State& state){
             state.counters["NComp"] = num_completions;
             state.counters["NPQ"] = num_pq; // number of partial queries
             // Total length of partial queries processed.
