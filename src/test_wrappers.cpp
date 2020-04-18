@@ -11,7 +11,7 @@
 #include <numeric>
 #include <myprog_opts.hpp>
 
-/* #define TEST_HTRIE 1 */
+#define TEST_HTRIE 1
 /* #define TEST_MARISA 1 */
 /* #define TEST_DAWG 1 */
 #define TEST_INCGT 1

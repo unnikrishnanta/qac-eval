@@ -23,8 +23,8 @@
 #define NCOMP 8  // Default number of completions 
 #define MAX_STRLEN 32  // Max length of strings indexed
 
-#if defined(unix) || defined(__unix__) || defined(__unix)
-    #if collection==wiki 
+#if defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
+    #if COLLECTION==WIKI 
     #define NROWS WIKI_NROWS
     #define SYNTHLOG "../../synth_log/data/wiki-synthlog.tsv"
     #define PQLOG_NCONV WIKI_NCONV

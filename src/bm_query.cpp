@@ -16,14 +16,14 @@
 #include <timeprof/benchmark_query_full.hpp>
 #include <timeprof/benchmark_query_plen.hpp>
 
-/* BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie) */
-/*     ->RangeMultiplier(8) */
-/*     /1* ->Ranges({{1<<5, 1<<5}, *1/ */
-/*     ->Ranges({{NROWS, NROWS}, */
-/*              /1* {1<<4, PQLOG_NCONV}, *1/ */
-/*              {1<<4, 1<<12}, */
-/*              {SLOG, LRLOG}}) */
-/*     ->Unit(benchmark::kMillisecond); */
+BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie)
+    ->RangeMultiplier(8)
+    /* ->Ranges({{1<<5, 1<<5}, */
+    ->Ranges({{NROWS, NROWS},
+             /* {1<<4, PQLOG_NCONV}, */
+             {1<<4, 1<<12},
+             {SLOG, LRLOG}})
+    ->Unit(benchmark::kMillisecond);
 
 /* BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa) */
 /*     ->RangeMultiplier(8) */
