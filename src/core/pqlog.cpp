@@ -50,6 +50,8 @@ void PQLog::load_qaclog(const string& file_name, const size_t& n_rows){
             lines++;
             f++;
         }
+        if(lines % 10000 == 0)
+            std::cerr << "Lines read: " << lines << "\r";
         if(lines == n_rows)
             break;
     }

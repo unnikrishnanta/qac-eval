@@ -130,6 +130,8 @@ void Collection::read_collection(const string& file_name, const size_t& n_rows,
                     break;
             }
         }
+        if(lines_read % 10000 == 0)
+            std::cerr << "Lines read: " << lines_read << "\r";
     }
 
     if(skip_header){
@@ -143,7 +145,7 @@ void Collection::read_collection(const string& file_name, const size_t& n_rows,
         unzip(str_dict_);
     }
     assert(str_set_.size() == scores_.size());
-    cout << lines_read << " lines read\n";
+    cout << lines_read << " lines read \n";
 }
 
 
