@@ -53,13 +53,24 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 }
             }
             else {  // Work on a full log. 
-                pqlog = qac_loq;
+                std::cerr<<"Complete pq log loaded\n";
+                std::cerr << "Logtype " << log_type << "\n";
+                std::cerr << "Current logtype " << curr_full_logtype << "\n";
                 // Generate LR log only if it hasn't been loaded. 
-                if((log_type == LRLOG) && (curr_full_logtype != log_type)) {
-                    std::cerr << "Complete log type changed to LR\n";
-                    pqlog = pqlog.lr_log();
+                if(log_type == SLOG){
+                    std::cerr << "Loading QAC log\n";
+                    pqlog = qac_loq;
+                }
+                else {  // Load LR log if needed
+                    if(curr_full_logtype != LRLOG) {
+                        std::cerr << "Loading LR log\n";
+                        pqlog = qac_loq.lr_log();
+                    }
+                    else 
+                        std::cerr << "LR preload\t" << pqlog.log_type() << "\n";
                 }
                 curr_full_logtype = log_type;
+                pqlog.set_log_type(curr_full_logtype);
             }
             assert(pqlog.size());
         }
