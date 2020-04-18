@@ -78,24 +78,33 @@
 /*              {SLOG, LRLOG}}) */
 /*     ->Unit(benchmark::kMillisecond); */
 
+static void CustomArguments(benchmark::internal::Benchmark* b) {
+    const int bin_width = 4;
+    /* const int max_strlen = 32;  // TODO: Define this in config.hpp */
+    for (const char logtype: {SLOG, LRLOG}){
+        for (int j = 0; j <= MAX_STRLEN - bin_width; j += bin_width)
+            b->Args(
+                    {
+                        10000, //NROWS, // collection size
+                        PQLOG_NCONV,  // TODO: Change to PQLOG_NCONV after testing
+                        logtype,
+                        j,  // |P| lower bound
+                        j + bin_width + 1,  // |P| upper bound
+                    }
+                   );
+    }
+}
+
 BENCHMARK_REGISTER_F(QueryFixturePlen, QueryHTriePlen)
-    ->RangeMultiplier(4)
-    /* ->Ranges({{1<<5, 1<<5}, */
-    ->Ranges({
-                {NROWS, NROWS}, // collection size
-                /* {1<<4, PQLOG_NCONV}, */
-                {1<<8, 1<<12},  // # conversations from the partial qeury log. 
-                {SLOG, LRLOG},
-                {1,28}, {4,32}
-             }
-            ) // Log type. SLOG: Synth or Bing. 
-    ->Unit(benchmark::kMillisecond);
+        ->Apply(CustomArguments)
+        ->Unit(benchmark::kMillisecond);
 
 
 int main(int argc, char *argv[])
 {
     std::cout << "Loading collections\n";
-    QueryBase::coll.read_collection(COLLECTION, NROWS, true);
+    QueryBase::coll.read_collection(COLLECTION, 10, true);
+    /* QueryBase::coll.read_collection(COLLECTION, NROWS, true); */
     QueryBase::qac_loq.load_qaclog(SYNTHLOG, SIZE_MAX);
     std::cout << "\n<Benchmark>/*/"<< (int) SLOG << ": SynthLog benchmrks\n";
     std::cout << "<Benchmark>/*/"<< (int) LRLOG << ": LRLog benchmrks\n\n";
