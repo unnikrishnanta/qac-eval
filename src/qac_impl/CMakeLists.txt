@@ -14,8 +14,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/IncNgTrie)
 file(GLOB QAC_SOURCES "*.cpp" ".hpp")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/IncNgTrie)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/marisa/lib)
+# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/marisa/lib)
 
 add_library(qac_impl SHARED ${QAC_SOURCES})
 target_link_libraries(qac_impl IncNgTrie)
-target_link_libraries(qac_impl "-L ${CMAKE_CURRENT_SOURCE_DIR}/marisa/lib" marisa)
+add_library( marisa SHARED IMPORTED GLOBAL)
+
+list(APPEND CMAKE_PREFIX_PATH "{CMAKE_CURRENT_SOURCE_DIR}/external/marisa-trie/install/lib")
+find_library(LIB_MARISA marisa)
+target_link_libraries(qac_impl "${LIB_MARISA}")
