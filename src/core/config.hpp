@@ -48,15 +48,15 @@
 #if defined(_WIN32)
     #if COLLECTION==WIKI 
     #define NROWS WIKI_NROWS
-    #define SYNTHLOG "../../synth_log/data/wiki-synthlog.tsv"
+    #define SYNTHLOG "../../synth_log/data/wiki-synthlog.tsv" //TODO:Update
     #define PQLOG_NCONV WIKI_NCONV
     #elif COLLECTION==CWEB 
     #define NROWS CWEB_NROWS
-    #define SYNTHLOG "../../synth_log/data/cweb-synthlog.tsv"
+    #define SYNTHLOG "../../synth_log/data/cweb-synthlog.tsv" //TODO:Update
     #define PQLOG_NCONV CWEB_NCONV
     #else
     #define NROWS BING_NROWS
-    #define SYNTHLOG "../../final_bing_log_ascii.tsv"
+    #define SYNTHLOG "../../final_bing_log_ascii.tsv" //TODO:Update
     #define PQLOG_NCONV BING_NCONV
     #endif
     const std::string WIKI_ROOT = "../../AutoSuggestions/PyQAC/data/wiki/";

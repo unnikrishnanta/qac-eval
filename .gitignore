@@ -5,6 +5,7 @@
 */lib/*
 /out/
 external/*
+export/*
 
 .DS_Store
 *.swp

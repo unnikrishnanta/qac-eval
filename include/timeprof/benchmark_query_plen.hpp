@@ -53,7 +53,6 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 }
             }
             else {  // Work on a full log. 
-                // Generate LR log only if it hasn't been loaded. 
                 if(log_type == SLOG){
                     pqlog = qac_loq;
                 }

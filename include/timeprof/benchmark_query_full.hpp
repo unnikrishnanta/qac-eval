@@ -36,7 +36,6 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
                 coll.uniform_sample(coll_nrows);
             qac_impl = std::make_unique<T>();
             qac_impl->build_index(coll.get_strings(), coll.get_scores());
-        
             if(n_conv != PQLOG_NCONV) {  // Sample query log
                 pqlog = qac_loq.uniform_sample(n_conv);
                 if (log_type == LRLOG) {  // Generate LR log from current sample
@@ -44,13 +43,16 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
                 }
             }
             else {  // Work on a full log. 
-                pqlog = qac_loq;
-                // Generate LR log only if it hasn't been loaded. 
-                if((log_type == LRLOG) && (curr_full_logtype != log_type)) {
-                    std::cerr << "Complete log type changed to LR\n";
-                    pqlog = pqlog.lr_log();
+                if(log_type == SLOG){
+                    pqlog = qac_loq;
+                }
+                else {  // Load LR log if needed
+                    if(curr_full_logtype != LRLOG) {
+                        pqlog = qac_loq.lr_log();
+                    }
                 }
                 curr_full_logtype = log_type;
+                pqlog.set_log_type(curr_full_logtype);  // For debugging later. 
             }
             assert(pqlog.size());
         }
