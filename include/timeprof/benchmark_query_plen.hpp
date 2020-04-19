@@ -22,6 +22,10 @@
 #include <unordered_map>
 #include <utility>
 
+/* #ifdef NROWS */ 
+/*   #undef NROWS */ 
+/*   #define NROWS 10000 */
+/* #endif */
 
 template <class T>
 class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
@@ -35,17 +39,22 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
          */
         QueryFixturePlen() {
             curr_full_logtype = 0;
+            qac_impl.reset();
         }
 
         void SetUp(const benchmark::State& state) {
-            assert(qac_impl.get() == nullptr);  // Entry check
             assert(qac_loq.size() != 0);
-            // Keep the following arg to maintain consistent API.
-            [[maybe_unused]]auto coll_nrows = static_cast<size_t>(state.range(0));
+            auto coll_nrows = static_cast<size_t>(state.range(0));
             auto n_conv = static_cast<size_t>(state.range(1));
             auto log_type = state.range(2);
-            qac_impl = std::make_unique<T>();
-            qac_impl->build_index(coll.get_strings(), coll.get_scores());
+            if(coll_nrows != NROWS)
+                coll.uniform_sample(coll_nrows);
+            // Rebuild the index only if collection is sampled or a full 
+            // collection index is not already built
+            if((qac_impl.get() == nullptr) || (coll_nrows != NROWS)){
+                qac_impl = std::make_unique<T>();
+                qac_impl->build_index(coll.get_strings(), coll.get_scores());
+            }
             if(n_conv != PQLOG_NCONV) {  // Sample query log
                 pqlog = qac_loq.uniform_sample(n_conv);
                 if (log_type == LRLOG) {  // Generate LR log from current sample
@@ -68,8 +77,15 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         }
 
         void TearDown([[maybe_unused]] const benchmark::State& state) {
+            auto coll_nrows = static_cast<size_t>(state.range(0));
             assert(qac_impl.get() != nullptr);
-            qac_impl.reset();
+            if(coll_nrows != NROWS) // Otherwise retain the previous value
+                qac_impl.reset();
+        }
+
+        ~QueryFixturePlen(){
+            if(qac_impl.get() == nullptr)
+                qac_impl.reset();
         }
 
     private:
@@ -86,6 +102,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
             /* To keep the SetUp function arguments consistent, pass the upper
              * and lower bounds of |P| bin as range(3) and range(4)
              */
+            assert(qac_impl.get() != nullptr);
             auto plen_lower = static_cast<int>(state.range(3));
             auto plen_upper = static_cast<int>(state.range(4));
             unsigned int bin_width = plen_upper - plen_lower;

@@ -18,6 +18,7 @@
 
 /* #define TEST_RUN 1 */
 #ifdef TEST_RUN 
+    #pragma message "TEST MODE ON. undef TEST_RUN from above"
     #ifdef NROWS 
         #undef NROWS 
         #define NROWS 10000
@@ -104,7 +105,7 @@ BENCHMARK_REGISTER_F(QueryFixturePlen, QueryIncNgTriePlen)
 int main(int argc, char *argv[])
 {
     std::cout << "Loading collections\n";
-    QueryBase::coll.read_collection(COLLECTION, SIZE_MAX, true); 
+    QueryBase::coll.read_collection(COLLECTION, NROWS+1, true);  // +1 for header
     QueryBase::qac_loq.load_qaclog(SYNTHLOG, SIZE_MAX);
     std::cout << "\n<Benchmark>/*/"<< (int) SLOG << ": SynthLog benchmrks\n";
     std::cout << "<Benchmark>/*/"<< (int) LRLOG << ": LRLog benchmrks\n\n";
