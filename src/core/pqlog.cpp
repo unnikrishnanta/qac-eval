@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <random>
 #include <utility>
+#include <cassert>
 
 #include "dtypes.hpp"
 #include "pqlog.hpp"
@@ -87,7 +88,7 @@ PQLog PQLog::uniform_sample(const size_t& sample_size){
             sample_size, std::mt19937{std::random_device{}()});
     
     for(const auto& qid: qid_sample){
-        auto status = sampled_log.insert(qid, pq_log_[qid]);
+        [[maybe_unused]] auto status = sampled_log.insert(qid, pq_log_[qid]);
         assert(status); // Make sure the sample was not a duplicate
     }
     return sampled_log;
