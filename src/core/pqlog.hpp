@@ -24,10 +24,12 @@ class PQLog {
 
         void set_log_type(const char ltype) { log_type_ = ltype; }
         char log_type() { return log_type_; }
+        size_t npq() { return npq_; }
 
     private:
         QueryLog pq_log_;
         char log_type_;
+        size_t npq_;  // Total number of partial queries
 };
 
 #endif /* ifndef PQLOG_H */

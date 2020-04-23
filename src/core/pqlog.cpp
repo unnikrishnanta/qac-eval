@@ -58,6 +58,7 @@ void PQLog::load_qaclog(const string& file_name, const size_t& n_rows){
     }
     cout << lines << " rows read from " << file_name << "\n";
     cout << pq_log_.size() << " conversations\n";
+    npq_ = lines; // the file format contains one partial query per line
 }
 
 PQLog PQLog::lr_log(){
