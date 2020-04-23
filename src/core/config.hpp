@@ -4,25 +4,30 @@
 #include<string>
 #include <stdio.h>
 
+// Collection names
 #define WIKI 'w'
 #define CWEB 'c'
 #define BING 'b'
 
+//Current collection being benchmarked
 #define COLLECTION WIKI
 
+// Log type. SLOG: Bing/Synth logs. LRLOG: Left to Right Log
 #define SLOG 's'
 #define LRLOG 'l'
 
+#define NCOMP 8  // Default number of completions 
+#define MAX_STRLEN 32  // Max length of strings indexed
+
+// Number of conversations (not #rows) from each partial query log
 #define WIKI_NCONV 1206653
 #define CWEB_NCONV 1264108
 #define BING_NCONV 1968265  
 
+// Number of rows from each collection
 #define WIKI_NROWS 4560699
 #define CWEB_NROWS 125000000  
 #define BING_NROWS 11578961   
-
-#define NCOMP 8  // Default number of completions 
-#define MAX_STRLEN 32  // Max length of strings indexed
 
 #if defined(__linux__) || defined(__APPLE__)
     const std::string WIKI_ROOT = "../../AutoSuggestions/PyQAC/data/wiki/";

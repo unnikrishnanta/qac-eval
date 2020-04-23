@@ -19,9 +19,14 @@
 
 /* #define TEST_RUN 1 */
 #ifdef TEST_RUN 
+#pragma message "TEST MODE ON. undef TEST_RUN from above"
 #ifdef NROWS 
     #undef NROWS 
-    #define NROWS 10000
+    #define NROWS 320000
+#endif
+#ifdef PQLOG_NCONV 
+    #undef PQLOG_NCONV
+    #define PQLOG_NCONV 400
 #endif
 #endif
 
