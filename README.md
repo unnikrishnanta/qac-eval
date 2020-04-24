@@ -1,6 +1,7 @@
 # qac-eval
 If the shared object is not found
 export LD_LIBRARY_PATH=../src/qac_impl/marisa/lib/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=../external/openssl/install/lib/:$LD_LIBRARY_PATH
 
 ## Install 
 1. Google benchmark under external/ (Follow installation instructions give in

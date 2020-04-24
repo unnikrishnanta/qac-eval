@@ -10,7 +10,7 @@
 #define BING 'b'
 
 //Current collection being benchmarked
-#define COLLECTION WIKI
+#define COLLECTION CWEB
 
 // Log type. SLOG: Bing/Synth logs. LRLOG: Left to Right Log
 #define SLOG 's'
@@ -38,15 +38,15 @@
     const std::string BING_COLLECTION = "";
     #if COLLECTION==WIKI 
         #define NROWS WIKI_NROWS
-        #define SYNTHLOG "../../synth_log/data/wiki-synthlog.tsv"
+        #define SYNTHLOG "../../synth_log/data/wiki-synthlog-sample.tsv"
         #define PQLOG_NCONV WIKI_NCONV
     #elif COLLECTION==CWEB 
         #define NROWS CWEB_NROWS
-        #define SYNTHLOG "../../synth_log/data/cweb-synthlog.tsv"
+        #define SYNTHLOG "../../synth_log/data/cweb-synthlog-sample.tsv"
         #define PQLOG_NCONV CWEB_NCONV
     #else
         #define NROWS BING_NROWS
-        #define SYNTHLOG "../../final_bing_log_ascii.tsv" 
+        #define SYNTHLOG "../../final_bing_log_ascii-sample.tsv" 
         #define PQLOG_NCONV BING_NCONV
     #endif
 
@@ -59,17 +59,18 @@
     const std::string BING_COLLECTION = "completionFrequencies_processed.tsv";
     #if COLLECTION==WIKI 
         #define NROWS WIKI_NROWS
-        #define SYNTHLOG "../../wiki-synthlog.tsv"
+        #define SYNTHLOG "../../wiki-synthlog-sample.tsv"
         #define PQLOG_NCONV WIKI_NCONV
     #elif COLLECTION==CWEB 
         #define NROWS CWEB_NROWS
-        #define SYNTHLOG "../../cweb-synthlog.tsv"
+        #define SYNTHLOG "../../cweb-synthlog-sample.tsv"
         #define PQLOG_NCONV CWEB_NCONV
     #else
         #define NROWS BING_NROWS
-        #define SYNTHLOG "../../final_bing_log_ascii.tsv"
+        #define SYNTHLOG "../../final_bing_log_ascii-sample.tsv"
         #define PQLOG_NCONV BING_NCONV
     #endif
 #endif  // if defined (unix)
 
 #endif /* ifndef CONFIG_H */
+
