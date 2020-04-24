@@ -50,15 +50,15 @@ def print_basic_stats(log_df, log_end):
     print("Unique partial queries: ", len(log_df.prefix_str.unique()))
     print("Unique final partial queries: ", len(log_end.prefix_str.unique()))
 
-def find_common_qids(bing_log, wikisynth, cwebsynth):
-    common_df = wikisynth.merge(cwebsynth, on='query_id', how='inner')\
-                    .merge(bing_log, on='query_id', how='inner')
+def find_common_qids(bing_end, wiki_end, cweb_end):
+    common_df = wiki_end.merge(cweb_end, on='query_id', how='inner')\
+                    .merge(bing_end, on='query_id', how='inner')
     common_df.dropna(inplace=True)
     common_qids = common_df.query_id.unique()
     return common_qids
 
 def filter_and_sample(log_df, log_end, common_qids, n):
-    qid_sample = np.random.choice(common_qids, n)
+    qid_sample = np.random.choice(common_qids, n, replace=False)
     log_df = log_df[log_df.query_id.isin(qid_sample)]
     log_end = find_synth_end(log_df)
     return log_df, log_end
@@ -67,7 +67,8 @@ def export_logdf(log_df, file_name):
     file_stub = file_name.split('.tsv')
     export_file = file_stub[0] + '-sample.tsv'
     print("Export file: " , export_file)
-    log_df[['prefix_str', 'query_id']].to_csv(export_file, sep='\t', index=None)
+    log_df[['prefix_str', 'query_id']].to_csv(export_file, sep='\t',
+                                              header=None, index=None)
 
 def main(args):
     nrows = None
@@ -89,7 +90,7 @@ def main(args):
 
     # Find common qids and sample
     print("Finding common QIDs")
-    common_qids = find_common_qids(bing_log, wikisynth, cwebsynth)
+    common_qids = find_common_qids(bing_end, wiki_end, cweb_end)
     print("No. of common qids: " , len(common_qids))
     bing_log, bing_end = filter_and_sample(bing_log, bing_end, common_qids,
                                             sample_size)
