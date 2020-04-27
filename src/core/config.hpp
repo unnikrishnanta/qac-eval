@@ -20,9 +20,12 @@
 #define MAX_STRLEN 32  // Max length of strings indexed
 
 // Number of conversations (not #rows) from each partial query log
-#define WIKI_NCONV 1206653
-#define CWEB_NCONV 1264108
-#define BING_NCONV 1968265  
+/* #define WIKI_NCONV 1206653 */
+/* #define CWEB_NCONV 1264108 */
+/* #define BING_NCONV 1968265 */  
+#define WIKI_NCONV 100000
+#define CWEB_NCONV 100000
+#define BING_NCONV 100000  
 
 // Number of rows from each collection
 #define WIKI_NROWS 4560699
