@@ -34,3 +34,5 @@ export/*
 src/qac_impl/dawgdic/test/*
 src/qac_impl/dawgdic/src/*
 src/qac_impl/dawgdic/bin/*
+# Jupyter notebook check points
+Python/Notebooks/.ipynb
