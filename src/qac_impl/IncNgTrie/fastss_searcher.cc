@@ -143,6 +143,7 @@ bool FastSSSearcher::ProcessOne()
 }
 
 
+/* Eliminating duplicates using a hash table */
 uint64_t FastSSSearcher::FectchResultsStupid(){  
   uint64_t fetched = 0;
   set<int> result;
@@ -192,7 +193,7 @@ uint64_t FastSSSearcher::FectchResultsStupid(){
 
 
 
-
+/* Case 1-3 duplicates are eliminated based on Section 4 of the paper */
 uint64_t FastSSSearcher::FectchResults(bool stupidfetch)
 {
   if (stupidfetch) return FectchResultsStupid();
