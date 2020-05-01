@@ -55,7 +55,6 @@ add_executable(${QUERY_TPROF} src/bm_query.cpp)
 add_executable(${TEST_WRAPPERS} src/test_wrappers.cpp)
 
 # Boost
-# target_link_libraries( ${MEM_PROF} ${Boost_LIBRARIES})
 # target_link_libraries( ${BUILD_TPROF} ${Boost_LIBRARIES})
 # target_link_libraries( ${TEST_WRAPPERS} ${Boost_LIBRARIES})
 # google benchmark
@@ -68,6 +67,12 @@ target_link_libraries(${TEST_WRAPPERS} pthread)
 # QAC Evaluation Code libraries
 target_link_libraries( ${MEM_PROF} core)
 target_link_libraries( ${MEM_PROF} qac_impl)
+# Link malloc_count and -ldl
+target_link_libraries(
+    ${MEM_PROF}
+    ${CMAKE_CURRENT_SOURCE_DIR}/malloc_count/malloc_count.o
+)
+target_link_libraries( ${MEM_PROF} dl)
 # target_link_libraries( ${MEM_PROF} "-L ../src/qac_impl/marisa/lib" marisa)
 
 target_link_libraries( ${BUILD_TPROF} core)

@@ -4,6 +4,7 @@
  */
 #ifndef MPROF_CORE_H
 #define MPROF_CORE_H
+#include <cassert>
 #include <iostream>
 #include <cstdint>
 #include <memory>
@@ -35,6 +36,7 @@ class MemProfiler {
             std::cout << std::string(40, '=') << std::endl;
             setup();
             std::cout << "Building index\n";
+            assert(data_strct.get() != nullptr);
             data_strct->build_index(coll->get_strings(), coll->get_scores());
             reset_collection();
             update_couters();

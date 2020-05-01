@@ -13,13 +13,17 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Args count by " << argv[0] << ": " << argc << "\n";
     //todo: take collection as an argument
-    size_t n_rows = 10000;
+    size_t n_rows = SIZE_MAX;
 
-    MemProfiler<HTrieCompleter> htrie_mprof(COLLECTION);
-    htrie_mprof.set_nrows(n_rows);
-    htrie_mprof.mem_bm_build();
+    Collection coll_wiki;
+    cout << "Reading collection\n";
+    coll_wiki.read_collection('w', n_rows, true);
+    HTrieCompleter ht_comp;
+    ht_comp.build_index(coll_wiki);
+    /* MemProfiler<HTrieCompleter> htrie_mprof(COLLECTION); */
+    /* htrie_mprof.set_nrows(n_rows); */
+    /* htrie_mprof.mem_bm_build(); */
 
     /* MemProfiler<MarisaCompleter> mtrie_mprof(COLLECTION); */
     /* mtrie_mprof.set_nrows(n_rows); */
