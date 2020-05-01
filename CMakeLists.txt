@@ -110,9 +110,11 @@ SET(HOST "raksasa.eng.unimelb.edu.au")
 SET(USER "uthoombayil")
 SET(COPY_PATH "~/CodeBase/QAC-Eval/")
 SET(RSYNC_EXCLUDE "{Makefile,build/*,debug/*,export/*,*.swp,*.DS_Store,\
-                    src/qac_impl/marisa/lib/*,external/*}")
+                    src/qac_impl/marisa/lib/*,external/*,*.o}")
 
 add_custom_target(sync
-    COMMAND rsync -av -e ssh * --exclude=${RSYNC_EXCLUDE} ${USER}@${HOST}:${COPY_PATH}
+    COMMAND rsync -av -e ssh *
+        --exclude=${RSYNC_EXCLUDE}
+        ${USER}@${HOST}:${COPY_PATH}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
