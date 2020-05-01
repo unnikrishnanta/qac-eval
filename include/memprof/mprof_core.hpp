@@ -1,6 +1,6 @@
 /* 
- * TODO: May be go for a benchmark class instead and read the collection in set
- * up 
+ * TODO: May be go for a benchmark class instead and read the
+         collection in set up 
  */
 #ifndef MPROF_CORE_H
 #define MPROF_CORE_H
