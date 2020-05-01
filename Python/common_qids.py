@@ -77,8 +77,8 @@ def main(args):
         print('Running in test. Loading ', nrows, ' rows')
 
     sample_size = 100000
-    if 'n' in args:
-        sample_size = int(args['n'])
+    if 'nconv' in args:
+        sample_size = int(args['nconv'])
     elif args['testsize']: # Test mode
         sample_size = 10
     print('Sample size ', sample_size, ' conversations')
