@@ -36,3 +36,6 @@ src/qac_impl/dawgdic/src/*
 src/qac_impl/dawgdic/bin/*
 # Jupyter notebook check points
 Python/Notebooks/.ipynb
+# Python files
+*.pyc
+*/__pycache__
