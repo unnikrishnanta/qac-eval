@@ -43,7 +43,7 @@ struct MemCounters {
     }
 
     double Bytes_to_MB(const size_t& Bytes){
-        return Bytes/ONE_K/ONE_K;
+        return (double)Bytes/ONE_K/ONE_K;
     }
 
     void update_counters() {
@@ -75,22 +75,28 @@ struct MemCounters {
         label_vec.push_back("stack_used");
         return label_vec;
     }
+
+    void print_counters() {
+        std::cout << "Memory counters\n";
+        std::cout << std::string(40, '=') << std::endl;
+        std::cout << "vm_used\t\t:" << vm_used << " MB\n";
+        std::cout << "rss_used\t:"  << rss_used << " MB\n";
+        std::cout << "heap_used\t:" << heap_used << " MB\n";
+        std::cout << "heap_peak\t:"<< heap_peak << " MB\n";
+        std::cout << "heap_total\t:"  << heap_total << " MB\n";
+        std::cout << "stack_used\t:" << stack_used << " MB\n\n";
+    }
 };
+
 
 
 template <class T>
 class MemProfiler {
     public: 
         MemProfiler(){
-            auto end = std::chrono::system_clock::now();
-            std::time_t time_now = std::chrono::system_clock::to_time_t(end);
-            string time_str = std::ctime(&time_now);
-            std::replace( time_str.begin(), time_str.end(), ' ', '-'); 
-            time_str.pop_back();
-            auto qac_impl = typeid(T).name();
-            auto out_file = string(qac_impl) + "-" + time_str + ".csv";
+            auto out_file = generate_export_filename();
             std::cerr << "Outfile set to: " << out_file << "\n";
-            csv_out_.open(qac_impl + time_str + ".csv");
+            csv_out_.open(out_file);
         }
 
         ~MemProfiler(){
@@ -106,12 +112,15 @@ class MemProfiler {
          * desc: A description for this benchmark
          */
         void mem_bm_build(Collection& coll) {
-            setup();
+            setup(coll);
             assert(coll.size() != 0);
             T data_strct;
             std::cout << "Building index\n";
+            base_counts_.print_counters();
             data_strct.build_index(coll.get_strings(), coll.get_scores());
-            update_couters();
+            cout << "Malloc peak: " << malloc_count_peak() << "\n";
+            set_counters();
+            curr_counts_.print_counters();
             teardown();
         }
         
@@ -120,7 +129,8 @@ class MemProfiler {
         MemCounters curr_counts_;
         csvfile csv_out_;
 
-        void setup() {
+
+        void setup(const Collection& coll) {
             std::cout << std::string(40, '=') << std::endl;
             std::cout <<  typeid(T).name() << "\n";
             std::cout << std::string(40, '=') << std::endl;
@@ -135,6 +145,7 @@ class MemProfiler {
                csv_out_ << l; 
             }
             csv_out_ << endrow;
+            set_base_counters();
         }
 
         /* Set the counter values to current usage */
@@ -144,7 +155,7 @@ class MemProfiler {
             curr_counts_.reset_counters();
         }
 
-        void update_couters() {
+        void set_counters() {
             curr_counts_.update_counters();
             curr_counts_.rss_used = curr_counts_.rss_used - base_counts_.rss_used;
             curr_counts_.vm_used = curr_counts_.vm_used - base_counts_.vm_used;
@@ -155,12 +166,27 @@ class MemProfiler {
         }
 
         void write_counters() {
+            for (const auto cnt : curr_counts_.get_counters()) {
+               csv_out_ << cnt; 
+            }
+            csv_out_ << endrow;
         }
 
-
+        std::string generate_export_filename() {
+            auto end = std::chrono::system_clock::now();
+            std::time_t time_now = std::chrono::system_clock::to_time_t(end);
+            string time_str = std::ctime(&time_now);
+            std::replace( time_str.begin(), time_str.end(), ' ', '-'); 
+            time_str.pop_back();
+            auto qac_impl = typeid(T).name();
+            auto out_file = "../export/data/mem-bm/" + string(qac_impl)
+                            + "-" + time_str + ".csv";
+            return out_file;
+        }
 
         void teardown() {
             std::cerr << "Tear down\n";
+            write_counters();
         }
 };
 
