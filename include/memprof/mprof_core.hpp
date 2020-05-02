@@ -5,6 +5,7 @@
 #ifndef MPROF_CORE_H
 #define MPROF_CORE_H
 #include <cassert>
+#include <cstddef>
 #include <iostream>
 #include <cstdint>
 #include <memory>
@@ -17,8 +18,12 @@
 template <class T>
 class MemProfiler {
     public: 
-        MemProfiler(const char& c):coll_type(c) {
-            n_rows = SIZE_MAX; // By default
+        MemProfiler(){
+            setup();
+        }
+
+        ~MemProfiler(){
+            teardown();
         }
 
         /* Any benchmark function should follow the same sequence: 
@@ -30,55 +35,42 @@ class MemProfiler {
          *
          * desc: A description for this benchmark
          */
-        void mem_bm_build() {
-            std::cout << std::string(40, '=') << std::endl;
-            std::cout << "BM_BUILD\t" << typeid(T).name() << "\n";
-            std::cout << std::string(40, '=') << std::endl;
-            setup();
+        void mem_bm_build(Collection& coll) {
+            /* std::cout << "BM_BUILD" << "\n"; */
+            assert(coll.size() != 0);
+            T data_strct;
             std::cout << "Building index\n";
-            assert(data_strct.get() != nullptr);
-            data_strct->build_index(coll->get_strings(), coll->get_scores());
-            reset_collection();
+            data_strct.build_index(coll.get_strings(), coll.get_scores());
             update_couters();
             print_counters();
-            teardown();
         }
         
-        void set_nrows(const size_t& nr) { n_rows = nr;}
 
         void print_counters() {
             std::cout << "Virtual memory: " << vm_used << " MB\n";
             std::cout << "RSS memory: " << rss_used << " MB\n";
         }
 
+        void set_nrows(const size_t& n) { n_rows_ = n; }
+
 
     private: 
         double vm_used;
         double rss_used;
-        const char coll_type;  // Collection type
-        std::unique_ptr<Collection> coll;
-        std::unique_ptr<T> data_strct;
-        size_t n_rows;
+        size_t n_rows_;
 
         void setup() {
-            std::cout << "Set up\n";
-            assert(coll.get() == nullptr);
-            assert(data_strct.get() == nullptr);
-            coll = make_unique<Collection>();
-            data_strct = make_unique<T>();
-            coll->read_collection(coll_type, n_rows, true);
+            std::cout << std::string(40, '=') << std::endl;
+            std::cout <<  typeid(T).name() << "\n";
+            std::cout << std::string(40, '=') << std::endl;
+            std::cerr << "Set up\n";
+            FILE* file = fopen("/proc/self/status", "r");
+            if (!file)
+                std::cerr << "/proc/self/status info not available \n";
         }
 
         void teardown() {
-            std::cout << "Tear down\n";
-            assert(coll.get() == nullptr);  // A benchmark should reset coll
-            assert(data_strct.get() != nullptr);
-            data_strct.reset();
-        }
-
-        void reset_collection() {
-            assert(coll.get() != nullptr);
-            coll.reset();
+            std::cerr << "Tear down\n";
         }
 
         void update_couters() {
