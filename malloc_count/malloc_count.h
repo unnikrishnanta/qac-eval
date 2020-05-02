@@ -38,6 +38,9 @@ extern "C" { /* for inclusion from C++ */
 /* returns the currently allocated amount of memory */
 extern size_t malloc_count_current(void);
 
+/* Return the total memory. Added by Unni */
+extern size_t malloc_count_total(void);
+
 /* returns the current peak memory allocation */
 extern size_t malloc_count_peak(void);
 

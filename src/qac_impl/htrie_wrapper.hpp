@@ -17,6 +17,7 @@ class HTrieCompleter {
         void build_index(const StringDict& str_dict);
         void build_index(const Collection& coll);
         void build_index(const StrVec& str_set, const ScoreVec& scores);
+        void insert(const string& str, const ScoreType& score);
         void update_index(const ScoredStr& sc);
         CandidateSet<std::string> complete(const string& prefix,
                                         const int& n_comp);

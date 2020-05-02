@@ -116,6 +116,12 @@ extern size_t malloc_count_peak(void)
     return peak;
 }
 
+/* Return the current total */
+extern size_t malloc_count_total(void)
+{
+    return total;
+}
+
 /* user function to reset the peak allocation to current */
 extern void malloc_count_reset_peak(void)
 {

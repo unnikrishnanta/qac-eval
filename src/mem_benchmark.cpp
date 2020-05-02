@@ -1,5 +1,5 @@
 #include <cstdint>
-#include<iostream>
+#include <iostream>
 #include "core/collection.hpp"
 #include "core/config.hpp"
 #include "core/pqlog.hpp"

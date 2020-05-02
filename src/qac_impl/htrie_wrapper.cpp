@@ -18,11 +18,13 @@ void HTrieCompleter::build_index(const Collection& coll){
 
 void HTrieCompleter::build_index(const StrVec& str_set, const ScoreVec& scores){
     for (unsigned int i = 0; i < str_set.size(); ++i) {
-       /* std::cout << "Inserting: " << str_set[i] << "\t" << scores[i] << "\n"; */
-       ht_map.insert(str_set[i], scores[i]); 
+       insert(str_set[i], scores[i]); 
     }
 }
 
+void HTrieCompleter::insert(const string& str, const ScoreType& score){
+    ht_map.insert(str, score); 
+}
 
 CandidateSet<std::string>
 HTrieCompleter::complete(const string& prefix, const int& n_comp){
