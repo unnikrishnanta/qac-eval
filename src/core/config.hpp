@@ -32,6 +32,22 @@
 #define CWEB_NROWS 125000000  
 #define BING_NROWS 11578961   
 
+#define WINDOWS "Windows"
+#define LINUX "Linux" 
+#define APPLE "Apple"
+#define UNKNOWN "Unknown"
+
+#if defined(__linux__)
+    #define PLATFORM LINUX
+#elif defined(__APPLE__)
+    #define PLATFORM APPLE
+#elif defined(_WIN32) || defined(__CYGWIN__)
+    #define PLATFORM WINDOWS
+#else
+    #define PLATFORM UNKNOWN
+#endif
+
+// Keeping the below old code as such without using the macro PLATFORM
 #if defined(__linux__) || defined(__APPLE__)
     const std::string WIKI_ROOT = "../../AutoSuggestions/PyQAC/data/wiki/";
     const std::string CWEB_ROOT = "../../AutoSuggestions/PyQAC/data/Clue-500M-Anchor-Log-External/";
