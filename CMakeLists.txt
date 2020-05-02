@@ -73,20 +73,15 @@ target_link_libraries(
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc_count/malloc_count.o
 )
 target_link_libraries( ${MEM_PROF} dl)
-# target_link_libraries( ${MEM_PROF} "-L ../src/qac_impl/marisa/lib" marisa)
 
 target_link_libraries( ${BUILD_TPROF} core)
 target_link_libraries( ${BUILD_TPROF} qac_impl)
-# target_link_libraries( ${BUILD_TPROF} "-L ../src/qac_impl/marisa/lib" marisa)
 
 target_link_libraries( ${QUERY_TPROF} core)
 target_link_libraries( ${QUERY_TPROF} qac_impl)
-# target_link_libraries( ${QUERY_TPROF} "-L ../src/qac_impl/marisa/lib" marisa)
 
 target_link_libraries( ${TEST_WRAPPERS} core)
 target_link_libraries( ${TEST_WRAPPERS} qac_impl)
-# target_link_libraries( ${TEST_WRAPPERS} "-L ../src/qac_impl/marisa/lib" marisa)
-# target_link_libraries( ${MEM_PROF} benchmark_main)
 
 execute_process(COMMAND date "+%Y-%m-%d_%H-%M"
        OUTPUT_VARIABLE BUILD_TIME)
