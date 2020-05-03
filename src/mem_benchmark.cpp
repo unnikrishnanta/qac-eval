@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         std::cout << "Collection type: " << coll_type << "\n";
         auto outfile = generate_export_filename("build", coll_type);
         coll.read_collection(coll_type, n_rows, true);
-        coll.uniform_sample(coll.size());  // Do a full shuffle
+        coll.uniform_sample(coll.size(), false);  // Do a full shuffle. Don't sort
         { 
                 MemProfiler<HTrieCompleter> htrie_mprof(outfile);
                 for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
