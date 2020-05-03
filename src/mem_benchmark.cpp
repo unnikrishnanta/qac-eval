@@ -43,46 +43,81 @@ int main(int argc, char *argv[])
 {
     std::cerr << "Platform detected: " << PLATFORM << "\n";
     //todo: take collection as an argument
-    size_t n_rows = 10000;
+    size_t n_rows = 0;
+    if ((argc > 1) && (std::string(argv[1]) == "-t")) {
+        std::cout << "Test mode. Running on " << n_rows << " rows\n";
+        n_rows = 10000;
+    }
     Collection coll; 
     for (const auto& coll_type : {WIKI, CWEB, BING}) {
         std::cout << "Collection type: " << coll_type << "\n";
+        if(!n_rows) {  // Not test mode
+            switch(coll_type) {
+                case WIKI: n_rows = WIKI_NROWS; break;
+                case CWEB: n_rows = CWEB_NROWS; break;
+                case BING: n_rows = BING_NROWS; break;
+            }
+        }
         auto outfile = generate_export_filename("build", coll_type);
         coll.read_collection(coll_type, n_rows, true);
         coll.uniform_sample(coll.size(), false);  // Do a full shuffle. Don't sort
         { 
                 MemProfiler<HTrieCompleter> htrie_mprof(outfile);
-                for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
-                   auto str_set = coll.get_strings(i);
+                for (size_t i = NROWS_RANGE_BEGIN; i <= n_rows; ) {
+                   auto str_set = coll.get_strings(i); // [0:i) slice
                    auto scores = coll.get_scores(i);
                    htrie_mprof.mem_bm_build(str_set, scores);
+                   if( i*RANGE_MULTIPLIER <= n_rows )
+                       i *= RANGE_MULTIPLIER;
+                   else if ( i != n_rows)
+                        i = n_rows;
+                   else
+                        break;
                 }
         }
 
         {
             MemProfiler<MarisaCompleter> marisa_mprof(outfile);
-            for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
+            for (size_t i = NROWS_RANGE_BEGIN; i <= n_rows;) {
                 auto str_set = coll.get_strings(i);
                 auto scores = coll.get_scores(i);
                 marisa_mprof.mem_bm_build(str_set, scores);
+                if( i*RANGE_MULTIPLIER <= n_rows )
+                    i *= RANGE_MULTIPLIER;
+                else if ( i != n_rows)
+                    i = n_rows;
+                else
+                    break;
             }
         }
 
         {
             MemProfiler<DAWGTrie> dawg_mprof(outfile);
-            for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
+            for (size_t i = NROWS_RANGE_BEGIN; i <= n_rows;) {
                 auto str_set = coll.get_strings(i);
                 auto scores = coll.get_scores(i);
                 dawg_mprof.mem_bm_build(str_set, scores);
+                if( i*RANGE_MULTIPLIER <= n_rows )
+                    i *= RANGE_MULTIPLIER;
+                else if ( i != n_rows)
+                    i = n_rows;
+                else
+                    break;
             }
         }
 
         {
             MemProfiler<IncNgTrieCompleter> incngt_mprof(outfile);
-            for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
+            for (size_t i = NROWS_RANGE_BEGIN; i <= n_rows;) {
                 auto str_set = coll.get_strings(i);
                 auto scores = coll.get_scores(i);
                 incngt_mprof.mem_bm_build(str_set, scores);
+                if( i*RANGE_MULTIPLIER <= n_rows )
+                    i *= RANGE_MULTIPLIER;
+                else if ( i != n_rows)
+                    i = n_rows;
+                else
+                    break;
             }
         }
         
