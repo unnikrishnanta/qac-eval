@@ -31,7 +31,7 @@ public:
     }
 
     void open(const std::string filename) { 
-        fs_.open(filename);
+        fs_.open(filename, std::ios_base::app);
     }
 
     ~csvfile()
