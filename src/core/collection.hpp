@@ -20,7 +20,23 @@ class Collection {
         void read_collection(const bool& skip_header=false);
         /* void sort_keys(); */
         StrVec const &get_strings() const { return str_set_; }
+
+        StrVec get_strings(const size_t& n) const {
+            if(n != SIZE_MAX) {  // return a sub vector
+                StrVec str_subvec (str_set_.begin(), str_set_.begin()+n);
+                return str_subvec;
+            }
+            return str_set_;
+        }
+
         ScoreVec const &get_scores() const { return scores_; }
+        ScoreVec get_scores(const size_t& n) const {
+            if(n != SIZE_MAX) {  // return a sub vector
+                ScoreVec score_subvec (scores_.begin(), scores_.begin()+n);
+                return score_subvec;
+            }
+            return scores_;
+        }
         size_t size() const;  /* Current size of the collection after sampling */
 
         char coll_type() const { return std::as_const(coll_type_); }
