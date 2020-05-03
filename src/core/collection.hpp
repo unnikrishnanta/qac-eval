@@ -21,7 +21,9 @@ class Collection {
         /* void sort_keys(); */
         StrVec const &get_strings() const { return str_set_; }
         ScoreVec const &get_scores() const { return scores_; }
-        size_t size();  /* Current size of the collection after sampling */
+        size_t size() const;  /* Current size of the collection after sampling */
+
+        char coll_type() const { return std::as_const(coll_type_); }
 
         void uniform_sample(const size_t& nrows,
                             const bool& sort=true, const int& sort_key=0);
@@ -30,6 +32,7 @@ class Collection {
         StrVec str_set_; // If sampled, only the sample will be stored
         ScoreVec scores_; // If sampled, only the sample will be stored
         StringDict str_dict_; // Always stores the collection in full
+        char coll_type_;
         // Sorts scores in ascending order and permutes str_set_ in the
         // corresponding order
         void sort_strdict(StringDict& zipped, int key=0);

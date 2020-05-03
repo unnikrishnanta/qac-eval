@@ -18,7 +18,7 @@ using namespace std;
 /* using namespace boost::iostreams; */
 
 
-size_t Collection::size(){
+size_t Collection::size() const{
     return str_set_.size(); 
 }
 
@@ -96,6 +96,7 @@ void Collection::read_collection(const char& coll_type, const size_t& n_rows,
     else if(coll_type == 'b')
     file_name = BING_ROOT + BING_COLLECTION;
     read_collection(file_name, n_rows, skip_header, sort, sort_key);
+    coll_type_ = coll_type;
 }
 
 void Collection::read_collection(const string& file_name, const size_t& n_rows,
