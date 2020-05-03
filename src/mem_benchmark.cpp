@@ -49,35 +49,40 @@ int main(int argc, char *argv[])
         std::cout << "Collection type: " << coll_type << "\n";
         auto outfile = generate_export_filename("build", coll_type);
         coll.read_collection(coll_type, n_rows, true);
+        coll.uniform_sample(coll.size());  // Do a full shuffle
         { 
                 MemProfiler<HTrieCompleter> htrie_mprof(outfile);
                 for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
-                   coll.uniform_sample(i); 
-                   htrie_mprof.mem_bm_build(coll);
+                   auto str_set = coll.get_strings(i);
+                   auto scores = coll.get_scores(i);
+                   htrie_mprof.mem_bm_build(str_set, scores);
                 }
         }
 
         {
             MemProfiler<MarisaCompleter> marisa_mprof(outfile);
             for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
-               coll.uniform_sample(i); 
-               marisa_mprof.mem_bm_build(coll);
+                auto str_set = coll.get_strings(i);
+                auto scores = coll.get_scores(i);
+                marisa_mprof.mem_bm_build(str_set, scores);
             }
         }
 
         {
             MemProfiler<DAWGTrie> dawg_mprof(outfile);
             for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
-                coll.uniform_sample(i); 
-                dawg_mprof.mem_bm_build(coll);
+                auto str_set = coll.get_strings(i);
+                auto scores = coll.get_scores(i);
+                dawg_mprof.mem_bm_build(str_set, scores);
             }
         }
 
         {
             MemProfiler<IncNgTrieCompleter> incngt_mprof(outfile);
             for (size_t i = NROWS_RANGE_BEGIN; i < n_rows; i*=RANGE_MULTIPLIER) {
-                coll.uniform_sample(i); 
-                incngt_mprof.mem_bm_build(coll);
+                auto str_set = coll.get_strings(i);
+                auto scores = coll.get_scores(i);
+                incngt_mprof.mem_bm_build(str_set, scores);
             }
         }
         

@@ -132,18 +132,31 @@ class MemProfiler {
          * 4. Update the counters used to hold memory usages 
          * 5. Tear down. 
          */
-        void mem_bm_build(const Collection& coll) {
-            setup(coll);
-            assert(coll.size() != 0);
+        void mem_bm_build(const StrVec& str_set, const ScoreVec& scores ) {
+            setup(str_set);
+            assert(str_set.size() != 0);
+            assert(str_set.size() == scores.size());
             T data_strct;
-            std::cout << "Building index with size: " << coll.size() << "\n";
+            std::cout << "Building index with size: " << str_set.size() << "\n";
             /* base_counts_.print_counters(); */
-            data_strct.build_index(coll.get_strings(), coll.get_scores());
+            data_strct.build_index(str_set, scores);
             set_counters();
             curr_counts_.print_counters();
             teardown();
         }
         
+        /* void mem_bm_query(const Collection& coll, const PQLog& pqlog) { */
+        /*     setup(coll); */
+        /*     assert(coll.size() != 0); */
+        /*     T data_strct; */
+        /*     std::cout << "Building index with size: " << coll.size() << "\n"; */
+        /*     /1* base_counts_.print_counters(); *1/ */
+        /*     data_strct.build_index(coll.get_strings(), coll.get_scores()); */
+        /*     set_counters(); */
+        /*     curr_counts_.print_counters(); */
+        /*     teardown(); */
+        /* } */
+
     private: 
         MemCounters base_counts_;
         MemCounters curr_counts_;
@@ -153,7 +166,7 @@ class MemProfiler {
         size_t nrows_;
 
 
-        void setup(const Collection& coll) {
+        void setup(const StrVec& str_set) {
             std::cerr << "Set up\n";
             FILE* file = fopen("/proc/self/status", "r");
             if (!file)
@@ -162,10 +175,10 @@ class MemProfiler {
                 fclose(file);
             set_base_counters();
             bytes_processed_ = 0;
-            for (const auto&s : coll.get_strings()) {
+            for (const auto&s : str_set) {
                bytes_processed_ += (s.length() + sizeof(ScoreType)); 
             }
-            nrows_ = coll.size();
+            nrows_ = str_set.size();
         }
 
         /* Set the counter values to current usage
