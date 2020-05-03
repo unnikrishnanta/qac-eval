@@ -65,6 +65,7 @@ protected:
     size_t      m_prev_mem;
     /// maximum memory usage to previous log output
     size_t      m_max;
+    char stack;
 
 protected:
 
@@ -148,7 +149,6 @@ public:
           m_prev_mem( 0 ),
           m_max( 0 )
     {
-        char stack;
         m_stack_base = &stack;
         m_file = fopen(filepath, funcname ? "a" : "w");
         malloc_count_set_callback(MemProfile::static_callback, this);

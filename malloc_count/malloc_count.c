@@ -160,7 +160,7 @@ extern void* malloc(size_t size)
 
         inc_count(size);
         if (log_operations && size >= log_operations_threshold) {
-            fprintf(stderr, PPREFIX "malloc(%'lld) = %p   (current %'lld)\n",
+            fprintf(stderr, PPREFIX "malloc(%'lld) = %s   (current %'lld)\n",
                     (long long)size, (char*)ret + alignment, curr);
         }
 
@@ -185,7 +185,7 @@ extern void* malloc(size_t size)
         *(size_t*)((char*)ret + alignment - sizeof(size_t)) = sentinel;
 
         if (log_operations_init_heap) {
-            fprintf(stderr, PPREFIX "malloc(%'lld) = %p   on init heap\n",
+            fprintf(stderr, PPREFIX "malloc(%'lld) = %s   on init heap\n",
                     (long long)size, (char*)ret + alignment);
         }
 

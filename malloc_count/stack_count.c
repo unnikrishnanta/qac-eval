@@ -35,7 +35,7 @@ static const size_t stacksize = 6*1024*1024;
 /* "clear" the stack by writing a sentinel value into it. */
 void* stack_count_clear(void)
 {
-    const size_t asize = stacksize / sizeof(uint32_t);
+    size_t asize = stacksize / sizeof(uint32_t);
     uint32_t stack[asize]; /* allocated on stack */
     uint32_t* p = stack;
     while ( p < stack + asize ) *p++ = 0xDEADC0DEu;

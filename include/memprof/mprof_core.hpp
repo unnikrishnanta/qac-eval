@@ -23,6 +23,11 @@
 #include "../malloc_count/malloc_count.h"
 #include "../malloc_count/stack_count.h"
 
+
+#define MBYTES "MB"
+#define BYTES "B"
+#define MEM_UNIT BYTES
+
 #define ONE_K 1024
 
 struct MemCounters {
@@ -32,9 +37,6 @@ struct MemCounters {
     double heap_peak;
     double heap_total;
     double stack_used;
-    void* stack_base;
-
-    MemCounters():stack_base(stack_count_clear()) {}
 
     /* All counts maintained in MB */
     void reset_counters() {
@@ -44,22 +46,27 @@ struct MemCounters {
         heap_peak  = 0;
         heap_total = 0;
         stack_used = 0;
-        stack_base = stack_count_clear();
-        malloc_count_reset_peak();
     }
 
     double Bytes_to_MB(const size_t& Bytes){
         return (double)Bytes/ONE_K/ONE_K;
     }
 
-    void update_counters() {
-        heap_used = Bytes_to_MB(malloc_count_current());
-        heap_peak = Bytes_to_MB(malloc_count_peak());
-        heap_total = Bytes_to_MB(malloc_count_total());
-        vm_used = get_virtual_mem()/((double)ONE_K); // KB to MB
-        rss_used = get_physical_mem()/((double)ONE_K);
-        auto scount = (long long)stack_count_usage(stack_base);
-        stack_used = Bytes_to_MB(scount);
+    void update_counters(void* stack_base, const string unit=MEM_UNIT) {
+        heap_used = malloc_count_current();
+        heap_peak = malloc_count_peak();
+        heap_total = malloc_count_total();
+        vm_used = get_virtual_mem() * ONE_K; // KB to B
+        rss_used = get_physical_mem() * ONE_K;
+        stack_used = stack_count_usage(stack_base);
+        if(unit == MBYTES){  // Convert all counters in Bytes to MB
+            heap_used = Bytes_to_MB(heap_used);
+            heap_peak = Bytes_to_MB(heap_peak);
+            heap_total = Bytes_to_MB(heap_total);
+            vm_used = Bytes_to_MB(vm_used); // KB to MB
+            rss_used = Bytes_to_MB(rss_used);
+            stack_used = Bytes_to_MB(stack_used);
+        }
     }
 
     std::vector<double> get_counters() {
@@ -87,12 +94,12 @@ struct MemCounters {
     void print_counters() {
         std::cout << "Memory counters\n";
         std::cout << std::string(40, '=') << std::endl;
-        std::cout << "vm_used\t\t:" << vm_used << " MB\n";
-        std::cout << "rss_used\t:"  << rss_used << " MB\n";
-        std::cout << "heap_used\t:" << heap_used << " MB\n";
-        std::cout << "heap_peak\t:"<< heap_peak << " MB\n";
-        std::cout << "heap_total\t:"  << heap_total << " MB\n";
-        std::cout << "stack_used\t:" << stack_used << " MB\n\n";
+        std::cout << "vm_used\t\t:" << vm_used << " " << MEM_UNIT << "\n";
+        std::cout << "rss_used\t:"  << rss_used << " " << MEM_UNIT << "\n";
+        std::cout << "heap_used\t:" << heap_used << " " << MEM_UNIT << "\n";
+        std::cout << "heap_peak\t:"<< heap_peak << " " << MEM_UNIT << "\n";
+        std::cout << "heap_total\t:"  << heap_total << " " << MEM_UNIT << "\n";
+        std::cout << "stack_used\t:" << stack_used << " " << MEM_UNIT << "\n\n";
     }
 };
 
@@ -119,12 +126,12 @@ class MemProfiler {
          */
         void mem_bm_build(Collection& coll) {
             setup(coll);
-            assert(coll.size() != 0);
-            T data_strct;
-            std::cout << "Building index\n";
+            /* assert(coll.size() != 0); */
+            /* T data_strct; */
+            /* std::cout << "Building index\n"; */
             base_counts_.print_counters();
-            data_strct.build_index(coll.get_strings(), coll.get_scores());
-            cout << "Malloc peak: " << malloc_count_peak() << "\n";
+            /* data_strct.build_index(coll.get_strings(), coll.get_scores()); */
+            std::vector<int> v(10);
             set_counters();
             curr_counts_.print_counters();
             teardown();
@@ -134,6 +141,7 @@ class MemProfiler {
         MemCounters base_counts_;
         MemCounters curr_counts_;
         csvfile csv_out_;
+        void* stack_base_;
 
 
         void setup(const Collection& coll) {
@@ -154,14 +162,22 @@ class MemProfiler {
             set_base_counters();
         }
 
-        /* Set the counter values to current usage */
+        /* Set the counter values to current usage
+         * 1. Clear stack and heap static counters from malloc_count
+         * 2. Set base_counts_ 
+         * 3. Reset curr_counts_
+        */
         void set_base_counters() {
-            base_counts_.update_counters();
+            malloc_count_reset_peak();  // Resets global malloc_peak
+            stack_base_ = stack_count_clear();  // Resets stack count on stack_base_
+            base_counts_.reset_counters();
+            base_counts_.update_counters(stack_base_);
             curr_counts_.reset_counters();
         }
 
+
         void set_counters() {
-            curr_counts_.update_counters();
+            curr_counts_.update_counters(stack_base_);
             curr_counts_.rss_used = curr_counts_.rss_used - base_counts_.rss_used;
             curr_counts_.vm_used = curr_counts_.vm_used - base_counts_.vm_used;
             curr_counts_.heap_used = curr_counts_.heap_used - base_counts_.heap_used;
