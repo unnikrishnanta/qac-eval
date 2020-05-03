@@ -38,6 +38,14 @@ std::string generate_export_filename(const string& bm, const char& coll_type) {
     return out_file;
 }
 
+size_t update_loop_counter(const size_t& i, const size_t& n_rows) {
+    if( i*RANGE_MULTIPLIER <= n_rows )
+        return i * RANGE_MULTIPLIER;
+    else if ( i != n_rows)
+        return n_rows;
+    else
+        return n_rows + 1;   // End loop with this update
+}
 
 int main(int argc, char *argv[])
 {
@@ -67,13 +75,9 @@ int main(int argc, char *argv[])
                    auto str_set = coll.get_strings(i); // [0:i) slice
                    auto scores = coll.get_scores(i);
                    htrie_mprof.mem_bm_build(str_set, scores);
-                   if( i*RANGE_MULTIPLIER <= n_rows )
-                       i *= RANGE_MULTIPLIER;
-                   else if ( i != n_rows)
-                        i = n_rows;
-                   else
-                        break;
+                   i = update_loop_counter(i, n_rows);
                 }
+                std::cout << "\n\n";
         }
 
         {
@@ -82,13 +86,9 @@ int main(int argc, char *argv[])
                 auto str_set = coll.get_strings(i);
                 auto scores = coll.get_scores(i);
                 marisa_mprof.mem_bm_build(str_set, scores);
-                if( i*RANGE_MULTIPLIER <= n_rows )
-                    i *= RANGE_MULTIPLIER;
-                else if ( i != n_rows)
-                    i = n_rows;
-                else
-                    break;
+                i = update_loop_counter(i, n_rows);
             }
+            std::cout << "\n\n";
         }
 
         {
@@ -97,13 +97,10 @@ int main(int argc, char *argv[])
                 auto str_set = coll.get_strings(i);
                 auto scores = coll.get_scores(i);
                 dawg_mprof.mem_bm_build(str_set, scores);
-                if( i*RANGE_MULTIPLIER <= n_rows )
-                    i *= RANGE_MULTIPLIER;
-                else if ( i != n_rows)
-                    i = n_rows;
-                else
-                    break;
+                i = update_loop_counter(i, n_rows);
             }
+            std::cout << "\n\n";
+            
         }
 
         {
@@ -112,13 +109,9 @@ int main(int argc, char *argv[])
                 auto str_set = coll.get_strings(i);
                 auto scores = coll.get_scores(i);
                 incngt_mprof.mem_bm_build(str_set, scores);
-                if( i*RANGE_MULTIPLIER <= n_rows )
-                    i *= RANGE_MULTIPLIER;
-                else if ( i != n_rows)
-                    i = n_rows;
-                else
-                    break;
+                i = update_loop_counter(i, n_rows);
             }
+            std::cout << "\n\n";
         }
         
     }

@@ -110,9 +110,9 @@ template <class T>
 class MemProfiler {
     public: 
         MemProfiler(const string& outfile){
-            std::cout << std::string(40, '=') << std::endl;
+            /* std::cout << std::string(40, '=') << std::endl; */
             std::cout <<  typeid(T).name() << "\n";
-            std::cout << std::string(40, '=') << std::endl;
+            std::cout << std::string(40, '-') << "\n";
             csv_out_.open(outfile);
             // Print log file header
             std::ifstream in_file(outfile); 
@@ -137,11 +137,11 @@ class MemProfiler {
             assert(str_set.size() != 0);
             assert(str_set.size() == scores.size());
             T data_strct;
-            std::cout << "Building index with size: " << str_set.size() << "\n";
+            std::cerr << "Building index with size: " << str_set.size() << "\r";
             /* base_counts_.print_counters(); */
             data_strct.build_index(str_set, scores);
             set_counters();
-            curr_counts_.print_counters();
+            /* curr_counts_.print_counters(); */
             teardown();
         }
         
@@ -155,7 +155,7 @@ class MemProfiler {
 
 
         void setup(const StrVec& str_set) {
-            std::cerr << "Set up\n";
+            /* std::cerr << "Set up\n"; */
             FILE* file = fopen("/proc/self/status", "r");
             if (!file)
                 std::cerr << "/proc/self/status info not available \n";
@@ -206,7 +206,7 @@ class MemProfiler {
         }
 
         void teardown() {
-            std::cerr << "Tear down\n";
+            /* std::cerr << "Tear down\n"; */
             write_counters();
         }
 
