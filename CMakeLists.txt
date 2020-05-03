@@ -40,7 +40,7 @@ set(TEST_WRAPPERS test_wrappers)
 
 add_subdirectory(src/core)
 add_subdirectory(src/qac_impl)
-
+add_subdirectory(malloc_count)
 
 # I../includes
 include_directories(include)
@@ -65,13 +65,10 @@ target_link_libraries(${QUERY_TPROF} pthread)
 target_link_libraries(${TEST_WRAPPERS} pthread)
 
 # QAC Evaluation Code libraries
-target_link_libraries( ${MEM_PROF} core)
-target_link_libraries( ${MEM_PROF} qac_impl)
+target_link_libraries(${MEM_PROF} core)
+target_link_libraries(${MEM_PROF} qac_impl)
 # Link malloc_count and -ldl
-target_link_libraries(
-    ${MEM_PROF}
-    ${CMAKE_CURRENT_SOURCE_DIR}/malloc_count/malloc_count.o
-)
+target_link_libraries(${MEM_PROF} malloc_count)
 target_link_libraries( ${MEM_PROF} dl)
 
 target_link_libraries( ${BUILD_TPROF} core)

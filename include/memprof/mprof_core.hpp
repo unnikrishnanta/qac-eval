@@ -21,6 +21,7 @@
 #include "../src/core/collection.hpp"
 #include "mem_usage.hpp"
 #include "../malloc_count/malloc_count.h"
+#include "../malloc_count/stack_count.h"
 
 #define ONE_K 1024
 
@@ -31,6 +32,9 @@ struct MemCounters {
     double heap_peak;
     double heap_total;
     double stack_used;
+    void* stack_base;
+
+    MemCounters():stack_base(stack_count_clear()) {}
 
     /* All counts maintained in MB */
     void reset_counters() {
@@ -40,6 +44,8 @@ struct MemCounters {
         heap_peak  = 0;
         heap_total = 0;
         stack_used = 0;
+        stack_base = stack_count_clear();
+        malloc_count_reset_peak();
     }
 
     double Bytes_to_MB(const size_t& Bytes){
@@ -52,6 +58,8 @@ struct MemCounters {
         heap_total = Bytes_to_MB(malloc_count_total());
         vm_used = get_virtual_mem()/((double)ONE_K); // KB to MB
         rss_used = get_physical_mem()/((double)ONE_K);
+        auto scount = (long long)stack_count_usage(stack_base);
+        stack_used = Bytes_to_MB(scount);
     }
 
     std::vector<double> get_counters() {
@@ -108,8 +116,6 @@ class MemProfiler {
          * 3. Release the memory used to hold the collection 
          * 4. Update the counters used to hold memory usages 
          * 5. Tear down. 
-         *
-         * desc: A description for this benchmark
          */
         void mem_bm_build(Collection& coll) {
             setup(coll);
@@ -150,7 +156,6 @@ class MemProfiler {
 
         /* Set the counter values to current usage */
         void set_base_counters() {
-            malloc_count_reset_peak();
             base_counts_.update_counters();
             curr_counts_.reset_counters();
         }
