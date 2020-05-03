@@ -145,18 +145,6 @@ class MemProfiler {
             teardown();
         }
         
-        /* void mem_bm_query(const Collection& coll, const PQLog& pqlog) { */
-        /*     setup(coll); */
-        /*     assert(coll.size() != 0); */
-        /*     T data_strct; */
-        /*     std::cout << "Building index with size: " << coll.size() << "\n"; */
-        /*     /1* base_counts_.print_counters(); *1/ */
-        /*     data_strct.build_index(coll.get_strings(), coll.get_scores()); */
-        /*     set_counters(); */
-        /*     curr_counts_.print_counters(); */
-        /*     teardown(); */
-        /* } */
-
     private: 
         MemCounters base_counts_;
         MemCounters curr_counts_;
