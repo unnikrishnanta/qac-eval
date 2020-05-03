@@ -131,7 +131,7 @@ class MemProfiler {
             /* std::cout << "Building index\n"; */
             base_counts_.print_counters();
             /* data_strct.build_index(coll.get_strings(), coll.get_scores()); */
-            std::vector<int> v(10);
+            std::vector<int> v(1000);
             set_counters();
             curr_counts_.print_counters();
             teardown();
@@ -168,9 +168,9 @@ class MemProfiler {
          * 3. Reset curr_counts_
         */
         void set_base_counters() {
-            malloc_count_reset_peak();  // Resets global malloc_peak
             stack_base_ = stack_count_clear();  // Resets stack count on stack_base_
             base_counts_.reset_counters();
+            malloc_count_reset_peak();  // Resets global malloc_peak
             base_counts_.update_counters(stack_base_);
             curr_counts_.reset_counters();
         }

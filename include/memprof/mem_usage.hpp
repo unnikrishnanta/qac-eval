@@ -14,11 +14,11 @@ int parseLine(char* line){
     return i;
 }
 
-int get_virtual_mem(){ //Note: this value is in KB!
+size_t get_virtual_mem(){ //Note: this value is in KB!
     FILE* file = fopen("/proc/self/status", "r");
     if(!file) 
         return 0;
-    int result = -1;
+    size_t result= 0;
     char line[128];
 
     while (fgets(line, 128, file) != NULL){
@@ -31,11 +31,11 @@ int get_virtual_mem(){ //Note: this value is in KB!
     return result;
 }
 
-int get_physical_mem(){ //Note: this value is in KB!
+size_t get_physical_mem(){ //Note: this value is in KB!
     FILE* file = fopen("/proc/self/status", "r");
     if(!file) 
         return 0;
-    int result = -1;
+    size_t result = 0;
     char line[128];
 
     while (fgets(line, 128, file) != NULL){

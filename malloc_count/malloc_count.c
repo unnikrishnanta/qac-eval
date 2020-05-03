@@ -128,6 +128,13 @@ extern void malloc_count_reset_peak(void)
     peak = curr;
 }
 
+/* Reset all the counters */
+extern void malloc_count_reset_all(void) {
+    peak = 0;
+    curr = 0;
+    total = 0;
+}
+
 /* user function which prints current and peak allocation to stderr */
 extern void malloc_count_print_status(void)
 {
