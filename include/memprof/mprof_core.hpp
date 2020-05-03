@@ -16,6 +16,7 @@
 #include <ctime>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <qac_impl.hpp>
 #include <csvfile.h>
 #include "../src/core/collection.hpp"
@@ -108,10 +109,17 @@ struct MemCounters {
 template <class T>
 class MemProfiler {
     public: 
-        MemProfiler(){
-            auto out_file = generate_export_filename();
-            std::cerr << "Outfile set to: " << out_file << "\n";
-            csv_out_.open(out_file);
+        MemProfiler(const string& outfile){
+            std::cout << std::string(40, '=') << std::endl;
+            std::cout <<  typeid(T).name() << "\n";
+            std::cout << std::string(40, '=') << std::endl;
+            csv_out_.open(outfile);
+            // Print log file header
+            std::ifstream in_file(outfile); 
+            auto nlines = std::count(std::istreambuf_iterator<char>(in_file), 
+                         std::istreambuf_iterator<char>(), '\n');
+            if(nlines == 0)  // First run for this output file. 
+                print_outfile_header();
         }
 
         ~MemProfiler(){
@@ -124,14 +132,13 @@ class MemProfiler {
          * 4. Update the counters used to hold memory usages 
          * 5. Tear down. 
          */
-        void mem_bm_build(Collection& coll) {
+        void mem_bm_build(const Collection& coll) {
             setup(coll);
-            /* assert(coll.size() != 0); */
-            /* T data_strct; */
-            /* std::cout << "Building index\n"; */
-            base_counts_.print_counters();
-            /* data_strct.build_index(coll.get_strings(), coll.get_scores()); */
-            std::vector<int> v(1000);
+            assert(coll.size() != 0);
+            T data_strct;
+            std::cout << "Building index with size: " << coll.size() << "\n";
+            /* base_counts_.print_counters(); */
+            data_strct.build_index(coll.get_strings(), coll.get_scores());
             set_counters();
             curr_counts_.print_counters();
             teardown();
@@ -142,24 +149,23 @@ class MemProfiler {
         MemCounters curr_counts_;
         csvfile csv_out_;
         void* stack_base_;
+        size_t bytes_processed_;
+        size_t nrows_;
 
 
         void setup(const Collection& coll) {
-            std::cout << std::string(40, '=') << std::endl;
-            std::cout <<  typeid(T).name() << "\n";
-            std::cout << std::string(40, '=') << std::endl;
             std::cerr << "Set up\n";
             FILE* file = fopen("/proc/self/status", "r");
             if (!file)
                 std::cerr << "/proc/self/status info not available \n";
             else 
                 fclose(file);
-            // Print log file header
-            for (const auto& l : base_counts_.counter_labels()) {
-               csv_out_ << l; 
-            }
-            csv_out_ << endrow;
             set_base_counters();
+            bytes_processed_ = 0;
+            for (const auto&s : coll.get_strings()) {
+               bytes_processed_ += (s.length() + sizeof(ScoreType)); 
+            }
+            nrows_ = coll.size();
         }
 
         /* Set the counter values to current usage
@@ -182,32 +188,35 @@ class MemProfiler {
             curr_counts_.vm_used = curr_counts_.vm_used - base_counts_.vm_used;
             curr_counts_.heap_used = curr_counts_.heap_used - base_counts_.heap_used;
             curr_counts_.heap_peak = curr_counts_.heap_peak - base_counts_.heap_peak;
+            // Total after base counts were set
             curr_counts_.heap_total = curr_counts_.heap_total - base_counts_.heap_total;
             curr_counts_.stack_used = curr_counts_.stack_used - base_counts_.stack_used;
         }
 
         void write_counters() {
+            auto qac_impl = typeid(T).name();
+            csv_out_ << qac_impl;
             for (const auto cnt : curr_counts_.get_counters()) {
                csv_out_ << cnt; 
             }
+            csv_out_ << nrows_;
+            csv_out_ << bytes_processed_;
             csv_out_ << endrow;
-        }
-
-        std::string generate_export_filename() {
-            auto end = std::chrono::system_clock::now();
-            std::time_t time_now = std::chrono::system_clock::to_time_t(end);
-            string time_str = std::ctime(&time_now);
-            std::replace( time_str.begin(), time_str.end(), ' ', '-'); 
-            time_str.pop_back();
-            auto qac_impl = typeid(T).name();
-            auto out_file = "../export/data/mem-bm/" + string(qac_impl)
-                            + "-" + time_str + ".csv";
-            return out_file;
         }
 
         void teardown() {
             std::cerr << "Tear down\n";
             write_counters();
+        }
+
+        void print_outfile_header() {
+            csv_out_ << "QACImpl";
+            for (const auto& l : base_counts_.counter_labels()) {
+                csv_out_ << l; 
+            }
+            csv_out_ << "nrows";
+            csv_out_ << "BytesProcessed";
+            csv_out_ << endrow;
         }
 };
 
