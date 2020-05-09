@@ -1,8 +1,10 @@
 # only for cmake --version >= 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
 if(APPLE)
-    SET(CMAKE_C_COMPILER clang)
-    SET(CMAKE_CXX_COMPILER clang++)
+    # SET(CMAKE_C_COMPILER clang)
+    # SET(CMAKE_CXX_COMPILER clang++)
+    SET(CMAKE_C_COMPILER gcc)
+    SET(CMAKE_CXX_COMPILER g++)
 else()
     SET(CMAKE_C_COMPILER gcc)
     SET(CMAKE_CXX_COMPILER g++)
@@ -27,7 +29,15 @@ ELSE()
   message("Some other build type.")
 ENDIF()
 
-# creates the variable MEM_PROF and sets it to hello
+# Enable replacing new/delete for memory profiling
+option(WITH_MEMPROF "Option description" OFF)
+if(WITH_MEMPROF)
+    message(STATUS "WITH_MEMPROF turned ON")
+    add_subdirectory(heap_count)
+    link_libraries(heap_count)
+    add_compile_definitions(MALLOC_OVERRIDE=1)
+endif()
+
 set(BUILD_TPROF bm_build)
 set(QUERY_TPROF bm_query)
 set(MEM_PROF mem_prof)
@@ -40,7 +50,7 @@ set(TEST_WRAPPERS test_wrappers)
 
 add_subdirectory(src/core)
 add_subdirectory(src/qac_impl)
-add_subdirectory(malloc_count)
+# add_subdirectory(malloc_count)
 
 # I../includes
 include_directories(include)
@@ -67,9 +77,11 @@ target_link_libraries(${TEST_WRAPPERS} pthread)
 # QAC Evaluation Code libraries
 target_link_libraries(${MEM_PROF} core)
 target_link_libraries(${MEM_PROF} qac_impl)
+
 # Link malloc_count and -ldl
-target_link_libraries(${MEM_PROF} malloc_count)
-target_link_libraries( ${MEM_PROF} dl)
+# target_link_libraries(${MEM_PROF} malloc_count)
+# target_link_libraries( ${MEM_PROF} dl)
+
 
 target_link_libraries( ${BUILD_TPROF} core)
 target_link_libraries( ${BUILD_TPROF} qac_impl)

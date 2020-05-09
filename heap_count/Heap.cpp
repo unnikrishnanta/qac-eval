@@ -1,6 +1,4 @@
-#ifdef MEM_PROF
-
-#include "heap.h"
+#include "Heap.h"
 #include <iomanip>
 #include <cassert>
 
@@ -46,8 +44,8 @@ namespace CGE
     void Heap::release(size_t inBytes)
     {
         assert(inBytes > 0);
-        assert(mBytes >= inBytes);
-        assert(mBlocks > 0);
+        /* assert(mBytes >= inBytes); */
+        /* assert(mBlocks > 0); */
 
         --mBlocks;
         mBytes -= inBytes;
@@ -105,5 +103,3 @@ namespace CGE
         return inStream;
     }
 }
-
-#endif  // MEM_PROF

@@ -3,7 +3,7 @@
 #include "Memory.h"
 #include "Heap.h"
 
-using namespace CGE;
+/* using namespace CGE; */
 
 int main(int argc, char const *argv[])
 {
@@ -12,7 +12,6 @@ int main(int argc, char const *argv[])
     /* { */
     /*     v.push_back(i); */
     /* } */
-    CGE::GeneralHeap.dump();
     std::vector<char> c(10);
     CGE::GeneralHeap.dump();
     return 0;
