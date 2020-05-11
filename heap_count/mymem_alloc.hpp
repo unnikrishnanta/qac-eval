@@ -6,7 +6,7 @@
 #ifndef MYMEM_ALLOC_H_
 #define MYMEM_ALLOC_H_ 1
 
-#include "Heap.h"
+/* #include "Heap.h" */
 #include "Memory.h"
 
 #endif /* ifndef MYMEM_ALLOC_H_ 1 */

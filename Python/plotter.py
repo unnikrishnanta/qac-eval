@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from bmlog_processor import Benchmark, QACImpl
+import pandas as pd
 
 plt.switch_backend('agg')
 
@@ -13,6 +15,16 @@ class MyPlt:
     BING_COLL_LABEL = r'{\tt Bing-Collection}'
     WIKI_COLL_LABEL = r'{\tt Wiki-Clickstream}'
     CWEB_COLL_LABEL = r'{\tt ClueWeb-09}'
+    HTRIE_LABEL = r'HAT-trie'
+    MARISA_LABEL = r'MARISA-trie'
+    DAWG_LABEL = r'DAWG-trie'
+    INCNGT_LABEL = r'IncNgTrie'
+    QAC_IMPL_LABELS = {
+                        QACImpl.htrie : HTRIE_LABEL,
+                        QACImpl.marisa: MARISA_LABEL,
+                        QACImpl.dawg  : DAWG_LABEL,
+                        QACImpl.incngt: INCNGT_LABEL
+                        }
 
     TEX_LASTP = r'($\mbox{\sf{FinalP}}$)'
     BING_LP_LABEL = BING_LOG_LABEL + TEX_LASTP
@@ -61,31 +73,48 @@ class MyPlt:
 
         plt.clf()  # Clear the current plot
 
-    def plot_buildtime_nrows(combined_build, qac_impl, outfile,
-                             cutoff_nrows=None,
-                             xlabel="Collection size", ylabel="Build time"):
-        """ Plot the relation between the collection size and build time for the
-        given qac_impl for all the collections in combined_build. """
+    def plot_cputime_nrows(combined_df, qac_impl, outfile,
+                           cutoff_nrows=None, style=None,
+                           drop_maxrows = True,
+                           xlabel="Collection size", ylabel="Build time"):
+        """ Plot the relation between the collection size and cpu time for the
+            given qac_impl for all the collections in combined_df.
+
+            qac_impl: One of the values from class QACImpl
+            style : Seaborn lineplot style argument. 
+        """
         MyPlt._initialise_plot()
+        qac_impl = qac_impl  # To get "BuildHtrie" for instanc
         if cutoff_nrows == None: # Set as  min nrows for any of the collection 
-            cutoff_nrows = combined_build.groupby(
-                            combined_build.collection)['nrows'].agg(max).min()
-        slice_df = combined_build[(combined_build.name == qac_impl)
-                                   & (combined_build.nrows <= cutoff_nrows)]
+            # cutoff_nrows = combined_df.groupby(
+            #                 combined_df.collection)['nrows'].agg(max).min()
+            # cutoff_nrows = 2**21  # Second largest value for wikiclick
+            cutoff_nrows = float('inf')
+        slice_df = combined_df[(combined_df.qac_impl == qac_impl)
+                                   & (combined_df.nrows <= cutoff_nrows)]
+
+        if drop_maxrows:
+            if 'log_type' in slice_df.columns:
+                max_idx = slice_df.groupby(['collection', 'log_type'])['nrows'].idxmax()
+            else:
+                max_idx = slice_df.groupby(['collection'])['nrows'].idxmax()
+            slice_df.drop(max_idx, axis=0, inplace=True)
 
         sns.set_palette(MyPlt.PALETTE_)
         ax = sns.lineplot(x="nrows", y="cpu_time", hue="collection",
-                          data=slice_df, marker="o", alpha=.6)
+                          data=slice_df,style=style, marker="o",
+                          alpha=.6)
+
         ax.set_xscale('log', basex=2)
         ax.set_yscale('log', basey=2)
-        ymax = np.log2(combined_build[combined_build.nrows
+
+        ymax = np.log2(combined_df[combined_df.nrows
                                       <= cutoff_nrows]['cpu_time'].max())
-        ymin = np.log2(combined_build[combined_build.nrows
+        ymin = np.log2(combined_df[combined_df.nrows
                                       <= cutoff_nrows]['cpu_time'].min())
         ax.set_ylim([2**(ymin-1), 2**(ymax+1)])
         
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
-        # ylabel = ylabel + '(s)'
         plt.ylabel(ylabel, fontsize=MyPlt._AX_LABEL_SIZE)
         plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE, rotation=0)
         plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
@@ -106,18 +135,79 @@ class MyPlt:
                 t.set_text(MyPlt.CWEB_COLL_LABEL)
             elif t.get_text() == u'wiki':
                 t.set_text(MyPlt.WIKI_COLL_LABEL)
+            elif t.get_text() == u'log_type':
+                t.set_text('Log type')
+            elif t.get_text() == Benchmark.SynthLog\
+                    or t.get_text() == Benchmark.LRLog:
+                pass
             else:
                 raise ValueError('Invalid collection name: ' + str(t))
         MyPlt._save_and_clear(outfile)
 
+
+    def plot_qtime_plen(combined_plenq_df, combined_qtime_csize,
+                        qac_impl, outfile, style=None,
+                        xlabel="Length of partial query",
+                        ylabel="Ratio of querying time"):
+        pd.options.mode.chained_assignment = None  # default='warn'
+        max_synth_time = combined_qtime_csize[(combined_qtime_csize.qac_impl==qac_impl)\
+                         & (combined_qtime_csize.log_type=='SynthLog')]['cpu_time'].max()
+        max_lr_time = combined_qtime_csize[(combined_qtime_csize.qac_impl==qac_impl)\
+                       & (combined_qtime_csize.log_type=='LRLog')]['cpu_time'].max()
+
+        sliced_df = combined_plenq_df[combined_plenq_df.qac_impl==qac_impl]
+        sliced_df.loc[sliced_df.log_type=='SynthLog', 'norm_time']\
+            = sliced_df[sliced_df.log_type == 'SynthLog']['cpu_time']/max_synth_time
+        sliced_df.loc[sliced_df.log_type=='LRLog', 'norm_time']\
+            = sliced_df[sliced_df.log_type == 'LRLog']['cpu_time']/max_lr_time
+        
+        ax = sns.lineplot(x='max_plen', y='norm_time', data=sliced_df,
+                          hue='collection', style=style, marker='o',
+                          markevery=1, alpha=.6)
+
+        ax.set_xscale('log', basex=2)
+        ax.set_yscale('log', basey=2)
+        # ax.set_xlim([None, 2**5])
+
+        plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
+        plt.ylabel(ylabel, fontsize=MyPlt._AX_LABEL_SIZE)
+        plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE)
+        plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
+        
+        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH)  # set lw for all lines
+        plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE)  # set lw for all lines
+        
+        # Legend position and line width
+        leg = plt.legend(loc='upper right', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
+        for legobj in leg.legendHandles:
+            legobj.set_linewidth(MyPlt._LINE_WIDTH)
+        # Legend texts
+        leg.get_texts()[0].set_text('Collection')
+        for t in leg.get_texts()[1:]:
+            if t.get_text() == u'bing':
+                t.set_text(MyPlt.BING_COLL_LABEL)
+            elif t.get_text() == u'cweb':
+                t.set_text(MyPlt.CWEB_COLL_LABEL)
+            elif t.get_text() == u'wiki':
+                t.set_text(MyPlt.WIKI_COLL_LABEL)
+            elif t.get_text() == u'log_type':
+                t.set_text('Log type')
+            elif t.get_text() == Benchmark.SynthLog\
+                    or t.get_text() == Benchmark.LRLog:
+                pass
+            else:
+                raise ValueError('Invalid collection name: ' + str(t))
+        MyPlt._save_and_clear(outfile)
+        pd.options.mode.chained_assignment = 'warn'
+
     @staticmethod
-    def plot_barplot(combined_build, outfile, ylabel='Bytes/sec',
+    def plot_barplot(combined_df, outfile, ylabel='Bytes/sec',
                      data='collection'):
         MyPlt._initialise_plot()
         palette = sns.color_palette(MyPlt.PALETTE_)
         
-        sns.barplot(x="name", y="TotalBytesRate", hue="collection", 
-                    data=combined_build, palette=palette, estimator=np.mean)
+        ax = sns.barplot(x="qac_impl", y="TotalBytesRate", hue="collection", 
+                    data=combined_df, palette=palette, estimator=np.mean)
         plt.yscale('log', basey=2)
         xlabel = "Implementation"
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
@@ -125,10 +215,17 @@ class MyPlt:
         plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE, rotation=0)
         plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
          
+        xtick_labels = [item.get_text() for item in ax.get_xticklabels()]
+        for i, item in enumerate(xtick_labels):
+            if item in MyPlt.QAC_IMPL_LABELS: 
+                xtick_labels[i] = MyPlt.QAC_IMPL_LABELS[item]
+            else:
+                raise ValueError('Plotter: Label not recognised')
+        ax.set_xticklabels(xtick_labels)
+
         leg = plt.legend(loc='upper right', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
         for legobj in leg.legendHandles:
             legobj.set_linewidth(MyPlt._LINE_WIDTH)
-        
         if data == 'collection':
             for t in leg.get_texts():
                 if t.get_text() == u'bing':

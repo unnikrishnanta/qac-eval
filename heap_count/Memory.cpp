@@ -94,6 +94,7 @@ namespace CGE
             Header* header = getHeader(inMemory);
             assert(header->references < 1);
 
+            // Unni: Is inMemory allocated from somewhere else
             header->heap->release(header->size);
 
             if (gFirstHeader == header) gFirstHeader = gFirstHeader->next;
@@ -139,7 +140,7 @@ void* operator new(size_t inSize)
     return CGE::allocate(inSize, CGE::GeneralHeap);
 }
 
-void operator delete(void* inData)
+void operator delete(void* inData) _NOEXCEPT
 {
     CGE::release(inData);
 }

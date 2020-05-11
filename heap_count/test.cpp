@@ -13,6 +13,6 @@ int main(int argc, char const *argv[])
     /*     v.push_back(i); */
     /* } */
     std::vector<char> c(10);
-    CGE::GeneralHeap.dump();
+    /* CGE::GeneralHeap.dump(); */
     return 0;
 }

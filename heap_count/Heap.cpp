@@ -44,8 +44,8 @@ namespace CGE
     void Heap::release(size_t inBytes)
     {
         assert(inBytes > 0);
-        /* assert(mBytes >= inBytes); */
-        /* assert(mBlocks > 0); */
+        assert(mBytes >= inBytes);
+        assert(mBlocks > 0);
 
         --mBlocks;
         mBytes -= inBytes;

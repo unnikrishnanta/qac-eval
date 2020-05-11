@@ -16,6 +16,6 @@ namespace CGE
 }
 
 void* operator new(size_t inSize);
-void operator delete(void* inData);
+void operator delete(void* inData) _NOEXCEPT;
 
 #endif

@@ -6,5 +6,6 @@
 #include "../src/qac_impl/dawgtrie_wrapper.hpp"
 #include "../src/qac_impl/marisa_wrapper.hpp"
 #include "../src/qac_impl/IncNgTrie_wrapper.hpp"
+#include "../heap_count/mymem_alloc.hpp"
 
 #endif

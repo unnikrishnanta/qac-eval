@@ -1,4 +1,5 @@
-#include <cstdint>
+#include "../heap_count/mymem_alloc.hpp"
+#include <stdlib.h>
 #include <iostream>
 #include <string_view>
 #include "core/collection.hpp"
@@ -14,7 +15,7 @@
 #define TEST_HTRIE 1
 /* #define TEST_MARISA 1 */
 /* #define TEST_DAWG 1 */
-#define TEST_INCGT 1
+/* #define TEST_INCGT 1 */
 
 using namespace std;
 
@@ -72,11 +73,12 @@ int main(int argc, char *argv[])
     HTrieCompleter ht_comp;
     ht_comp.build_index(coll_wiki);
     cout << "HAT Trie Completions\n"<< string(30, '-') << endl;
-    auto ht_completions = ht_comp.complete(prefix, 10);
-    for (const auto& c : ht_completions) {
-        cout << c.first << "\t" << c.second << "\n";
-    }
-    cout << "Total " << ht_completions.size() << " completions \n";
+    /* auto ht_completions = ht_comp.complete(prefix, 10); */
+    /* for (const auto& c : ht_completions) { */
+    /*     cout << c.first << "\t" << c.second << "\n"; */
+    /* } */
+    /* cout << "Total " << ht_completions.size() << " completions \n"; */
+
 #endif
 
 #ifdef TEST_DAWG

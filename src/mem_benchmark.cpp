@@ -1,16 +1,16 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
-/* #include "core/collection.hpp" */
-/* #include "core/config.hpp" */
-/* #include "core/pqlog.hpp" */
-/* #include <qac_impl.hpp> */
-/* #include <stdexcept> */
-/* #include <string> */
-/* #include <thread> */
-/* #include <chrono> */
-/* #include <memprof/mprof_core.hpp> */
 #include "../heap_count/mymem_alloc.hpp"
+#include "core/collection.hpp"
+#include "core/config.hpp"
+#include "core/pqlog.hpp"
+#include <qac_impl.hpp>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <chrono>
+#include <memprof/mprof_core.hpp>
 
 /* using namespace std; */
 #define RANGE_MULTIPLIER 4
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 {
     std::vector<int> v(1000);
 #ifdef MALLOC_OVERRIDE
-    CGE::GeneralHeap.dump();
+    /* CGE::GeneralHeap.dump(); */
 #endif
     return 0;
 }
