@@ -98,7 +98,7 @@ class MyPlt:
                 max_idx = slice_df.groupby(['collection', 'log_type'])['nrows'].idxmax()
             else:
                 max_idx = slice_df.groupby(['collection'])['nrows'].idxmax()
-            slice_df.drop(max_idx, axis=0, inplace=True)
+            slice_df = slice_df.drop(max_idx, axis=0)
 
         sns.set_palette(MyPlt.PALETTE_)
         ax = sns.lineplot(x="nrows", y="cpu_time", hue="collection",
@@ -202,12 +202,13 @@ class MyPlt:
 
     @staticmethod
     def plot_barplot(combined_df, outfile, ylabel='Bytes/sec',
-                     data='collection'):
+                     hue='collection', 
+                     x = "qac_impl", y ="TotalBytesRate"):
         MyPlt._initialise_plot()
         palette = sns.color_palette(MyPlt.PALETTE_)
         
-        ax = sns.barplot(x="qac_impl", y="TotalBytesRate", hue="collection", 
-                    data=combined_df, palette=palette, estimator=np.mean)
+        ax = sns.barplot(x=x, y=y, hue=hue, data=combined_df,
+                         palette=palette, estimator=np.mean)
         plt.yscale('log', basey=2)
         xlabel = "Implementation"
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
@@ -226,7 +227,7 @@ class MyPlt:
         leg = plt.legend(loc='upper right', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
         for legobj in leg.legendHandles:
             legobj.set_linewidth(MyPlt._LINE_WIDTH)
-        if data == 'collection':
+        if hue == 'collection':
             for t in leg.get_texts():
                 if t.get_text() == u'bing':
                     t.set_text(MyPlt.BING_COLL_LABEL)
@@ -239,5 +240,51 @@ class MyPlt:
         
         plt.tight_layout()
         MyPlt._save_and_clear(outfile, despine=True)
+
+
+    @staticmethod
+    def plot_boxplot(combined_df, outfile,
+                     ylabel='Bytes/sec',
+                     hue='collection', x = "qac_impl", y ="PQBytesRate"):
+        MyPlt._initialise_plot()
+        palette = sns.color_palette(MyPlt.PALETTE_)
+        
+        ax = sns.boxplot(x=x, y=y, data=combined_df,  hue=hue, palette=palette)
+        plt.yscale('log', basey=2)
+        xlabel = "Implementation"
+        plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
+        plt.ylabel(ylabel, fontsize=MyPlt._AX_LABEL_SIZE)
+        plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE, rotation=0)
+        plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
+         
+        xtick_labels = [item.get_text() for item in ax.get_xticklabels()]
+        for i, item in enumerate(xtick_labels):
+            if item in MyPlt.QAC_IMPL_LABELS: 
+                xtick_labels[i] = MyPlt.QAC_IMPL_LABELS[item]
+            else:
+                raise ValueError('Plotter: Label not recognised')
+        ax.set_xticklabels(xtick_labels)
+
+        leg = plt.legend(loc='upper left',
+                         ncol=3,
+                         bbox_to_anchor=(-0.01, 1.09),
+                         frameon=True,
+                         prop={'size': MyPlt._LEGEND_LABEL_SIZE-2})
+        for legobj in leg.legendHandles:
+            legobj.set_linewidth(MyPlt._LINE_WIDTH)
+        if hue == 'collection':
+            for t in leg.get_texts():
+                if t.get_text() == u'bing':
+                    t.set_text(MyPlt.BING_LOG_LABEL)
+                elif t.get_text() == u'cweb':
+                    t.set_text(MyPlt.CWEB_LOG_LABEL)
+                elif t.get_text() == u'wiki':
+                    t.set_text(MyPlt.WIKI_LOG_LABEL)
+                else:
+                    raise ValueError('Invalid collection name: ' + str(t))    
+        
+        # plt.tight_layout()
+        MyPlt._save_and_clear(outfile, despine=True)
+
 
 

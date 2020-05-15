@@ -30,11 +30,21 @@ def buildtime_plots(bm_root_dir):
     combined_build = build_wiki.append(build_cweb, ignore_index=True)\
                                .append( build_bing, ignore_index=True)
 
-    print("Plotting build time vs collection size for SynthLog")
+    print("Plotting build time vs collection size for collections")
     cputime_collsize(combined_build, benchmark=Benchmark.build,
                      ylabel="Build time")
     print("Plotting build time bytes rate")
     buildtime_bytes_rate(combined_build)
+
+
+def query_time_bytes_rate(combined_qcs, cutoff_nrows, normalise=True):
+    sliced_df = combined_qcs[(combined_qcs.log_type=="SynthLog")
+                        & (combined_qcs.nrows <= cutoff_nrows)].copy()
+    if normalise:
+        sliced_df.PQBytesRate = sliced_df.PQBytesRate/sliced_df.nrows
+    mplt.plot_boxplot(sliced_df, "qtime-pqbytes-rate.pdf",
+                      ylabel="Bytes/sec")
+
 
 def querytime_plots(bm_root_dir):
     qc_base = bm_root_dir + '/query-collsize/'
@@ -46,6 +56,8 @@ def querytime_plots(bm_root_dir):
                                       Collection.bing)
     combined_qcs = wiki_qcs.append(cweb_qcs, ignore_index=True)\
                                .append(bing_qcs, ignore_index=True)
+    print("Total query bytes rate")
+    query_time_bytes_rate(combined_qcs, bing_qcs.nrows.max())
     print("Plotting query time vs collection size (SynthLog)")
     # combined_qcs[combined_qcs.log_type==Benchmark.SynthLog]
     cputime_collsize(combined_qcs,
