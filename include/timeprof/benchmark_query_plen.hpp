@@ -12,6 +12,7 @@
  *  - This file always operates on the full collection - the index construction
  *  can be moved from SetUp to the Fixture class constructor. 
  */
+#include <ios>
 #include <qac_impl.hpp>
 #include "../prof_base.hpp"
 #include <benchmark/benchmark.h>
@@ -21,11 +22,36 @@
 #include <iostream>
 #include <unordered_map>
 #include <utility>
+#include <chrono>
+#include <vector>
+#include "csvfile.h"
 
 /* #ifdef NROWS */ 
 /*   #undef NROWS */ 
 /*   #define NROWS 10000 */
 /* #endif */
+
+
+struct TimeLogger {
+    double qtime;
+    int plen;
+    string fixture;
+    string collection;
+
+    static std::string generate_export_fname(){
+        string coll_name; 
+        switch(COLLECTION) {
+            case WIKI: coll_name = "wiki"; break;
+            case CWEB: coll_name = "cweb"; break;
+            case BING: coll_name = "bing"; break;
+        }
+        string outfile = "../export/data/time-bm/"
+                            + coll_name + 
+                            "-plen-qtime.csv";
+        return outfile;
+    }
+};
+
 
 template <class T>
 class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
@@ -40,6 +66,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         QueryFixturePlen() {
             curr_full_logtype = 0;
             qac_impl.reset();
+            ++total_;
         }
 
         void SetUp(const benchmark::State& state) {
@@ -47,6 +74,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
             auto coll_nrows = static_cast<size_t>(state.range(0));
             auto n_conv = static_cast<size_t>(state.range(1));
             auto log_type = state.range(2);
+            log_type_ = log_type; // Set the private member to export the logs
             if(coll_nrows != NROWS)
                 coll.uniform_sample(coll_nrows);
             // Rebuild the index only if collection is sampled or a full 
@@ -74,6 +102,12 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 pqlog.set_log_type(curr_full_logtype);
             }
             assert(pqlog.size());
+            fixture_name_ = typeid(T).name();
+            switch(COLLECTION) {
+                case WIKI: coll_name_ = "wiki"; break;
+                case CWEB: coll_name_ = "cweb"; break;
+                case BING: coll_name_ = "bing"; break;
+            }
         }
 
         void TearDown([[maybe_unused]] const benchmark::State& state) {
@@ -86,10 +120,34 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         ~QueryFixturePlen(){
             if(qac_impl.get() == nullptr)
                 qac_impl.reset();
+            --total_;
+            export_qlentmap();
         }
 
     private:
         char curr_full_logtype;
+        std::vector<TimeLogger> plen_qtime;
+        int log_type_;
+        std::string fixture_name_;
+        static inline size_t total_;
+        std::string coll_name_;
+
+
+        void export_qlentmap() {
+            csvfile csv_out_;
+            string outfile = TimeLogger::generate_export_fname();
+            std::cout << "Exporting plen_qtime with size: " << plen_qtime.size()
+                      << " to: " << outfile << "\n";
+            csv_out_.open(outfile);
+            for (const auto tl : plen_qtime) {
+                csv_out_ << tl.fixture << tl.plen
+                         << tl.qtime << tl.collection ;
+                csv_out_ << endrow ;
+            }
+        }
+
+
+
 
     protected:
          /* Benchmark on partial queries that has a given |P|
@@ -103,36 +161,39 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
              * and lower bounds of |P| bin as range(3) and range(4)
              */
             assert(qac_impl.get() != nullptr);
-            auto plen_lower = static_cast<int>(state.range(3));
-            auto plen_upper = static_cast<int>(state.range(4));
-            unsigned int bin_width = plen_upper - plen_lower;
             double num_completions=0, plen_sum=0, num_pq=0, comp_len_sum=0;
             for (auto _ : state) {
+                auto iter_start = std::chrono::high_resolution_clock::now();
                 for (const auto& qid_pvec: pqlog) {
                     const auto& pvec = qid_pvec.second;  // partial q vector
                     for(const auto& p: pvec){
-                        state.PauseTiming();
-                        /* Check if p.length() is between plen_lower and
-                         * plen_upper https://stackoverflow.com/a/17095534/937153 */
-                        if ((unsigned)(p.length()-plen_lower) <= (bin_width)) {
-                            // Find completions, but skip timing
-                            auto completions = qac_impl->complete(p, NCOMP);
-                            continue;
-                        }
-                        state.ResumeTiming();
-                        // Count this time if p.length() == plen
+                        auto compt_start = std::chrono::high_resolution_clock::now();
                         auto completions = qac_impl->complete(p, NCOMP);
-                        // high overhead counters outsider timing units
-                        state.PauseTiming(); //Stop timers.Warning:high overhead
+                        auto compt_end = std::chrono::high_resolution_clock::now();
+                        // Timer paused
+                        state.PauseTiming();
+                        auto qtime_elapsed = std::chrono::duration_cast<
+                            std::chrono::duration<double>>(compt_end - compt_start);
+                        TimeLogger tl;
+                        tl.qtime = qtime_elapsed.count();
+                        tl.collection = coll_name_; 
+                        tl.plen = p.length();
+                        tl.fixture = fixture_name_;
+                        plen_qtime.push_back(tl);
                         ++num_pq;
                         num_completions += completions.size();
                         plen_sum += p.length();
                         for (const auto& c : completions) {
                             comp_len_sum += c.first.length();  // len(comp str)
                         }
+                        // Timer resumes
                         state.ResumeTiming();
                     }
                 }
+                auto iter_end = std::chrono::high_resolution_clock::now();
+                auto elapsed_seconds = std::chrono::duration_cast<
+                    std::chrono::duration<double>>(iter_end - iter_start);
+                state.SetIterationTime(elapsed_seconds.count());
             }
             add_counters(num_pq, num_completions, plen_sum, comp_len_sum, state);
         }
