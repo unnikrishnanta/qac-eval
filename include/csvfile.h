@@ -30,8 +30,9 @@ public:
         fs_.exceptions(std::ios::failbit | std::ios::badbit);
     }
 
-    void open(const std::string filename) { 
-        fs_.open(filename, std::ios_base::app);
+    void open(const std::string filename,
+              std::ios_base::openmode mode=std::ios_base::app) { 
+        fs_.open(filename, mode);
     }
 
     ~csvfile()
