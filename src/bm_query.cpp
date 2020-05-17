@@ -21,7 +21,7 @@
 #pragma message "TEST MODE ON. undef TEST_RUN from above"
 #ifdef NROWS 
     #undef NROWS 
-    #define NROWS 20000
+    #define NROWS 400000
 #endif
 #ifdef PQLOG_NCONV 
     #undef PQLOG_NCONV
@@ -84,19 +84,23 @@ static void CustomArguments(benchmark::internal::Benchmark* b) {
 
 BENCHMARK_REGISTER_F(QueryFixturePlen, QueryHTriePlen)
         ->Apply(CustomArguments)
-        ->Unit(benchmark::kMillisecond);
+        ->Unit(benchmark::kMillisecond)
+        ->UseManualTime();
 
 BENCHMARK_REGISTER_F(QueryFixturePlen, QueryMarisaPlen)
         ->Apply(CustomArguments)
-        ->Unit(benchmark::kMillisecond);
+        ->Unit(benchmark::kMillisecond)
+        ->UseManualTime();
 
 BENCHMARK_REGISTER_F(QueryFixturePlen, QueryDAWGPlen)
         ->Apply(CustomArguments)
-        ->Unit(benchmark::kMillisecond);
+        ->Unit(benchmark::kMillisecond)
+        ->UseManualTime();
 
 BENCHMARK_REGISTER_F(QueryFixturePlen, QueryIncNgTriePlen)
         ->Apply(CustomArguments)
-        ->Unit(benchmark::kMillisecond);
+        ->Unit(benchmark::kMillisecond)
+        ->UseManualTime();
 
 int main(int argc, char *argv[])
 {
