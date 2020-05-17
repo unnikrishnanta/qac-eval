@@ -26,11 +26,7 @@
 #include <vector>
 #include "csvfile.h"
 
-/* #ifdef NROWS */ 
-/*   #undef NROWS */ 
-/*   #define NROWS 10000 */
-/* #endif */
-
+#define USE_LOGGING 1
 
 struct TimeLogger {
     double qtime;
@@ -66,7 +62,13 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         QueryFixturePlen() {
             curr_full_logtype = 0;
             qac_impl.reset();
-            ++total_;
+            ++instance_count_;
+            switch(COLLECTION) {
+                case WIKI: coll_name_ = "wiki"; break;
+                case CWEB: coll_name_ = "cweb"; break;
+                case BING: coll_name_ = "bing"; break;
+            }
+            fixture_name_ = typeid(T).name();
         }
 
         void SetUp(const benchmark::State& state) {
@@ -102,12 +104,6 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 pqlog.set_log_type(curr_full_logtype);
             }
             assert(pqlog.size());
-            fixture_name_ = typeid(T).name();
-            switch(COLLECTION) {
-                case WIKI: coll_name_ = "wiki"; break;
-                case CWEB: coll_name_ = "cweb"; break;
-                case BING: coll_name_ = "bing"; break;
-            }
         }
 
         void TearDown([[maybe_unused]] const benchmark::State& state) {
@@ -120,7 +116,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         ~QueryFixturePlen(){
             if(qac_impl.get() == nullptr)
                 qac_impl.reset();
-            --total_;
+            --instance_count_;
             export_qlentmap();
         }
 
@@ -129,7 +125,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         std::vector<TimeLogger> plen_qtime;
         int log_type_;
         std::string fixture_name_;
-        static inline size_t total_;
+        static inline size_t instance_count_;
         std::string coll_name_;
 
 
@@ -145,9 +141,6 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 csv_out_ << endrow ;
             }
         }
-
-
-
 
     protected:
          /* Benchmark on partial queries that has a given |P|
@@ -170,6 +163,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                         auto compt_start = std::chrono::high_resolution_clock::now();
                         auto completions = qac_impl->complete(p, NCOMP);
                         auto compt_end = std::chrono::high_resolution_clock::now();
+#ifdef USE_LOGGING
                         // Timer paused
                         state.PauseTiming();
                         auto qtime_elapsed = std::chrono::duration_cast<
@@ -188,6 +182,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                         }
                         // Timer resumes
                         state.ResumeTiming();
+#endif
                     }
                 }
                 auto iter_end = std::chrono::high_resolution_clock::now();
