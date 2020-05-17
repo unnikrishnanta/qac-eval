@@ -16,7 +16,7 @@
 #include <timeprof/benchmark_query_full.hpp>
 #include <timeprof/benchmark_query_plen.hpp>
 
-#define TEST_RUN 1
+/* #define TEST_RUN 1 */
 #ifdef TEST_RUN 
 #pragma message "TEST MODE ON. undef TEST_RUN from above"
 #ifdef NROWS 
