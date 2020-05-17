@@ -29,6 +29,10 @@ ELSE()
   message("Some other build type.")
 ENDIF()
 
+option(COLL "Speciffy the collection" WIKI)
+message(STATUS "Collection set to ${COLL}")
+add_compile_definitions(COLLECTION=${COLL})
+
 # Enable replacing new/delete for memory profiling
 option(WITH_MEMPROF "Option description" OFF)
 if(WITH_MEMPROF)

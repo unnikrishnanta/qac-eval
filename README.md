@@ -15,3 +15,12 @@ export LD_LIBRARY_PATH=../external/openssl/install/lib/:$LD_LIBRARY_PATH
    to src/qac_impl/marisa
 
 
+## Running on different collections
+Specify the run time configs using CMake:
+cmake .. -DWITH_MEMPROF=OFF -DCOLL=WIKI
+
+- COLL=<BING/WIKI/CWEB> (Default : WIKI)
+- WITH_MEMPROF=ON : Enable memory profiling by intercepting memory allocation
+  calls (Default : OFF)
+
+
