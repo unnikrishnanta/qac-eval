@@ -10,7 +10,10 @@
 #define BING 'b'
 
 //Current collection being benchmarked
-#define COLLECTION CWEB
+#ifndef COLLECTION
+    #pragma message "Collection NOT set from cmake. Use cmake .. -DCOLL=<collection>"
+    #define COLLECTION WIKI
+#endif
 
 // Log type. SLOG: Bing/Synth logs. LRLOG: Left to Right Log
 #define SLOG 's'
