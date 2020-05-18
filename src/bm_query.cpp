@@ -16,16 +16,15 @@
 #include <timeprof/benchmark_query_full.hpp>
 #include <timeprof/benchmark_query_plen.hpp>
 
-/* #define TEST_RUN 1 */
 #ifdef TEST_RUN 
 #pragma message "TEST MODE ON. undef TEST_RUN from above"
 #ifdef NROWS 
     #undef NROWS 
-    #define NROWS 400000
+    #define NROWS 4<<20
 #endif
 #ifdef PQLOG_NCONV 
     #undef PQLOG_NCONV
-    #define PQLOG_NCONV 400
+    #define PQLOG_NCONV 512
 #endif
 #endif
 
@@ -112,7 +111,7 @@ int main(int argc, char *argv[])
     new_file.close();
 
     std::cout << "Loading collections\n";
-    QueryBase::coll.read_collection(COLLECTION, NROWS+1, true);  // +1 for header
+    QueryBase::coll.read_collection(COLLECTION, NROWS, true);  // +1 for header
     QueryBase::qac_loq.load_qaclog(SYNTHLOG, SIZE_MAX);
     std::cout << "\n<Benchmark>/*/"<< (int) SLOG << ": SynthLog benchmrks\n";
     std::cout << "<Benchmark>/*/"<< (int) LRLOG << ": LRLog benchmrks\n\n";

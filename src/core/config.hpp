@@ -4,6 +4,8 @@
 #include<string>
 #include <stdio.h>
 
+#define TEST_RUN 1
+
 // Collection names
 #define WIKI 'w'
 #define CWEB 'c'
@@ -11,7 +13,6 @@
 
 //Current collection being benchmarked
 #ifndef COLLECTION
-    #pragma message "Collection NOT set from cmake. Use cmake .. -DCOLL=<collection>"
     #define COLLECTION WIKI
 #endif
 
