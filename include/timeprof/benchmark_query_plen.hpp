@@ -41,7 +41,7 @@ struct TimeLogger {
             case CWEB: coll_name = "cweb"; break;
             case BING: coll_name = "bing"; break;
         }
-        string outfile = "../export/data/time-bm/"
+        string outfile = "../export/data/"
                             + coll_name + 
                             "-plen-qtime.csv";
         return outfile;
