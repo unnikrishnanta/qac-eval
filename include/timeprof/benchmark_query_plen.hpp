@@ -32,6 +32,7 @@ struct TimeLogger {
     double qtime;
     int plen;
     string fixture;
+    int log_type;  // Synth or LR log
     string collection;
 
     static std::string generate_export_fname(){
@@ -137,7 +138,9 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
             csv_out_.open(outfile);
             for (const auto tl : plen_qtime) {
                 csv_out_ << tl.fixture << tl.plen
-                         << tl.qtime << tl.collection ;
+                         << tl.qtime
+                         << tl.log_type
+                         << tl.collection ;
                 csv_out_ << endrow ;
             }
         }
@@ -173,6 +176,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                         tl.collection = coll_name_; 
                         tl.plen = p.length();
                         tl.fixture = fixture_name_;
+                        tl.log_type = log_type_;
                         plen_qtime.push_back(tl);
                         ++num_pq;
                         num_completions += completions.size();
