@@ -54,8 +54,16 @@ int main(int argc, char *argv[])
         test_run = true;
         n_rows = 10000;
     }
+
+    // Check if /proc/self can be read
+    FILE* file = fopen("/proc/self/status", "r");
+    if (!file)
+        std::cerr << "/proc/self/status info not available \n";
+    else 
+        fclose(file);
+
     Collection coll; 
-    for (const auto& coll_type : {CWEB, WIKI, BING}) {
+    for (const auto& coll_type : {WIKI, CWEB, BING}) {
         if(!test_run) {  // Not test mode
             switch(coll_type) {
                 case WIKI: n_rows = WIKI_NROWS; break;

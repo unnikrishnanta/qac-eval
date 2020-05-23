@@ -1,7 +1,5 @@
-/* 
- * TODO: May be go for a benchmark class instead and read the
-         collection in set up 
- */
+#ifdef MEM_BM
+
 #ifndef MPROF_CORE_H
 #define MPROF_CORE_H
 #include <cassert>
@@ -155,11 +153,6 @@ class MemProfiler {
 
         void setup(const StrVec& str_set) {
             /* std::cerr << "Set up\n"; */
-            FILE* file = fopen("/proc/self/status", "r");
-            if (!file)
-                std::cerr << "/proc/self/status info not available \n";
-            else 
-                fclose(file);
             set_base_counters();
             bytes_processed_ = 0;
             for (const auto&s : str_set) {
@@ -221,3 +214,4 @@ class MemProfiler {
 };
 
 #endif /* ifndef MPROF_CORE_H */
+#endif  //MEM_BM
