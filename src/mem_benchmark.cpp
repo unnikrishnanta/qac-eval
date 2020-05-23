@@ -48,13 +48,15 @@ int main(int argc, char *argv[])
 {
     std::cerr << "Platform detected: " << PLATFORM << "\n";
     size_t n_rows = 0;
+    bool test_run = false;
     if ((argc > 1) && (std::string(argv[1]) == "-t")) {
         std::cout << "Test mode. Running on " << n_rows << " rows\n";
+        test_run = true;
         n_rows = 10000;
     }
     Collection coll; 
     for (const auto& coll_type : {CWEB, WIKI, BING}) {
-        if(!n_rows) {  // Not test mode
+        if(!test_run) {  // Not test mode
             switch(coll_type) {
                 case WIKI: n_rows = WIKI_NROWS; break;
                 case CWEB: n_rows = CWEB_NROWS; break;
