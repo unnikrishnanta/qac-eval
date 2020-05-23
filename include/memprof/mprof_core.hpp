@@ -105,14 +105,13 @@ struct MemCounters {
 };
 
 
-
 template <class T>
 class MemProfiler {
     public: 
         MemProfiler(const string& outfile){
             /* std::cout << std::string(40, '=') << std::endl; */
             std::cout <<  typeid(T).name() << "\n";
-            std::cout << std::string(40, '-') << "\n";
+            /* std::cout << std::string(40, '-') << "\n"; */
             csv_out_.open(outfile);
             // Print log file header
             std::ifstream in_file(outfile); 
@@ -137,7 +136,7 @@ class MemProfiler {
             assert(str_set.size() != 0);
             assert(str_set.size() == scores.size());
             T data_strct;
-            std::cerr << "Building index with size: " << str_set.size() << "\r";
+            /* std::cerr << "\t" << str_set.size() << "\n"; */
             /* base_counts_.print_counters(); */
             data_strct.build_index(str_set, scores);
             set_counters();

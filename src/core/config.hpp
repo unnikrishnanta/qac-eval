@@ -4,7 +4,7 @@
 #include<string>
 #include <stdio.h>
 
-#define TEST_RUN 1
+/* #define TEST_RUN 1 */
 
 // Collection names
 #define WIKI 'w'
@@ -33,7 +33,7 @@
 
 // Number of rows from each collection
 #define WIKI_NROWS 4560699
-#define CWEB_NROWS 125000000  
+#define CWEB_NROWS 64000000  
 #define BING_NROWS 11578961   
 
 #define WINDOWS "Windows"
@@ -57,7 +57,7 @@
     const std::string CWEB_ROOT = "../../AutoSuggestions/PyQAC/data/Clue-500M-Anchor-Log-External/";
     const std::string BING_ROOT = "";  
     const std::string WIKI_COLLECTION = "clickstream-agg-wiki-32B.tsv";
-    const std::string CWEB_COLLECTION = "clueweb-agg-32B-sample.tsv";
+    const std::string CWEB_COLLECTION = "clueweb-agg-32B.tsv";
     const std::string BING_COLLECTION = "";
     #if COLLECTION==WIKI 
         #define NROWS WIKI_NROWS

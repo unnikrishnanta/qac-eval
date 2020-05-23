@@ -34,13 +34,13 @@ message(STATUS "Collection set to ${COLL}")
 add_compile_definitions(COLLECTION=${COLL})
 
 # Enable replacing new/delete for memory profiling
-option(WITH_MEMPROF "Option description" OFF)
-if(WITH_MEMPROF)
-    message(STATUS "WITH_MEMPROF turned ON")
-    add_subdirectory(heap_count)
-    link_libraries(heap_count)
-    add_compile_definitions(MALLOC_OVERRIDE=1)
-endif()
+# option(MEM_BM "Option description" OFF)
+# if(MEM_BM)
+#     message(STATUS "MEM_BM turned ON")
+#     add_subdirectory(heap_count)
+#     link_libraries(heap_count)
+#     add_compile_definitions(MALLOC_OVERRIDE=1)
+# endif()
 
 set(BUILD_TPROF bm_build)
 set(QUERY_TPROF bm_query)
@@ -54,7 +54,6 @@ set(TEST_WRAPPERS test_wrappers)
 
 add_subdirectory(src/core)
 add_subdirectory(src/qac_impl)
-# add_subdirectory(malloc_count)
 
 # I../includes
 include_directories(include)
@@ -83,9 +82,14 @@ target_link_libraries(${MEM_PROF} core)
 target_link_libraries(${MEM_PROF} qac_impl)
 
 # Link malloc_count and -ldl
-# target_link_libraries(${MEM_PROF} malloc_count)
-# target_link_libraries( ${MEM_PROF} dl)
 
+option(MEM_BM "Option description" OFF)
+if(MEM_BM)
+    message(STATUS "MEM_BM turned ON")
+    add_subdirectory(malloc_count)
+    target_link_libraries(${MEM_PROF} malloc_count)
+    target_link_libraries( ${MEM_PROF} dl)
+endif()
 
 target_link_libraries( ${BUILD_TPROF} core)
 target_link_libraries( ${BUILD_TPROF} qac_impl)
