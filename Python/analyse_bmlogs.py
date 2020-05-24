@@ -4,7 +4,7 @@ if sys.version_info[0] < 3:
 import argparse
 from bmlog_processor import Collection, QACImpl, Benchmark,\
                             load_build_df, load_qtime_collsize_df,\
-                            load_qtime_plen_df
+                            load_qtime_plen_df, load_qtime_df
 from plotter import MyPlt as mplt
 
 def cputime_collsize(combined_df, benchmark, ylabel, style=None):
@@ -36,6 +36,25 @@ def buildtime_plots(bm_root_dir):
     print("Plotting build time bytes rate")
     buildtime_bytes_rate(combined_build)
 
+def norm_plen_qtime(combined_qtime_plen_df, combined_qtime_df):
+    """ Normalise the cpu_time in combined_qtime_plen_df with the curresponding
+    total for the collection, qac_impl and log from combined_qtime_df."""
+    for coll in combined_qtime_df.collection.unique():
+        for lt in combined_qtime_df.log_type.unique():
+            for qac_impl in combined_qtime_df.qac_impl.unique():
+                max_qtime = combined_qtime_df[
+                                    (combined_qtime_df.qac_impl == qac_impl)
+                                    & (combined_qtime_df.collection == coll)
+                                    & (combined_qtime_df.log_type == lt)
+                                    ][ 'cpu_time'].max()
+                # print(qac_impl, coll, lt, max_qtime)
+                mask = (combined_qtime_plen_df.qac_impl == qac_impl)\
+                   & (combined_qtime_plen_df.collection == coll)\
+                   & (combined_qtime_plen_df.log_type == lt)
+                combined_qtime_plen_df.loc[
+                    mask, 'normed_cpu_time'] = combined_qtime_plen_df[
+                                                    mask]['cpu_time']/max_qtime
+    
 
 def query_time_bytes_rate(combined_qcs, cutoff_nrows, normalise=True):
     sliced_df = combined_qcs[(combined_qcs.log_type=="SynthLog")
@@ -65,18 +84,44 @@ def querytime_plots(bm_root_dir):
                      ylabel="Querying time",
                      style='log_type')
 
+    print("Plotting query time vs |P| ")
     # Query time |P| benchmarks
     qplen_base = bm_root_dir + '/query-plen/'
-    wiki_plenq_df = load_qtime_plen_df(qplen_base + '{0}.csv'.format(Collection.wiki),
-                                       Collection.wiki)
-    bing_plenq_df = load_qtime_plen_df(qplen_base + '{0}.csv'.format(Collection.bing),
-                                       Collection.bing)
-    combined_plenq_df = wiki_plenq_df.append(bing_plenq_df, ignore_index=True)
+    file_end = '-query-times.csv'
+    wiki_qtime_df = load_qtime_df(qplen_base + Collection.wiki + file_end, 
+                                  Collection.wiki)  
+    # bing_qtime_df = load_qtime_df(qplen_base + Collection.bing + file_end, 
+    #                               Collection.bing)  
+    cweb_qtime_df = load_qtime_df(qplen_base + Collection.cweb + file_end, 
+                                  Collection.cweb)  
+    # TODO: Combine CWEB
+    combined_qtime_df = wiki_qtime_df.append(
+                           # bing_qtime_df, ignore_index=True).append(
+                           cweb_qtime_df, ignore_index=True)
+                                     
+
+    # Load query time |P| dataframes
+    wiki_plenq_df = load_qtime_plen_df(qplen_base
+                        + '{0}-plen-qtime.csv'.format(Collection.wiki))
+    # bing_plenq_df = load_qtime_plen_df(qplen_base
+    #                     + '{0}-plen-qtime.csv'.format(Collection.bing))
+    cweb_plenq_df = load_qtime_plen_df(qplen_base
+                        + '{0}-plen-qtime.csv'.format(Collection.cweb))
+    # TODO: Combine CWEB
+    combined_plenq_df = wiki_plenq_df.append(
+                             # bing_plenq_df, ignore_index=True).append(
+                             cweb_plenq_df, ignore_index=True)
+    norm_plen_qtime(combined_plenq_df, combined_qtime_df)
     benchmark = 'qplen'
+    legend = False
     for qac_impl in QACImpl.qac_impl_list():
+        if qac_impl == QACImpl.marisa:
+            legend = True
+        else: 
+            legend = False
         mplt.plot_qtime_plen(combined_plenq_df, combined_qcs, qac_impl, 
                              outfile='{0}-{1}.pdf'.format(benchmark, qac_impl), 
-                             style='log_type')
+                             style='log_type', plot_legend=legend)
         
 def main(args):
     nrows = None

@@ -46,7 +46,7 @@ class MyPlt:
     _TICK_LABEL_SIZE = 28
     _LEGEND_LABEL_SIZE = 26
     _LINE_WIDTH = 6
-    _DASHL_WIDTH = 5
+    _DASHL_WIDTH = _LINE_WIDTH
     _MARKER_SIZE = _LINE_WIDTH + 10
     _dev_run = False
 
@@ -148,55 +148,53 @@ class MyPlt:
     def plot_qtime_plen(combined_plenq_df, combined_qtime_csize,
                         qac_impl, outfile, style=None,
                         xlabel="Length of partial query",
-                        ylabel="Ratio of querying time"):
+                        ylabel="Ratio of querying time",
+                        plot_legend=False):
         pd.options.mode.chained_assignment = None  # default='warn'
-        max_synth_time = combined_qtime_csize[(combined_qtime_csize.qac_impl==qac_impl)\
-                         & (combined_qtime_csize.log_type=='SynthLog')]['cpu_time'].max()
-        max_lr_time = combined_qtime_csize[(combined_qtime_csize.qac_impl==qac_impl)\
-                       & (combined_qtime_csize.log_type=='LRLog')]['cpu_time'].max()
 
         sliced_df = combined_plenq_df[combined_plenq_df.qac_impl==qac_impl]
-        sliced_df.loc[sliced_df.log_type=='SynthLog', 'norm_time']\
-            = sliced_df[sliced_df.log_type == 'SynthLog']['cpu_time']/max_synth_time
-        sliced_df.loc[sliced_df.log_type=='LRLog', 'norm_time']\
-            = sliced_df[sliced_df.log_type == 'LRLog']['cpu_time']/max_lr_time
         
-        ax = sns.lineplot(x='max_plen', y='norm_time', data=sliced_df,
-                          hue='collection', style=style, marker='o',
-                          markevery=1, alpha=.6)
+        ax = sns.lineplot(x='plen', y='normed_cpu_time',
+                          data=sliced_df,
+                          hue='collection', style=style,
+                          marker='o', markevery=4, alpha=.6)
 
-        ax.set_xscale('log', basex=2)
-        ax.set_yscale('log', basey=2)
-        # ax.set_xlim([None, 2**5])
+        # ax.set_xscale('log', basex=2)
+        ax.set_yscale('log', basey=10)
+        ax.set_xlim([None, 80])
+        # ax.set_ylim([10**-7, 1])
 
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
         plt.ylabel(ylabel, fontsize=MyPlt._AX_LABEL_SIZE)
         plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE)
         plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
         
-        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH)  # set lw for all lines
-        plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE)  # set lw for all lines
+        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH-1)  # set lw for all lines
+        plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE-1)  # set lw for all lines
         
-        # Legend position and line width
-        leg = plt.legend(loc='upper right', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
-        for legobj in leg.legendHandles:
-            legobj.set_linewidth(MyPlt._LINE_WIDTH)
-        # Legend texts
-        leg.get_texts()[0].set_text('Collection')
-        for t in leg.get_texts()[1:]:
-            if t.get_text() == u'bing':
-                t.set_text(MyPlt.BING_COLL_LABEL)
-            elif t.get_text() == u'cweb':
-                t.set_text(MyPlt.CWEB_COLL_LABEL)
-            elif t.get_text() == u'wiki':
-                t.set_text(MyPlt.WIKI_COLL_LABEL)
-            elif t.get_text() == u'log_type':
-                t.set_text('Log type')
-            elif t.get_text() == Benchmark.SynthLog\
-                    or t.get_text() == Benchmark.LRLog:
-                pass
-            else:
-                raise ValueError('Invalid collection name: ' + str(t))
+        if plot_legend:
+            # Legend position and line width
+            leg = plt.legend(loc='upper right', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
+            for legobj in leg.legendHandles:
+                legobj.set_linewidth(MyPlt._LINE_WIDTH)
+            # Legend texts
+            leg.get_texts()[0].set_text('Collection')
+            for t in leg.get_texts()[1:]:
+                if t.get_text() == u'bing':
+                    t.set_text(MyPlt.BING_COLL_LABEL)
+                elif t.get_text() == u'cweb':
+                    t.set_text(MyPlt.CWEB_COLL_LABEL)
+                elif t.get_text() == u'wiki':
+                    t.set_text(MyPlt.WIKI_COLL_LABEL)
+                elif t.get_text() == u'log_type':
+                    t.set_text('Log type')
+                elif t.get_text() == Benchmark.SynthLog\
+                        or t.get_text() == Benchmark.LRLog:
+                    pass
+                else:
+                    raise ValueError('Invalid collection name: ' + str(t))
+        else:
+            ax.legend_.remove()
         MyPlt._save_and_clear(outfile)
         pd.options.mode.chained_assignment = 'warn'
 

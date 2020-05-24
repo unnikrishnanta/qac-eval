@@ -75,8 +75,13 @@ def load_qtime_collsize_df(filename, collection, convert_units=True):
     
     return query_df
 
+def map_qac_impl(s):
+    for qimpl in QACImpl.qac_impl_list():
+        if qimpl in s: 
+            return qimpl
 
-def load_qtime_plen_df(filename, collection, convert_units=True):
+def load_qtime_df(filename, collection, convert_units=True):
+    """Total querying time for each collection across Synth and LR logs. """
     query_df = pd.read_csv(filename, index_col=None)
     name_split = query_df.name.str.split('/')
     
@@ -86,7 +91,6 @@ def load_qtime_plen_df(filename, collection, convert_units=True):
     log_type = name_split.apply(lambda x: x[4])
     log_type.replace('108', 'LRLog', inplace=True)
     log_type.replace('115', 'SynthLog', inplace=True)
-    max_plen = name_split.apply(lambda x: int(x[-1]))
     
     query_df['qac_impl'] = qac_impl
     query_df['nrows'] = coll_size
@@ -95,10 +99,22 @@ def load_qtime_plen_df(filename, collection, convert_units=True):
     query_df['collection'] = collection
     
     query_df.drop(['name','bytes_per_second','items_per_second',
-                   'label','error_occurred','error_message'], axis=1, inplace=True)
-    query_df['max_plen'] = max_plen
+                   'label','error_occurred','error_message'],
+                   axis=1, inplace=True)
     
+    query_df.qac_impl = query_df.qac_impl.apply(lambda x: map_qac_impl(x))
     if convert_units:
         convert_time(query_df)
     
     return query_df
+
+def load_qtime_plen_df(file_name):
+    """ Querying time at different values of |P|. """
+    qtime_plen_df = pd.read_csv(file_name, header=None)
+    qtime_plen_df.columns = ['qac_impl', 'plen', 'cpu_time',
+                              'log_type', 'collection']
+    qtime_plen_df.cpu_time = qtime_plen_df.cpu_time * 1e3 # s to ms
+    qtime_plen_df.log_type = qtime_plen_df.log_type.map({115:'SynthLog', 108:'LRLog'})
+    qtime_plen_df.qac_impl = qtime_plen_df.qac_impl.apply(lambda x: map_qac_impl(x))
+    
+    return qtime_plen_df
