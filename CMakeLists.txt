@@ -29,22 +29,12 @@ ELSE()
   message("Some other build type.")
 ENDIF()
 
-option(COLL "Speciffy the collection" WIKI)
+SET(COLL WIKI CACHE BOOL "Speciffy the collection" FORCE)
 message(STATUS "Collection set to ${COLL}")
 add_compile_definitions(COLLECTION=${COLL})
 
-# Enable replacing new/delete for memory profiling
-# option(MEM_BM "Option description" OFF)
-# if(MEM_BM)
-#     message(STATUS "MEM_BM turned ON")
-#     add_subdirectory(heap_count)
-#     link_libraries(heap_count)
-#     add_compile_definitions(MALLOC_OVERRIDE=1)
-# endif()
-
 set(BUILD_TPROF bm_build)
 set(QUERY_TPROF bm_query)
-set(MEM_PROF mem_prof)
 set(TEST_WRAPPERS test_wrappers)
 
 # Boost libraries
@@ -59,35 +49,29 @@ add_subdirectory(src/qac_impl)
 include_directories(include)
 include_directories(external/benchmark/include)
 
-# puts all .cpp files inside src to the SOURCES variable
-# file(GLOB SOURCES "src/*.cpp")
-# compiles the files defined by SOURCES to generante the executable defined by MEM_PROF
-add_executable(${MEM_PROF} src/mem_benchmark.cpp)
 add_executable(${BUILD_TPROF} src/bm_build.cpp)
 add_executable(${QUERY_TPROF} src/bm_query.cpp)
 add_executable(${TEST_WRAPPERS} src/test_wrappers.cpp)
 
-# Boost
-# target_link_libraries( ${BUILD_TPROF} ${Boost_LIBRARIES})
-# target_link_libraries( ${TEST_WRAPPERS} ${Boost_LIBRARIES})
-# google benchmark
 target_link_libraries(${BUILD_TPROF} "-L ../external/benchmark/build/src" benchmark)
 target_link_libraries(${QUERY_TPROF} "-L ../external/benchmark/build/src" benchmark)
 target_link_libraries(${BUILD_TPROF} pthread)
 target_link_libraries(${QUERY_TPROF} pthread)
 target_link_libraries(${TEST_WRAPPERS} pthread)
 
-# QAC Evaluation Code libraries
-target_link_libraries(${MEM_PROF} core)
-target_link_libraries(${MEM_PROF} qac_impl)
 
 # Link malloc_count and -ldl
-
-option(MEM_BM "Option description" OFF)
+SET(MEM_BM OFF CACHE BOOL "Enable memory profiling" FORCE)
 if(MEM_BM)
     message(STATUS "MEM_BM turned ON")
     add_compile_definitions(MEM_BM=1)
     add_subdirectory(malloc_count)
+    set(MEM_PROF mem_prof)
+    add_executable(${MEM_PROF} src/mem_benchmark.cpp)
+    # QAC core libraries
+    target_link_libraries(${MEM_PROF} core)
+    target_link_libraries(${MEM_PROF} qac_impl)
+    # Memory profiler libraries
     target_link_libraries(${MEM_PROF} malloc_count)
     target_link_libraries( ${MEM_PROF} dl)
 endif()
@@ -101,12 +85,7 @@ target_link_libraries( ${QUERY_TPROF} qac_impl)
 target_link_libraries( ${TEST_WRAPPERS} core)
 target_link_libraries( ${TEST_WRAPPERS} qac_impl)
 
-execute_process(COMMAND date "+%Y-%m-%d_%H-%M"
-       OUTPUT_VARIABLE BUILD_TIME)
-   string(STRIP ${BUILD_TIME} BUILD_TIME)
-
 set(EXPORT_DIR  "${CMAKE_SOURCE_DIR}/export/data/")
-
 add_custom_target(build-time
     COMMAND ${BUILD_TPROF}
             --benchmark_counters_tabular=true 
