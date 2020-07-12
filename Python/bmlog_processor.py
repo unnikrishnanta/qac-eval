@@ -116,5 +116,20 @@ def load_qtime_plen_df(file_name):
     qtime_plen_df.cpu_time = qtime_plen_df.cpu_time * 1e3 # s to ms
     qtime_plen_df.log_type = qtime_plen_df.log_type.map({115:'SynthLog', 108:'LRLog'})
     qtime_plen_df.qac_impl = qtime_plen_df.qac_impl.apply(lambda x: map_qac_impl(x))
+    for logt in ['SynthLog', 'LRLog']:
+        mask = (qtime_plen_df.log_type==logt)
+        qtime_plen_df.loc[mask,
+                'normed_cpu_time'] = qtime_plen_df[mask]['cpu_time'].div(
+                                        qtime_plen_df[mask]['cpu_time'].sum())
     
     return qtime_plen_df
+
+def read_membm_df(file_name, collection):
+    """ Read memory benchmark log from file_name."""
+    mem_df = pd.read_csv(file_name)
+    mem_df['collection'] = collection
+    mem_df.sort_values(['QACImpl','nrows'], inplace=True)
+    mem_df.QACImpl = mem_df.QACImpl.apply(lambda x: map_qac_impl(x))
+    mem_df.rename(columns={'QACImpl':'qac_impl'}, inplace=True)
+    mem_df['heap_frac'] = mem_df.heap_used/mem_df.BytesProcessed
+    return mem_df

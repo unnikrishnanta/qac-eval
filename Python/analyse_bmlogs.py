@@ -4,8 +4,9 @@ if sys.version_info[0] < 3:
 import argparse
 from bmlog_processor import Collection, QACImpl, Benchmark,\
                             load_build_df, load_qtime_collsize_df,\
-                            load_qtime_plen_df, load_qtime_df
+                            load_qtime_plen_df, load_qtime_df, read_membm_df
 from plotter import MyPlt as mplt
+
 
 def cputime_collsize(combined_df, benchmark, ylabel, style=None):
     for qimpl in QACImpl.qac_impl_list():
@@ -48,6 +49,11 @@ def norm_plen_qtime(combined_qtime_plen_df, combined_qtime_df):
                                     & (combined_qtime_df.log_type == lt)
                                     ][ 'cpu_time'].max()
                 # print(qac_impl, coll, lt, max_qtime)
+                # sum_qtime = combined_qtime_plen_df[
+                #                     (combined_qtime_plen_df.qac_impl == qac_impl)
+                #                     & (combined_qtime_plen_df.collection == coll)
+                #                     & (combined_qtime_plen_df.log_type == lt)
+                #                     ][ 'cpu_time'].sum()
                 mask = (combined_qtime_plen_df.qac_impl == qac_impl)\
                    & (combined_qtime_plen_df.collection == coll)\
                    & (combined_qtime_plen_df.log_type == lt)
@@ -65,6 +71,22 @@ def query_time_bytes_rate(combined_qcs, cutoff_nrows, normalise=True):
                       ylabel="Bytes/sec")
 
 
+def query_time_plen(combined_plenq_df, combined_qtime_df):
+    """ Pass values to plot query time at various values of |P|."""
+    norm_plen_qtime(combined_plenq_df, combined_qtime_df)
+    benchmark = 'qplen'
+    legend = False
+    for qac_impl in QACImpl.qac_impl_list():
+        if qac_impl == QACImpl.marisa:
+            legend = True
+        else: 
+            legend = False
+        mplt.plot_qtime_plen(combined_plenq_df, qac_impl, 
+                             outfile='{0}-{1}.pdf'.format(benchmark, qac_impl), 
+                             style='log_type', plot_legend=legend)
+        
+
+    
 def querytime_plots(bm_root_dir):
     qc_base = bm_root_dir + '/query-collsize/'
     wiki_qcs = load_qtime_collsize_df(qc_base+'{0}.csv'.format(Collection.wiki),
@@ -90,39 +112,49 @@ def querytime_plots(bm_root_dir):
     file_end = '-query-times.csv'
     wiki_qtime_df = load_qtime_df(qplen_base + Collection.wiki + file_end, 
                                   Collection.wiki)  
-    # bing_qtime_df = load_qtime_df(qplen_base + Collection.bing + file_end, 
-    #                               Collection.bing)  
+    bing_qtime_df = load_qtime_df(qplen_base + Collection.bing + file_end, 
+                                  Collection.bing)  
     cweb_qtime_df = load_qtime_df(qplen_base + Collection.cweb + file_end, 
                                   Collection.cweb)  
-    # TODO: Combine CWEB
     combined_qtime_df = wiki_qtime_df.append(
-                           # bing_qtime_df, ignore_index=True).append(
+                           bing_qtime_df, ignore_index=True).append(
                            cweb_qtime_df, ignore_index=True)
                                      
 
     # Load query time |P| dataframes
     wiki_plenq_df = load_qtime_plen_df(qplen_base
                         + '{0}-plen-qtime.csv'.format(Collection.wiki))
-    # bing_plenq_df = load_qtime_plen_df(qplen_base
-    #                     + '{0}-plen-qtime.csv'.format(Collection.bing))
-    cweb_plenq_df = load_qtime_plen_df(qplen_base
-                        + '{0}-plen-qtime.csv'.format(Collection.cweb))
-    # TODO: Combine CWEB
-    combined_plenq_df = wiki_plenq_df.append(
-                             # bing_plenq_df, ignore_index=True).append(
-                             cweb_plenq_df, ignore_index=True)
-    norm_plen_qtime(combined_plenq_df, combined_qtime_df)
-    benchmark = 'qplen'
-    legend = False
+    bing_plenq_df = load_qtime_plen_df(qplen_base
+                        + '{0}-plen-qtime.csv'.format(Collection.bing))
+    # cweb_plenq_df = load_qtime_plen_df(qplen_base
+    #                     + '{0}-plen-qtime.csv'.format(Collection.cweb))
+    combined_plenq_df = wiki_plenq_df\
+                             .append(bing_plenq_df, ignore_index=True)
+                             # .append(cweb_plenq_df, ignore_index=True)
+    query_time_plen(combined_plenq_df, combined_qtime_df)
+
+
+def memory_bm_plots(bm_root_dir):
+    wiki_memdf = read_membm_df(bm_root_dir
+                            + '/mem-bm/wiki-1590211724-build-mem.csv', 'wiki')
+    cweb_memdf = read_membm_df(bm_root_dir
+                            + '/mem-bm/cweb-1590211760-build-mem.csv', 'cweb')
+    random_memdf = read_membm_df(bm_root_dir
+                        + '/mem-bm/random-1590327569-build-mem.csv', 'random')
+    bing_memdf = read_membm_df(bm_root_dir
+                        + '/mem-bm/bing-1590548765-build-mem.csv', 'bing')
+    combined_memdf = wiki_memdf.append(cweb_memdf, ignore_index=True)\
+                                    .append(random_memdf, ignore_index=True)\
+                                    .append(bing_memdf, ignore_index=True)
+
+    print("Plotting fraction of heap used")
     for qac_impl in QACImpl.qac_impl_list():
-        if qac_impl == QACImpl.marisa:
-            legend = True
-        else: 
-            legend = False
-        mplt.plot_qtime_plen(combined_plenq_df, combined_qcs, qac_impl, 
-                             outfile='{0}-{1}.pdf'.format(benchmark, qac_impl), 
-                             style='log_type', plot_legend=legend)
-        
+        mplt.plot_barplot(combined_memdf, 'heap-frac.pdf',
+                          ylabel='Fraction of memory used', hue='collection', 
+                          x = "qac_impl", y ="heap_frac",
+                          log_scale=False,
+                          legen_loc='upper left')
+
 def main(args):
     nrows = None
     if args['testsize']: # Test mode
@@ -132,6 +164,7 @@ def main(args):
     bm_root_dir = args['dir']
     buildtime_plots(bm_root_dir)
     querytime_plots(bm_root_dir)
+    memory_bm_plots(bm_root_dir)
 
 
 if __name__ == "__main__":

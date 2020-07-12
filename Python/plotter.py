@@ -15,9 +15,10 @@ class MyPlt:
     BING_COLL_LABEL = r'{\tt Bing-Collection}'
     WIKI_COLL_LABEL = r'{\tt Wiki-Clickstream}'
     CWEB_COLL_LABEL = r'{\tt ClueWeb-09}'
+    RANDOM_COLL_LABEL = r'{\tt Wiki-Random}'
     HTRIE_LABEL = r'HAT-trie'
     MARISA_LABEL = r'MARISA-trie'
-    DAWG_LABEL = r'DAWG-trie'
+    DAWG_LABEL = r'DAWGDic'
     INCNGT_LABEL = r'IncNgTrie'
     QAC_IMPL_LABELS = {
                         QACImpl.htrie : HTRIE_LABEL,
@@ -145,7 +146,7 @@ class MyPlt:
         MyPlt._save_and_clear(outfile)
 
 
-    def plot_qtime_plen(combined_plenq_df, combined_qtime_csize,
+    def plot_qtime_plen(combined_plenq_df,
                         qac_impl, outfile, style=None,
                         xlabel="Length of partial query",
                         ylabel="Ratio of querying time",
@@ -161,7 +162,7 @@ class MyPlt:
 
         # ax.set_xscale('log', basex=2)
         ax.set_yscale('log', basey=10)
-        ax.set_xlim([None, 80])
+        # ax.set_xlim([None, 64])
         # ax.set_ylim([10**-7, 1])
 
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
@@ -169,8 +170,8 @@ class MyPlt:
         plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE)
         plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
         
-        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH-1)  # set lw for all lines
-        plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE-1)  # set lw for all lines
+        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH-4)  # set lw for all lines
+        plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE-4)  # set lw for all lines
         
         if plot_legend:
             # Legend position and line width
@@ -201,13 +202,20 @@ class MyPlt:
     @staticmethod
     def plot_barplot(combined_df, outfile, ylabel='Bytes/sec',
                      hue='collection', 
-                     x = "qac_impl", y ="TotalBytesRate"):
+                     x = "qac_impl", y ="TotalBytesRate",
+                     log_scale=True, legen_loc='upper right'):
         MyPlt._initialise_plot()
-        palette = sns.color_palette(MyPlt.PALETTE_)
+        ncoll = len(combined_df.collection.unique())
+        colors = MyPlt.PALETTE_;
+        if ncoll > len(colors): 
+            colors.insert(2, sns.xkcd_rgb["dusky blue"])
+            print(colors)
+        palette = sns.color_palette(colors)
         
         ax = sns.barplot(x=x, y=y, hue=hue, data=combined_df,
                          palette=palette, estimator=np.mean)
-        plt.yscale('log', basey=2)
+        if log_scale:
+            plt.yscale('log', basey=2)
         xlabel = "Implementation"
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
         plt.ylabel(ylabel, fontsize=MyPlt._AX_LABEL_SIZE)
@@ -222,7 +230,7 @@ class MyPlt:
                 raise ValueError('Plotter: Label not recognised')
         ax.set_xticklabels(xtick_labels)
 
-        leg = plt.legend(loc='upper right', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
+        leg = plt.legend(loc=legen_loc, prop={'size': MyPlt._LEGEND_LABEL_SIZE})
         for legobj in leg.legendHandles:
             legobj.set_linewidth(MyPlt._LINE_WIDTH)
         if hue == 'collection':
@@ -233,6 +241,8 @@ class MyPlt:
                     t.set_text(MyPlt.CWEB_COLL_LABEL)
                 elif t.get_text() == u'wiki':
                     t.set_text(MyPlt.WIKI_COLL_LABEL)
+                elif t.get_text() == u'random':
+                    t.set_text(MyPlt.RANDOM_COLL_LABEL)
                 else:
                     raise ValueError('Invalid collection name: ' + str(t))    
         
@@ -245,7 +255,13 @@ class MyPlt:
                      ylabel='Bytes/sec',
                      hue='collection', x = "qac_impl", y ="PQBytesRate"):
         MyPlt._initialise_plot()
-        palette = sns.color_palette(MyPlt.PALETTE_)
+        ncoll = len(combined_df.collection.unique())
+        if ncoll == 3:
+            palette = sns.color_palette(MyPlt.PALETTE_)
+        elif ncoll == 4: 
+            colors = MyPlt.PALETTE_;
+            colors.insert(2, 'b')
+            palette = sns.color_palette(colors)
         
         ax = sns.boxplot(x=x, y=y, data=combined_df,  hue=hue, palette=palette)
         plt.yscale('log', basey=2)
