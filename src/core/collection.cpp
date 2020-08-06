@@ -42,6 +42,8 @@ void Collection::sort_strdict(StringDict& zipped, int key){
  * from them */
 void Collection::uniform_sample(const size_t& nrows,
                                 const bool& sort, const int& sort_key){
+    if (nrows >= str_set_.size())
+        return;
     StringDict sample;
     sample.reserve(nrows);
     std::sample(str_dict_.begin(), str_dict_.end(), std::back_inserter(sample),

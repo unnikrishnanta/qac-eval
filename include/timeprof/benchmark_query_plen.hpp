@@ -73,7 +73,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         }
 
         void SetUp(const benchmark::State& state) {
-            assert(qac_loq.size() != 0);
+            assert(qac_log.size() != 0);
             auto coll_nrows = static_cast<size_t>(state.range(0));
             auto n_conv = static_cast<size_t>(state.range(1));
             auto log_type = state.range(2);
@@ -86,23 +86,24 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                 qac_impl = std::make_unique<T>();
                 qac_impl->build_index(coll.get_strings(), coll.get_scores());
             }
+            
             if(n_conv != PQLOG_NCONV) {  // Sample query log
-                pqlog = qac_loq.uniform_sample(n_conv);
+                pqlog = qac_log.uniform_sample(n_conv);
                 if (log_type == LRLOG) {  // Generate LR log from current sample
                     pqlog = pqlog.lr_log();
                 }
             }
             else {  // Work on a full log. 
                 if(log_type == SLOG){
-                    pqlog = qac_loq;
+                    pqlog = qac_log;
                 }
                 else {  // Load LR log if needed
                     if(curr_full_logtype != LRLOG) {
-                        pqlog = qac_loq.lr_log();
+                        pqlog = qac_log.lr_log();
                     }
                 }
                 curr_full_logtype = log_type;
-                pqlog.set_log_type(curr_full_logtype);
+                pqlog.set_log_type(curr_full_logtype);  // For debugging later. 
             }
             assert(pqlog.size());
         }
@@ -112,13 +113,14 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
             assert(qac_impl.get() != nullptr);
             if(coll_nrows != NROWS) // Otherwise retain the previous value
                 qac_impl.reset();
+            export_qlentmap();
         }
 
         ~QueryFixturePlen(){
-            if(qac_impl.get() == nullptr)
+            if(qac_impl.get() != nullptr)
                 qac_impl.reset();
             --instance_count_;
-            export_qlentmap();
+            export_qlentmap(); // In case anything is left!
         }
 
     private:
@@ -133,7 +135,8 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
         void export_qlentmap() {
             csvfile csv_out_;
             string outfile = TimeLogger::generate_export_fname();
-            std::cout << "Exporting plen_qtime with size: " << plen_qtime.size()
+            std::cout << "Exporting plen_qtime. size: " << plen_qtime.size()
+                      << " log type: " << log_type_
                       << " to: " << outfile << "\n";
             csv_out_.open(outfile);
             for (const auto tl : plen_qtime) {
@@ -143,6 +146,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                          << tl.collection ;
                 csv_out_ << endrow ;
             }
+            plen_qtime.clear();
         }
 
     protected:
@@ -168,7 +172,9 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                         auto compt_end = std::chrono::high_resolution_clock::now();
 #ifdef USE_LOGGING
                         // Timer paused
-                        state.PauseTiming();
+                        // The pausing logic involves high overhead that gets
+                        // counted in the time for a single partial query. 
+                        /* state.PauseTiming();  */
                         auto qtime_elapsed = std::chrono::duration_cast<
                             std::chrono::duration<double>>(compt_end - compt_start);
                         TimeLogger tl;
@@ -185,7 +191,7 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
                             comp_len_sum += c.first.length();  // len(comp str)
                         }
                         // Timer resumes
-                        state.ResumeTiming();
+                        /* state.ResumeTiming(); */
 #endif
                     }
                 }

@@ -86,20 +86,20 @@ BENCHMARK_REGISTER_F(QueryFixturePlen, QueryHTriePlen)
         ->Unit(benchmark::kMillisecond)
         ->UseManualTime();
 
-BENCHMARK_REGISTER_F(QueryFixturePlen, QueryMarisaPlen)
-        ->Apply(CustomArguments)
-        ->Unit(benchmark::kMillisecond)
-        ->UseManualTime();
+/* BENCHMARK_REGISTER_F(QueryFixturePlen, QueryMarisaPlen) */
+/*         ->Apply(CustomArguments) */
+/*         ->Unit(benchmark::kMillisecond) */
+/*         ->UseManualTime(); */
 
 BENCHMARK_REGISTER_F(QueryFixturePlen, QueryDAWGPlen)
         ->Apply(CustomArguments)
         ->Unit(benchmark::kMillisecond)
         ->UseManualTime();
 
-BENCHMARK_REGISTER_F(QueryFixturePlen, QueryIncNgTriePlen)
-        ->Apply(CustomArguments)
-        ->Unit(benchmark::kMillisecond)
-        ->UseManualTime();
+/* BENCHMARK_REGISTER_F(QueryFixturePlen, QueryIncNgTriePlen) */
+/*         ->Apply(CustomArguments) */
+/*         ->Unit(benchmark::kMillisecond) */
+/*         ->UseManualTime(); */
 
 int main(int argc, char *argv[])
 {
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
     std::cout << "Loading collections\n";
     QueryBase::coll.read_collection(COLLECTION, NROWS, true);  // +1 for header
-    QueryBase::qac_loq.load_qaclog(SYNTHLOG, SIZE_MAX);
+    QueryBase::qac_log.load_qaclog(SYNTHLOG, SIZE_MAX);
     std::cout << "\n<Benchmark>/*/"<< (int) SLOG << ": SynthLog benchmrks\n";
     std::cout << "<Benchmark>/*/"<< (int) LRLOG << ": LRLog benchmrks\n\n";
     benchmark::Initialize(&argc, argv);

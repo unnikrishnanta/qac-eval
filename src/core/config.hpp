@@ -4,7 +4,7 @@
 #include<string>
 #include <stdio.h>
 
-/* #define TEST_RUN 1 */
+#define TEST_RUN 1
 
 // Collection names
 #define WIKI 'w'
