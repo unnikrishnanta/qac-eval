@@ -46,8 +46,11 @@ def load_build_df(filename, collection, convert_units=True):
         convert_time(build_df)
     return build_df
 
-def load_qtime_collsize_df(filename, collection, convert_units=True):
-    """ Load query time vs collection size benchmark files."""
+def load_qtime_collsize_df(filename, collection, convert_units=True,
+                           normalise=False):
+    """ Load query time vs collection size benchmark files.
+        normalise: Normalise CPU time by the number of partial queries
+    """
     try:
         query_df = pd.read_csv(filename)
     except (OSError, IOError) :
@@ -72,6 +75,9 @@ def load_qtime_collsize_df(filename, collection, convert_units=True):
     
     if convert_units:
         convert_time(query_df)
+
+    if normalise: 
+        query_df['cpu_time'] = query_df.cpu_time/query_df.NPQ
     
     return query_df
 

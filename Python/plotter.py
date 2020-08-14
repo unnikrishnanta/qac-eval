@@ -77,7 +77,8 @@ class MyPlt:
     def plot_cputime_nrows(combined_df, qac_impl, outfile,
                            cutoff_nrows=None, style=None,
                            drop_maxrows = True,
-                           xlabel="Collection size", ylabel="Build time"):
+                           xlabel="Collection size", ylabel="Build time", 
+                           plot_legend=False):
         """ Plot the relation between the collection size and cpu time for the
             given qac_impl for all the collections in combined_df.
 
@@ -104,7 +105,7 @@ class MyPlt:
         sns.set_palette(MyPlt.PALETTE_)
         ax = sns.lineplot(x="nrows", y="cpu_time", hue="collection",
                           data=slice_df,style=style, marker="o",
-                          alpha=.6)
+                          alpha=.8)
 
         ax.set_xscale('log', basex=2)
         ax.set_yscale('log', basey=2)
@@ -123,54 +124,58 @@ class MyPlt:
         plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH)  # set lw for all lines
         plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE)  # set lw for all lines
         
-        # Legend position and line width
-        leg = plt.legend(loc='upper left', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
-        for legobj in leg.legendHandles:
-            legobj.set_linewidth(MyPlt._LINE_WIDTH)
-        # Legend texts
-        leg.get_texts()[0].set_text('Collection')
-        for t in leg.get_texts()[1:]:
-            if t.get_text() == u'bing':
-                t.set_text(MyPlt.BING_COLL_LABEL)
-            elif t.get_text() == u'cweb':
-                t.set_text(MyPlt.CWEB_COLL_LABEL)
-            elif t.get_text() == u'wiki':
-                t.set_text(MyPlt.WIKI_COLL_LABEL)
-            elif t.get_text() == u'log_type':
-                t.set_text('Log type')
-            elif t.get_text() == Benchmark.SynthLog\
-                    or t.get_text() == Benchmark.LRLog:
-                pass
-            else:
-                raise ValueError('Invalid collection name: ' + str(t))
+        if plot_legend:
+            # Legend position and line width
+            leg = plt.legend(loc='upper left', prop={'size': MyPlt._LEGEND_LABEL_SIZE})
+            for legobj in leg.legendHandles:
+                legobj.set_linewidth(MyPlt._LINE_WIDTH)
+            # Legend texts
+            leg.get_texts()[0].set_text('Collection')
+            for t in leg.get_texts()[1:]:
+                if t.get_text() == u'bing':
+                    t.set_text(MyPlt.BING_COLL_LABEL)
+                elif t.get_text() == u'cweb':
+                    t.set_text(MyPlt.CWEB_COLL_LABEL)
+                elif t.get_text() == u'wiki':
+                    t.set_text(MyPlt.WIKI_COLL_LABEL)
+                elif t.get_text() == u'log_type':
+                    t.set_text('Log type')
+                elif t.get_text() == Benchmark.SynthLog\
+                        or t.get_text() == Benchmark.LRLog:
+                    pass
+                else:
+                    raise ValueError('Invalid collection name: ' + str(t))
+        else:
+            ax.legend_.remove()
+
         MyPlt._save_and_clear(outfile)
 
 
     def plot_qtime_plen(combined_plenq_df,
                         qac_impl, outfile, style=None,
                         xlabel="Length of partial query",
-                        ylabel="Ratio of querying time",
+                        ylabel="Total querying time",
                         plot_legend=False):
         pd.options.mode.chained_assignment = None  # default='warn'
 
         sliced_df = combined_plenq_df[combined_plenq_df.qac_impl==qac_impl]
         
-        ax = sns.lineplot(x='plen', y='normed_cpu_time',
+        ax = sns.lineplot(x='plen', y='cpu_time',
                           data=sliced_df,
                           hue='collection', style=style,
                           marker='o', markevery=4, alpha=.6)
 
         # ax.set_xscale('log', basex=2)
-        ax.set_yscale('log', basey=10)
-        # ax.set_xlim([None, 64])
-        # ax.set_ylim([10**-7, 1])
+        ax.set_yscale('log', basey=2)
+        ax.set_xlim([None, 64])
+        # ax.set_ylim([10**-4, 10**5])
 
         plt.xlabel(xlabel, fontsize=MyPlt._AX_LABEL_SIZE)
         plt.ylabel(ylabel, fontsize=MyPlt._AX_LABEL_SIZE)
         plt.xticks(fontsize=MyPlt._TICK_LABEL_SIZE)
         plt.yticks(fontsize=MyPlt._TICK_LABEL_SIZE)
         
-        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH-4)  # set lw for all lines
+        plt.setp(ax.lines,linewidth=MyPlt._LINE_WIDTH-2)  # set lw for all lines
         plt.setp(ax.lines,markersize=MyPlt._MARKER_SIZE-4)  # set lw for all lines
         
         if plot_legend:

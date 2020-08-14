@@ -10,11 +10,15 @@ from plotter import MyPlt as mplt
 
 def cputime_collsize(combined_df, benchmark, ylabel, style=None):
     for qimpl in QACImpl.qac_impl_list():
+        plot_legend = False
+        if qimpl == QACImpl.marisa:
+            plot_legend = True
         mplt.plot_cputime_nrows(combined_df,
                                 qac_impl=qimpl,
                                 outfile='{0}-{1}.pdf'.format(benchmark, qimpl),
                                 style=style,
-                                ylabel=ylabel)
+                                ylabel=ylabel, 
+                                plot_legend=plot_legend)
 
 def buildtime_bytes_rate(combined_df):
     mplt.plot_barplot(combined_df, '{0}.pdf'.format('build-bytes-rate'))
@@ -43,23 +47,18 @@ def norm_plen_qtime(combined_qtime_plen_df, combined_qtime_df):
     for coll in combined_qtime_df.collection.unique():
         for lt in combined_qtime_df.log_type.unique():
             for qac_impl in combined_qtime_df.qac_impl.unique():
-                max_qtime = combined_qtime_df[
+                # Total querying time for thie impl, log and coll
+                tot_qtime = combined_qtime_df[
                                     (combined_qtime_df.qac_impl == qac_impl)
                                     & (combined_qtime_df.collection == coll)
                                     & (combined_qtime_df.log_type == lt)
                                     ][ 'cpu_time'].max()
-                # print(qac_impl, coll, lt, max_qtime)
-                # sum_qtime = combined_qtime_plen_df[
-                #                     (combined_qtime_plen_df.qac_impl == qac_impl)
-                #                     & (combined_qtime_plen_df.collection == coll)
-                #                     & (combined_qtime_plen_df.log_type == lt)
-                #                     ][ 'cpu_time'].sum()
                 mask = (combined_qtime_plen_df.qac_impl == qac_impl)\
                    & (combined_qtime_plen_df.collection == coll)\
                    & (combined_qtime_plen_df.log_type == lt)
-                combined_qtime_plen_df.loc[
-                    mask, 'normed_cpu_time'] = combined_qtime_plen_df[
-                                                    mask]['cpu_time']/max_qtime
+                # Normalised time = time for each |P|/total time
+                combined_qtime_plen_df.loc[mask, 'normed_cpu_time']\
+                            = combined_qtime_plen_df[mask]['cpu_time']/tot_qtime
     
 
 def query_time_bytes_rate(combined_qcs, cutoff_nrows, normalise=True):
@@ -90,21 +89,22 @@ def query_time_plen(combined_plenq_df, combined_qtime_df):
 def querytime_plots(bm_root_dir):
     qc_base = bm_root_dir + '/query-collsize/'
     wiki_qcs = load_qtime_collsize_df(qc_base+'{0}.csv'.format(Collection.wiki),
-                                      Collection.wiki)
+                                      Collection.wiki, normalise=True)
     cweb_qcs = load_qtime_collsize_df(qc_base+'{0}.csv'.format(Collection.cweb),
-                                      Collection.cweb)
+                                      Collection.cweb, normalise=True)
     bing_qcs = load_qtime_collsize_df(qc_base+'{0}.csv'.format(Collection.bing),
-                                      Collection.bing)
+                                      Collection.bing, normalise=True)
     combined_qcs = wiki_qcs.append(cweb_qcs, ignore_index=True)\
                                .append(bing_qcs, ignore_index=True)
     print("Total query bytes rate")
     query_time_bytes_rate(combined_qcs, bing_qcs.nrows.max())
     print("Plotting query time vs collection size (SynthLog)")
-    # combined_qcs[combined_qcs.log_type==Benchmark.SynthLog]
+    # NOTE: Comment the below to plot both synth and LR logs
+    combined_qcs = combined_qcs[combined_qcs.log_type==Benchmark.SynthLog]
     cputime_collsize(combined_qcs,
                      benchmark=Benchmark.query,
                      ylabel="Querying time",
-                     style='log_type')
+                     style=None)
 
     print("Plotting query time vs |P| ")
     # Query time |P| benchmarks
@@ -112,25 +112,26 @@ def querytime_plots(bm_root_dir):
     file_end = '-query-times.csv'
     wiki_qtime_df = load_qtime_df(qplen_base + Collection.wiki + file_end, 
                                   Collection.wiki)  
-    bing_qtime_df = load_qtime_df(qplen_base + Collection.bing + file_end, 
-                                  Collection.bing)  
     cweb_qtime_df = load_qtime_df(qplen_base + Collection.cweb + file_end, 
                                   Collection.cweb)  
-    combined_qtime_df = wiki_qtime_df.append(
-                           bing_qtime_df, ignore_index=True).append(
-                           cweb_qtime_df, ignore_index=True)
+    bing_qtime_df = load_qtime_df(qplen_base + Collection.bing + file_end, 
+                                  Collection.bing)  
+    combined_qtime_df = wiki_qtime_df\
+                            .append(cweb_qtime_df, ignore_index=True)\
+                            .append( bing_qtime_df, ignore_index=True)
                                      
 
     # Load query time |P| dataframes
+    file_suff = '-plen-qtime.csv'
     wiki_plenq_df = load_qtime_plen_df(qplen_base
-                        + '{0}-plen-qtime.csv'.format(Collection.wiki))
+                        + '{0}{1}'.format(Collection.wiki, file_suff))
+    cweb_plenq_df = load_qtime_plen_df(qplen_base
+                        + '{0}{1}'.format(Collection.cweb, file_suff))
     bing_plenq_df = load_qtime_plen_df(qplen_base
-                        + '{0}-plen-qtime.csv'.format(Collection.bing))
-    # cweb_plenq_df = load_qtime_plen_df(qplen_base
-    #                     + '{0}-plen-qtime.csv'.format(Collection.cweb))
+                        + '{0}{1}'.format(Collection.bing, file_suff))
     combined_plenq_df = wiki_plenq_df\
+                             .append(cweb_plenq_df, ignore_index=True)\
                              .append(bing_plenq_df, ignore_index=True)
-                             # .append(cweb_plenq_df, ignore_index=True)
     query_time_plen(combined_plenq_df, combined_qtime_df)
 
 
@@ -162,9 +163,9 @@ def main(args):
         print('Running in test. Loading ', nrows, ' rows')
 
     bm_root_dir = args['dir']
-    buildtime_plots(bm_root_dir)
+    # buildtime_plots(bm_root_dir)
     querytime_plots(bm_root_dir)
-    memory_bm_plots(bm_root_dir)
+    # memory_bm_plots(bm_root_dir)
 
 
 if __name__ == "__main__":
