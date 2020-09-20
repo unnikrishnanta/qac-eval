@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     else 
         fclose(file);
 
-    Collection coll; 
+    Collection coll_full; 
     for (const auto& coll_type : {WIKI, CWEB, BING}) {
         if(!test_run) {  // Not test mode
             switch(coll_type) {
@@ -74,41 +74,41 @@ int main(int argc, char *argv[])
         std::cout << "Collection type: " << coll_type << "\n";
         std::cout << "Total rows: " << n_rows << "\n";
         auto outfile = generate_export_filename("build", coll_type);
-        coll.read_collection(coll_type, n_rows, true);
+        coll_full.read_collection(coll_type, n_rows, true);
         std::cout << "\nRunning memory benchmarks\n";
         std::cout << std::string(40, '=') << "\n";
         for (size_t i = NROWS_RANGE_BEGIN; i <= n_rows; ) {
             std::cout << "Collection: " << coll_type << "\tsize: " << i << "\n";
             std::cout << std::string(40, '-') << "\n";
-            coll.uniform_sample(i);  
+            auto coll_sample = coll_full.uniform_sample(i);  
             { 
                 MemProfiler<HTrieCompleter> htrie_mprof(outfile);
-                auto str_set = coll.get_strings(); 
-                auto scores = coll.get_scores();
+                auto str_set = coll_full.get_strings(); 
+                auto scores = coll_full.get_scores();
                 htrie_mprof.mem_bm_build(str_set, scores);
                 /* std::cout << "\n\n"; */
             }
 
             {
                 MemProfiler<MarisaCompleter> marisa_mprof(outfile);
-                auto str_set = coll.get_strings(); 
-                auto scores = coll.get_scores();
+                auto str_set = coll_full.get_strings(); 
+                auto scores = coll_full.get_scores();
                 marisa_mprof.mem_bm_build(str_set, scores);
                 /* std::cout << "\n\n"; */
             }
 
             {
                 MemProfiler<DAWGTrie> dawg_mprof(outfile);
-                auto str_set = coll.get_strings();
-                auto scores = coll.get_scores();
+                auto str_set = coll_full.get_strings();
+                auto scores = coll_full.get_scores();
                 dawg_mprof.mem_bm_build(str_set, scores);
                 /* std::cout << "\n\n"; */
             }
 
             {
                 /* MemProfiler<IncNgTrieCompleter> incngt_mprof(outfile); */
-                /* auto str_set = coll.get_strings(); */
-                /* auto scores = coll.get_scores(); */
+                /* auto str_set = coll_full.get_strings(); */
+                /* auto scores = coll_full.get_scores(); */
                 /* incngt_mprof.mem_bm_build(str_set, scores); */
                 /* std::cout << "\n\n"; */
             }

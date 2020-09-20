@@ -6,12 +6,12 @@
 
 class QueryBase {
  public:
-     static Collection coll;
+     static Collection coll_full;
      static PQLog qac_log;
 };
 
 /* Declaring static members */
-Collection QueryBase::coll;
+Collection QueryBase::coll_full;
 PQLog QueryBase::qac_log;
 
 #endif /* ifndef PROF_BASE_H */

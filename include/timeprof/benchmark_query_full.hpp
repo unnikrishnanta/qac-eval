@@ -31,11 +31,10 @@ class QueryFixture: public QueryBase, public benchmark::Fixture {
             auto coll_nrows = static_cast<size_t>(state.range(0));
             auto n_conv = static_cast<size_t>(state.range(1));
             auto log_type = state.range(2);
-            assert(coll.size());
-            if (coll_nrows != NROWS)
-                coll.uniform_sample(coll_nrows);
+            assert(coll_full.size());
+            auto coll_sample = coll_full.uniform_sample(coll_nrows);
             qac_impl = std::make_unique<T>();
-            qac_impl->build_index(coll.get_strings(), coll.get_scores());
+            qac_impl->build_index(coll_sample.first, coll_sample.second);
             if(n_conv != PQLOG_NCONV) {  // Sample query log
                 pqlog = qac_log.uniform_sample(n_conv);
                 if (log_type == LRLOG) {  // Generate LR log from current sample

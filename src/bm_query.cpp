@@ -30,14 +30,14 @@
 
 // Querying time for varying collection size
 // ===========================================================
-/* BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie) */
-/*     ->RangeMultiplier(8) */
-/*     ->Ranges({ */
-/*                 {1<<9, NROWS}, */
-/*                 {PQLOG_NCONV, PQLOG_NCONV}, */
-/*                 {SLOG, LRLOG} */
-/*              }) */
-/*     ->Unit(benchmark::kMillisecond); */
+BENCHMARK_REGISTER_F(QueryFixture, QueryHTrie)
+    ->RangeMultiplier(8)
+    ->Ranges({
+                {1<<9, NROWS},
+                {PQLOG_NCONV, PQLOG_NCONV},
+                {SLOG, LRLOG}
+             })
+    ->Unit(benchmark::kMillisecond);
 
 /* BENCHMARK_REGISTER_F(QueryFixture, QueryMarisa) */
 /*     ->RangeMultiplier(8) */
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     new_file.close();
 
     std::cout << "Loading collections\n";
-    QueryBase::coll.read_collection(COLLECTION, NROWS, true);  // +1 for header
+    QueryBase::coll_full.read_collection(COLLECTION, NROWS, true);  // +1 for header
     QueryBase::qac_log.load_qaclog(SYNTHLOG, SIZE_MAX);
     std::cout << "\n<Benchmark>/*/"<< (int) SLOG << ": SynthLog benchmrks\n";
     std::cout << "<Benchmark>/*/"<< (int) LRLOG << ": LRLog benchmrks\n\n";

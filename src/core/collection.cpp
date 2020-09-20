@@ -13,6 +13,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <utility>
 
 using namespace std;
 /* using namespace boost::iostreams; */
@@ -35,23 +36,30 @@ void Collection::sort_strdict(StringDict& zipped, int key){
                     return a.second < b.second;
                 });
     }
-    unzip(zipped);
+    /* unzip(zipped); */
 }
 
 /* Randomly shuffles the vectors str_set and scores and selects nrows samples
  * from them */
-void Collection::uniform_sample(const size_t& nrows,
+pair<StrVec, ScoreVec> Collection::uniform_sample(const size_t& nrows,
                                 const bool& sort, const int& sort_key){
     if (nrows >= str_set_.size())
-        return;
+        return make_pair(get_strings(), get_scores());
     StringDict sample;
     sample.reserve(nrows);
     std::sample(str_dict_.begin(), str_dict_.end(), std::back_inserter(sample),
                 nrows, std::mt19937{std::random_device{}()});
-    /* cout << "nrows = " << nrows << " Sampled size " << sample.size() << "\n"; */
     if(sort)
         sort_strdict(sample, sort_key);
-    unzip(sample);
+
+    StrVec sample_strs; 
+    ScoreVec sample_scores;
+    for (const auto zp : sample) {
+       sample_strs.push_back(zp.first); 
+       sample_scores.push_back(zp.second);
+    }
+    
+    return std::make_pair(sample_strs, sample_scores);
 }
 
 void Collection::zip(StringDict &zipped)
@@ -63,18 +71,28 @@ void Collection::zip(StringDict &zipped)
     }
 }
 
-void Collection::unzip(const StringDict& zipped)
+Collection Collection::unzip(const StringDict& zipped, bool inplace)
 {
-    str_set_.clear();
-    scores_.clear();
-    str_set_.reserve(zipped.size());
-    scores_.reserve(zipped.size());
-    for(const auto& zp: zipped)
-    {
-        str_set_.push_back(zp.first);
-        scores_.push_back(zp.second);
+    
+    if(inplace){
+        cout << "Sampling in place" << "\n";
+        str_set_.clear();
+        scores_.clear();
+        str_set_.reserve(zipped.size());
+        scores_.reserve(zipped.size());
+        for(const auto& zp: zipped)
+        {
+            str_set_.push_back(zp.first);
+            scores_.push_back(zp.second);
+        }
+        assert(str_set_.size() == scores_.size());
+        return {};
     }
-    assert(str_set_.size() == scores_.size());
+    else {
+        Collection sampled_coll;
+        sampled_coll.read_collection(zipped);
+        return sampled_coll;
+    }
 }
 
 /*
@@ -153,3 +171,42 @@ void Collection::read_collection(const string& file_name, const size_t& n_rows,
 
 
 
+void Collection::read_collection(const StrVec& strs, const ScoreVec& scores,
+                             const bool sort, const int& sort_key){
+    assert(strs.size() == scores.size());
+    str_set_.clear(); 
+    scores_.clear(); 
+    str_set_.reserve(strs.size());
+    scores_.reserve(scores.size());
+    for (const auto s : strs) {
+        str_set_.push_back(s);
+    }
+    for (const auto sc : scores) {
+        scores_.push_back(sc);
+    }
+    zip(str_dict_);
+    if(sort){ // sort the collection based on sort_key. 0:sort by strings
+        sort_strdict(str_dict_, sort_key); 
+        unzip(str_dict_);
+    }
+    assert(str_set_.size() == scores_.size());
+}
+
+void Collection::read_collection(const StringDict& sdict, const bool sort,
+                     const int& sort_key){
+    str_set_.clear(); 
+    scores_.clear(); 
+    str_set_.reserve(sdict.size());
+    scores_.reserve(sdict.size());
+
+    for (const auto zp : sdict) {
+        str_set_.push_back(zp.first);
+        scores_.push_back(zp.second);
+    }
+    zip(str_dict_);
+    if(sort){ // sort the collection based on sort_key. 0:sort by strings
+        sort_strdict(str_dict_, sort_key); 
+        unzip(str_dict_);
+    }
+    assert(str_set_.size() == scores_.size());
+}

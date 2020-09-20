@@ -41,10 +41,10 @@ BENCHMARK_REGISTER_F(BuildFixture, BuildIncNgT)
 
 // Define the static variable outside all functions
 // https://stackoverflow.com/a/9282425/937153
-Collection BuildFixture::coll;
+Collection BuildFixture::coll_full;
 
 int main(int argc, char** argv) {
-  BuildFixture::coll.read_collection(COLLECTION, NROWS, true);
+  BuildFixture::coll_full.read_collection(COLLECTION, NROWS, true);
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
 }

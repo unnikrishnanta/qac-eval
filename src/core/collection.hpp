@@ -18,6 +18,10 @@ class Collection {
                              const bool& skip_header=false, 
                              const bool& sort=true, const int& sort_key=0);
         void read_collection(const bool& skip_header=false);
+        void read_collection(const StrVec& strs, const ScoreVec& scores,
+                             const bool sort=true, const int& sort_key=0);
+        void read_collection(const StringDict& sdict, const bool sort=true,
+                             const int& sort_key=0);
         /* void sort_keys(); */
         StrVec const &get_strings() const { return str_set_; }
 
@@ -41,7 +45,7 @@ class Collection {
 
         char coll_type() const { return std::as_const(coll_type_); }
 
-        void uniform_sample(const size_t& nrows,
+        pair<StrVec, ScoreVec> uniform_sample(const size_t& nrows,
                             const bool& sort=true, const int& sort_key=0);
 
     private:
@@ -53,7 +57,7 @@ class Collection {
         // corresponding order
         void sort_strdict(StringDict& zipped, int key=0);
         void zip(StringDict& zipped);
-        void unzip(const StringDict& zipped);
+        Collection unzip(const StringDict& zipped, bool inplace=true);
 };
 
 #endif /* ifndef COLLECTION_H */

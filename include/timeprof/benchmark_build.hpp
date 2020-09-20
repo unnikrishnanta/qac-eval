@@ -12,7 +12,7 @@
 
 class BuildFixture : public ::benchmark::Fixture {
  public:
-     static Collection coll;
+     static Collection coll_full;
 };
 
 /* Add a set of counters derived from coll  to the State object.
@@ -21,10 +21,11 @@ class BuildFixture : public ::benchmark::Fixture {
  *  PQBytes: No. of bytes from partial query strings processed. 
  *  TotalBytes: Total no. of bytes processed including strings and scores
  */
-void add_build_counters(const Collection& coll, benchmark::State& state) {
+void add_build_counters(const StrVec& coll_strs,
+                        benchmark::State& state) {
     auto nrows = static_cast<size_t>(state.range(0));
     double plen_sum=0, total_bytes=0;
-    for (const auto s : coll.get_strings()) {
+    for (const auto s : coll_strs) {
         plen_sum += s.length();
         total_bytes = total_bytes + s.length() + sizeof(ScoreType);
     }
@@ -51,47 +52,47 @@ void add_build_counters(const Collection& coll, benchmark::State& state) {
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildHTrie)(benchmark::State& state) {
     auto nrows = static_cast<size_t>(state.range(0));
-    assert(coll.size());  // Make sure that coll is not empty
-    coll.uniform_sample(nrows);
+    assert(coll_full.size());  // Make sure that coll is not empty
+    auto coll_sample = coll_full.uniform_sample(nrows);
     for (auto _ : state) {
         HTrieCompleter ht_comp;
-        ht_comp.build_index(coll.get_strings(), coll.get_scores());
+        ht_comp.build_index(coll_sample.first, coll_sample.second);
     }
-    add_build_counters(coll, state);
+    add_build_counters(coll_sample.first, state);
 }
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildMarisa)(benchmark::State& state) {
     auto nrows = static_cast<size_t>(state.range(0));
-    assert(coll.size());  // Make sure that coll is not empty
-    coll.uniform_sample(nrows);
+    assert(coll_full.size());  // Make sure that coll is not empty
+    auto coll_sample = coll_full.uniform_sample(nrows);
     for (auto _ : state) {
         MarisaCompleter mtc;
-        mtc.build_index(coll.get_strings(), coll.get_scores());
+        mtc.build_index(coll_sample.first, coll_sample.second);
     }
-    add_build_counters(coll, state);
+    add_build_counters(coll_sample.first, state);
 }
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildDAWG)(benchmark::State& state) {
     auto nrows = static_cast<size_t>(state.range(0));
-    assert(coll.size());  // Make sure that coll is not empty
-    coll.uniform_sample(nrows);
+    assert(coll_full.size());  // Make sure that coll is not empty
+    auto coll_sample = coll_full.uniform_sample(nrows);
     for (auto _ : state) {
         DAWGTrie dtrie;
-        dtrie.build_index(coll.get_strings(), coll.get_scores());
+        dtrie.build_index(coll_sample.first, coll_sample.second);
     }
-    add_build_counters(coll, state);
+    add_build_counters(coll_sample.first, state);
 }
 
 BENCHMARK_DEFINE_F(BuildFixture, BuildIncNgT)(benchmark::State& state) {
     auto nrows = static_cast<size_t>(state.range(0));
     int tau = static_cast<int>(state.range(1));
-    assert(coll.size());  // Make sure that coll is not empty
-    coll.uniform_sample(nrows);
+    assert(coll_full.size());  // Make sure that coll is not empty
+    auto coll_sample = coll_full.uniform_sample(nrows);
     MarisaCompleter mtc;
     for (auto _ : state) {
         IncNgTrieCompleter inc(tau);
-        inc.build_index(coll.get_strings(), coll.get_scores());
+        inc.build_index(coll_sample.first, coll_sample.second);
     }
-    add_build_counters(coll, state);
+    add_build_counters(coll_sample.first, state);
 }
 

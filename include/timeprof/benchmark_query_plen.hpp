@@ -78,13 +78,12 @@ class QueryFixturePlen: public QueryBase, public benchmark::Fixture {
             auto n_conv = static_cast<size_t>(state.range(1));
             auto log_type = state.range(2);
             log_type_ = log_type; // Set the private member to export the logs
-            if(coll_nrows != NROWS)
-                coll.uniform_sample(coll_nrows);
+            auto coll_sample = coll_full.uniform_sample(coll_nrows);
             // Rebuild the index only if collection is sampled or a full 
             // collection index is not already built
             if((qac_impl.get() == nullptr) || (coll_nrows != NROWS)){
                 qac_impl = std::make_unique<T>();
-                qac_impl->build_index(coll.get_strings(), coll.get_scores());
+                qac_impl->build_index(coll_sample.first, coll_sample.second);
             }
             
             if(n_conv != PQLOG_NCONV) {  // Sample query log
