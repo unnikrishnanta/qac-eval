@@ -67,7 +67,7 @@ def query_time_bytes_rate(combined_qcs, cutoff_nrows, normalise=True):
     if normalise:
         sliced_df.PQBytesRate = sliced_df.PQBytesRate/sliced_df.nrows
     mplt.plot_boxplot(sliced_df, "qtime-pqbytes-rate.pdf",
-                      ylabel="Bytes/sec")
+                      ylabel="Query bytes/second/target string")
 
 
 def query_time_plen(combined_plenq_df, combined_qtime_df):
@@ -103,7 +103,7 @@ def querytime_plots(bm_root_dir):
     combined_qcs = combined_qcs[combined_qcs.log_type==Benchmark.SynthLog]
     cputime_collsize(combined_qcs,
                      benchmark=Benchmark.query,
-                     ylabel="Querying time",
+                     ylabel="Querying time (sec/query)",
                      style=None)
 
     print("Plotting query time vs |P| ")
